@@ -7,7 +7,7 @@ using static MAVLink;
 
 #pragma warning disable CS8625
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     /// <summary>
     /// Enumeration that describes the data channel to be written by the sensor

@@ -12,7 +12,7 @@ using System.IO.Ports;
 #pragma warning disable CS8618
 #pragma warning disable CS8625
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     /// <summary>
     /// Class that implements a SerialPort based interface to sync messages over wire.

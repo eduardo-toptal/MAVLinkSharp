@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 #pragma warning disable CS8618
 #pragma warning disable CS8625
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     /// <summary>
     /// Class that implements an UDP based interface to sync messages over network.

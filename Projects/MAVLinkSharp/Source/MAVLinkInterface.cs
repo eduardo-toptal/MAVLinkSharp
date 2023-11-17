@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static MAVLink;
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     /// <summary>
     /// Class that describes a MAVLink interface which will stream in and out data over any kind of medium like Serial or Network.

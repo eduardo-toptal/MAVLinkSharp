@@ -9,7 +9,7 @@ using static MAVLink;
 
 #pragma warning disable CS8625
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     /// <summary>
     /// MAVLink Entity extension to support broadcasting heartbeat messages across the MAVLink network.

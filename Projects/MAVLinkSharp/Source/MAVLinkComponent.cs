@@ -11,7 +11,7 @@ using static MAVLink;
 #pragma warning disable CS8618
 #pragma warning disable CS8625
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     /// <summary>
     /// Class that implements a MAVLink most basic system, made of an id and signals the network its 'alive'

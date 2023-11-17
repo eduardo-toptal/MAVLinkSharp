@@ -11,7 +11,7 @@ using static MAVLink;
 #pragma warning disable CS8618
 #pragma warning disable CS8625
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     /// <summary>
     /// Class that implements an extension of a MAVLink System supporting the usual set of components and methods available to vehicles

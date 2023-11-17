@@ -11,7 +11,7 @@ using static MAVLink;
 #pragma warning disable CS8602
 #pragma warning disable CS8603
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     /// <summary>
     /// Class that implements MAVLink messaging provided by Streams in general

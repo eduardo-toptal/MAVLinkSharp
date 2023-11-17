@@ -12,7 +12,7 @@ using static MAVLink;
 #pragma warning disable CS8618
 #pragma warning disable CS8625
 
-namespace MAVConsole {
+namespace MAVLinkSharp {
 
     #region struct MAVLinkParam
     /// <summary>
