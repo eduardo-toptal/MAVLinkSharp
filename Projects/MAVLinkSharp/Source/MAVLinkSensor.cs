@@ -9,6 +9,7 @@ using static MAVLink;
 
 namespace MAVLinkSharp {
 
+    #region enum SensorChannel
     /// <summary>
     /// Enumeration that describes the data channel to be written by the sensor
     /// </summary>
@@ -94,6 +95,22 @@ namespace MAVLinkSharp {
         Custom8,
         Custom9
     }
+    #endregion
+
+    #region interface IMAVLinkSensorProvider
+    /// <summary>
+    /// Interface for external providers to provide data channels and other interactions.
+    /// </summary>
+    public interface IMAVLinkSensorProvider {
+
+        /// <summary>
+        /// Callback called for handling this sensor state and data
+        /// </summary>
+        /// <param name="p_sensor"></param>
+        public void OnSensorPoll(MAVLinkSensor p_sensor);
+
+    }
+    #endregion
 
     /// <summary>
     /// Class that extends a component to implement sensors functionalities. Providing different channel data reported back to the owner system
@@ -128,6 +145,11 @@ namespace MAVLinkSharp {
             set { m_healthy = value; if (system != null) system.OnSensorStatusChanged(this); }
         }
         private bool m_healthy;
+
+        /// <summary>
+        /// Reference to the provider.
+        /// </summary>
+        public IMAVLinkSensorProvider provider;
 
         /// <summary>
         /// Internals
@@ -223,6 +245,14 @@ namespace MAVLinkSharp {
         public void WriteFloat (SensorChannel p_channel,float  p_value) { m_f_lut  [p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
         public void WriteDouble(SensorChannel p_channel,double p_value) { m_d_lut  [p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
         public void Write      (SensorChannel p_channel,object p_value) { m_obj_lut[p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
+
+        /// <summary>
+        /// Updates the sensort logic
+        /// </summary>
+        protected override void OnUpdate() {
+            if(active)
+            if (provider != null) provider.OnSensorPoll(this);
+        }
 
     }
 }

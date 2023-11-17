@@ -168,6 +168,11 @@ namespace MAVLinkSharp {
         }
 
         /// <summary>
+        /// Handler for mavlink messages events to external entities
+        /// </summary>
+        public Action<MAVLinkEntity,MAVLinkMessage> OnMessageEvent;
+
+        /// <summary>
         /// Handler for 
         /// </summary>
         private double m_rate_elapsed;
@@ -271,9 +276,9 @@ namespace MAVLinkSharp {
                 //If entity is not allowed to process the msg then continue
                 bool is_allowed = p_force || IsMessageAllowed(n,p_msg);                
                 //Invoke message handler
-                if(is_allowed) n.OnMessage(this,p_msg);
+                if(is_allowed) n.OnMessageInternal(this,p_msg);
             }
-            if (network != null) network.OnMessage(this,p_msg);
+            if (network != null) network.OnMessageInternal(this,p_msg);
         }
 
         /// <summary>
@@ -359,7 +364,10 @@ namespace MAVLinkSharp {
         /// </summary>
         /// <param name="p_caller"></param>
         /// <param name="p_msg"></param>
-        internal void OnMessageInternal(MAVLinkEntity p_caller,MAVLinkMessage p_msg) { OnMessage(p_caller,p_msg); }
+        internal void OnMessageInternal(MAVLinkEntity p_caller,MAVLinkMessage p_msg) { 
+            if(OnMessageEvent!=null) OnMessageEvent(p_caller,p_msg);
+            OnMessage(p_caller,p_msg); 
+        }
 
         /// <summary>
         /// Handles an incoming message

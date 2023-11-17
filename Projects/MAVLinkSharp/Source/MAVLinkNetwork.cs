@@ -69,6 +69,11 @@ namespace MAVLinkSharp {
         public ulong elapsedMS;
 
         /// <summary>
+        /// Handler for messages to be interacted by external code.
+        /// </summary>
+        public Action<MAVLinkEntity,MAVLinkMessage> OnMessageEvent;
+
+        /// <summary>
         /// List of entities
         /// </summary>
         internal List<MAVLinkEntity> m_entities;
@@ -120,11 +125,21 @@ namespace MAVLinkSharp {
         }
 
         /// <summary>
+        /// Handler for dispatching incoming messages internally
+        /// </summary>
+        /// <param name="p_caller"></param>
+        /// <param name="p_msg"></param>
+        internal void OnMessageInternal(MAVLinkEntity p_caller,MAVLinkMessage p_msg) {
+            if (OnMessageEvent != null) OnMessageEvent(p_caller,p_msg);
+            OnMessage(p_caller,p_msg);
+        }
+
+        /// <summary>
         /// Handles incoming messages from all entities
         /// </summary>
         /// <param name="p_sender"></param>
         /// <param name="p_msg"></param>
-        internal void OnMessage(MAVLinkEntity p_sender,MAVLinkMessage p_msg) {
+        protected void OnMessage(MAVLinkEntity p_sender,MAVLinkMessage p_msg) {
             switch((MSG_ID)p_msg.msgid) {
                 case MSG_ID.HEARTBEAT: {
                     HEARTBEAT_MSG d = p_msg.ToStructure<HEARTBEAT_MSG>();
