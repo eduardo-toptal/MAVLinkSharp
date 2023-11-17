@@ -1,0 +1,17 @@
+{
+  "name": "com.mavlink",
+  "version": "1.0.0",
+  "displayName": "MAVLinkSharp",
+  "description": "MAVLink bindings for C#",
+  "unity": "2022.3",
+  "dependencies": {    
+  },
+  "keywords": [    
+  ],
+  "author": {
+    "name": "Eduardo",
+    "email": "eduardo@thelaborat.org",
+    "url": ""
+  },  
+  "type": "library"
+}
