@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static MAVConsole.MAVLinkNetwork;
 using static MAVLink;
+using static MAVLinkSharp.MAVLinkNetwork;
 
 #pragma warning disable CS8600
 #pragma warning disable CS8601
