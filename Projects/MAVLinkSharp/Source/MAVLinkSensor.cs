@@ -99,7 +99,7 @@ namespace MAVLinkSharp {
 
     #region interface IMAVLinkSensorProvider
     /// <summary>
-    /// Interface for external providers to provide data channels and other interactions.
+    /// Interface for external providers to provide data axis and other interactions.
     /// </summary>
     public interface IMAVLinkSensorProvider {
 

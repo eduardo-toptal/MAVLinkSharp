@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using static MAVLink;
 
 #pragma warning disable CS8600
@@ -106,6 +107,173 @@ namespace MAVLinkSharp {
     }
     #endregion
 
+    #region enum MAVLinkInputField
+    /// <summary>
+    /// Enumeration to associate an input axis and buttons
+    /// </summary>
+    public enum MAVLinkInputField {
+        Throttle=0,
+        Yaw,
+        Pitch,
+        Roll,
+        Axis0,
+        Axis1,
+        Axis2,
+        Axis3,
+        Axis4,
+        Axis5,
+        Axis6,
+        Axis7,
+        Axis8,
+        Axis9,
+        Axis10,
+        Axis11,
+        Axis12,
+        Button0,
+        Button1,
+        Button2,
+        Button3,
+        Button4,
+        Button5,
+        Button6,
+        Button7,
+        Button8,
+        Button9,
+        Button10,
+        Button11,
+        Button12
+    }
+    #endregion
+
+    #region class MAVLinkInput
+    /// <summary>
+    /// Class that envelops input information coming from MAVLink messaging
+    /// </summary>
+    public class MAVLinkInput {
+
+        /// <summary>
+        /// List of input axis
+        /// </summary>
+        public double[] axis;
+
+        /// <summary>
+        /// List of deadzones associated with the axis
+        /// </summary>
+        public double[] deadzones;
+
+        /// <summary>
+        /// List of buttons
+        /// </summary>
+        public bool[] buttons;
+
+        /// <summary>
+        /// Internal
+        /// </summary>
+        private Dictionary<MAVLinkInputField,int> m_field_lut;
+
+        /// <summary>
+        /// CTOR.
+        /// </summary>
+        /// <param name="p_length"></param>
+        public MAVLinkInput (int p_length) {
+            Resize(p_length);
+            m_field_lut = new Dictionary<MAVLinkInputField,int>();
+        }
+
+        /// <summary>
+        /// Clears the field lookup
+        /// </summary>
+        public void Clear() {
+            m_field_lut.Clear();
+        }
+
+        /// <summary>
+        /// Assign an axis to a given value in the input array
+        /// </summary>
+        /// <param name="p_field"></param>
+        /// <param name="p_index"></param>
+        public void AssignAxis(MAVLinkInputField p_field,int p_index) { m_field_lut[p_field] = p_index; }
+
+        /// <summary>
+        /// Assign a button to a given value in the input array
+        /// </summary>
+        /// <param name="p_field"></param>
+        /// <param name="p_index"></param>
+        public void AssignButton(MAVLinkInputField p_field,int p_index) { m_field_lut[p_field] = p_index; }
+
+        /// <summary>
+        /// Assigns the deadzone for a given assigned axis.
+        /// </summary>
+        /// <param name="p_field"></param>
+        /// <param name="p_value"></param>
+        public void SetDeadzone(MAVLinkInputField p_field,double p_value) {
+            if (deadzones == null) return;
+            if (!m_field_lut.ContainsKey(p_field)) return;
+            int idx = m_field_lut[p_field];
+            if(idx<0)             return;
+            if(idx>=axis.Length)  return;
+            deadzones[idx] = p_value;
+        }
+
+        /// <summary>
+        /// Returns the associated axis.
+        /// </summary>
+        /// <param name="p_field"></param>
+        /// <param name="p_default"></param>
+        /// <returns></returns>
+        public double GetAxis(MAVLinkInputField p_field,bool p_mid,double p_default=0) {
+            if (axis == null) return p_default;
+            if (!m_field_lut.ContainsKey(p_field)) return p_default;
+            int idx = m_field_lut[p_field];
+            if(idx<0)             return p_default;
+            if(idx>=axis.Length)  return p_default;
+            double v = axis[idx];
+            if (p_mid) v = (v-0.5)/0.5;
+            double d = Math.Max(deadzones[idx],0);
+            double s = v < 0 ? -1 : 1;
+            v = ((Math.Abs(v) - d) / (1.0 - d));
+            v = v < 0 ? 0 : (v > 1 ? 1 : v);
+            return v*s;
+        }
+
+        /// <summary>
+        /// Returns the associated axis
+        /// </summary>
+        /// <param name="p_field"></param>
+        /// <param name="p_default"></param>
+        /// <returns></returns>
+        public double GetAxis(MAVLinkInputField p_field,double p_default = 0) { return GetAxis(p_field,false,p_default); }
+
+        /// <summary>
+        /// Returns the associated button.
+        /// </summary>
+        /// <param name="p_field"></param>
+        /// <param name="p_default"></param>
+        /// <returns></returns>
+        public bool Getbutton(MAVLinkInputField p_field,bool p_default = false) {
+            if (buttons == null) return p_default;
+            if (!m_field_lut.ContainsKey(p_field)) return p_default;
+            int idx = m_field_lut[p_field];
+            if (idx < 0) return p_default;
+            if (idx >= axis.Length) return p_default;
+            return buttons[idx];
+        }
+
+        /// <summary>
+        /// Resizes the amount of axis
+        /// </summary>
+        /// <param name="p_length"></param>
+        public void Resize(int p_length) {
+            axis      = new double[p_length];
+            deadzones = new double[p_length];
+            buttons   = new bool[p_length];
+            for (int i = 0;i < p_length;i++) axis[i] = deadzones[i] = 0;
+            for (int i = 0;i < p_length;i++) buttons [i] = false;
+        }
+
+    }
+    #endregion
+
     /// <summary>
     /// Class that implements a MAVLink most basic system, made of an id and signals the network its 'alive'
     /// </summary>
@@ -194,6 +362,47 @@ namespace MAVLinkSharp {
         public MAV_MODE mode { get; set; }
 
         /// <summary>
+        /// flag that tells the system is armed.
+        /// </summary>
+        public bool armed { get { return ((byte)mode & (byte)MAV_MODE_FLAG.SAFETY_ARMED) != 0; } }
+
+        /// <summary>
+        /// Returns the isolated flight mode flag
+        /// </summary>
+        public MAV_MODE_FLAG flightMode { 
+            get { 
+                switch(mode) {
+                    case MAV_MODE.AUTO_ARMED:      case MAV_MODE.AUTO_DISARMED:         return MAV_MODE_FLAG.AUTO_ENABLED;
+                    case MAV_MODE.MANUAL_ARMED:    case MAV_MODE.MANUAL_DISARMED:       return MAV_MODE_FLAG.MANUAL_INPUT_ENABLED;
+                    case MAV_MODE.STABILIZE_ARMED: case MAV_MODE.STABILIZE_DISARMED:    return MAV_MODE_FLAG.STABILIZE_ENABLED;
+                    case MAV_MODE.GUIDED_ARMED:    case MAV_MODE.GUIDED_DISARMED:       return MAV_MODE_FLAG.GUIDED_ENABLED;
+                    case MAV_MODE.TEST_ARMED:      case MAV_MODE.TEST_DISARMED:         return MAV_MODE_FLAG.TEST_ENABLED;
+                    case MAV_MODE.PREFLIGHT: break;
+                }
+                return (MAV_MODE_FLAG)0;
+            } 
+        }
+
+        /// <summary>
+        /// Reference to the input data.
+        /// </summary>
+        public MAVLinkInput input { get; private set; }
+
+        /// <summary>
+        /// List of actuator values;
+        /// </summary>
+        public double[] actuators;
+
+        /// <summary>
+        /// Populates actuator values into the list.
+        /// </summary>
+        /// <param name="p_list"></param>
+        public void SetActuators(double[] p_list) {
+            int c = (p_list==null || actuators==null) ? 0 : Math.Min(p_list.Length, actuators.Length);
+            for(int i=0;i< c;i++) p_list[i] = actuators[i];
+        }
+
+        /// <summary>
         /// Status Flags
         /// </summary>
         public Status status { get; private set; }
@@ -238,6 +447,8 @@ namespace MAVLinkSharp {
             lockstep_actuator_active     = false;
             lockstep_delay               = 5.0;
 
+            input     = new MAVLinkInput(16);
+            actuators = new double[16];
 
             //Thre is no 'fields updated' so we iteratively change fields and re-use the struct
             hil_gps_d = new HIL_GPS_MSG() {
@@ -383,6 +594,10 @@ namespace MAVLinkSharp {
             switch ((MSG_ID)p_msg.msgid) {
 
                 case MSG_ID.HIL_ACTUATOR_CONTROLS: {
+                    HIL_ACTUATOR_CONTROLS_MSG d = (HIL_ACTUATOR_CONTROLS_MSG)p_msg.data;
+                    mode = (MAV_MODE)d.mode;
+                    int c = Math.Min(d.controls.Length,actuators.Length);
+                    for(int i=0;i<c;i++) actuators[i] = d.controls[i];                    
                     /*
                     lockstep_actuator_active = true;
                     if (lockstep_wait_actuator > 0) break;
@@ -390,6 +605,33 @@ namespace MAVLinkSharp {
                     //Console.WriteLine($"[{lockstep_wait_actuator,3}][{lockstep_frame}] ACTUATOR");
                     lockstep_frame++;
                     //*/
+                }
+                break;
+
+                case MSG_ID.MANUAL_CONTROL: {
+                    MANUAL_CONTROL_MSG d = (MANUAL_CONTROL_MSG)p_msg.data;
+                    double v;
+                    double x, y, z, r;
+                    v = 0f; if (d.x != short.MaxValue) v = ((double)d.x) / 1000.0; x = (float)v;
+                    v = 0f; if (d.y != short.MaxValue) v = ((double)d.y) / 1000.0; y = (float)v;
+                    v = 0f; if (d.z != short.MaxValue) v = ((double)d.z) / 1000.0; z = (float)v;
+                    v = 0f; if (d.r != short.MaxValue) v = ((double)d.r) / 1000.0; r = (float)v;
+
+                    int k = 0;
+
+                    input.axis[k++] = x;
+                    input.axis[k++] = y;
+                    input.axis[k++] = z;
+                    input.axis[k++] = r;
+
+                    ushort msk = d.buttons;
+                    int c = Math.Min(input.buttons.Length,16);
+                    for (int i = 0;i < c;i++) {
+                        bool f = (msk & 1) != 0;
+                        msk = (ushort)(msk >> 1);
+                        input.buttons[i] = f;
+                    }
+
                 }
                 break;
 
@@ -401,15 +643,20 @@ namespace MAVLinkSharp {
             }
 
             //Check msg sysid and skip if not matching
-            byte sys_id = p_msg.sysid;            
-            if(sys_id>0) if (sys_id != id) return;            
-            byte cmp_id = p_msg.compid;
+            //Validate COMMAND messages                
+            byte t_sys = 0; //Target SysId
+            byte t_cmp = 0; //Target CompId
+            //Fetch targets from message
+            GetMessageTargets(p_msg,out t_sys,out t_cmp);            
+            //Iterate components and call the message handler if matching sys/comp ids
             for(int i=0;i<m_components.Count;i++) {
                 MAVLinkComponent it = m_components[i];
                 if(it== null) continue;
                 //Skip non matching component id
-                if (cmp_id > 0) if ((byte)it.id != cmp_id) continue;
-                it.OnMessageInternal(p_caller,p_msg);
+                //Block handling if not matching (if targets are 0 then its broadcast)
+                if (it.systemId    > 0) if (t_sys > 0) if (t_sys != it.systemId   ) continue;
+                if (it.componentId > 0) if (t_cmp > 0) if (t_cmp != it.componentId) continue;
+                it.OnSystemMessageInternal(p_msg);
             }
             
         }
@@ -421,7 +668,9 @@ namespace MAVLinkSharp {
         /// </summary>
         override internal void Update() {
             base.Update();
-            for (int i = 0;i < m_components.Count;i++) m_components[i].Update();
+            for (int i = 0;i < m_components.Count;i++) {
+                if(m_components[i]!=null) m_components[i].Update();
+            }
         }
 
         /// <summary>

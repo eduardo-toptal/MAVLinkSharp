@@ -12,7 +12,7 @@ namespace MAVLinkSharp {
     /// Class that describes a MAVLink interface which will stream in and out data over any kind of medium like Serial or Network.
     /// Every message processed will be sent over the entities graph
     /// </summary>
-    public class MAVLinkInterface : MAVLinkEntity {
+    public abstract class MAVLinkInterface : MAVLinkEntity {
 
         /// <summary>
         /// Reference to the sender stream
@@ -25,6 +25,11 @@ namespace MAVLinkSharp {
         public MAVLinkStream receiver { get; set; }
 
         /// <summary>
+        /// Flag that tells this interface is connected and able to exchange data
+        /// </summary>
+        virtual public bool connected { get {  return false; } }
+
+        /// <summary>
         /// CTOR.
         /// </summary>
         /// <param name="p_name"></param>
@@ -35,9 +40,13 @@ namespace MAVLinkSharp {
         }
 
         /// <summary>
-        /// Handler for flushing buffered message data
+        /// Closes this interface
         /// </summary>
-        virtual protected void OnDataSend(byte[] p_data) { }
+        public void Close() {
+            if(sender  !=null) if(sender.BaseStream  !=null) sender.BaseStream.Close();
+            if(receiver!=null) if(receiver.BaseStream!=null) receiver.BaseStream.Close();
+            OnClose();
+        }
 
         /// <summary>
         /// Handler for incoming data
@@ -48,12 +57,7 @@ namespace MAVLinkSharp {
             if (receiver != null) {
                 receiver.Write(p_data,p_offset,p_length);
             }
-        }  
-
-        /// <summary>
-        /// Handler for data updating loop
-        /// </summary>
-        virtual protected void OnDataUpdate() { }
+        }
 
         /// <summary>
         /// Handles incoming messages and forward them
@@ -95,6 +99,23 @@ namespace MAVLinkSharp {
                 if (d.Length>0) OnDataSend(d);                 
             }
         }
+
+        #region Virtuals
+        /// <summary>
+        /// Handler for flushing buffered message data
+        /// </summary>
+        virtual protected void OnDataSend(byte[] p_data) { }
+
+        /// <summary>
+        /// Handler for data updating loop
+        /// </summary>
+        virtual protected void OnDataUpdate() { }
+
+        /// <summary>
+        /// Handler for when this interface is closed.
+        /// </summary>
+        virtual protected void OnClose() { }
+        #endregion
 
     }
 }

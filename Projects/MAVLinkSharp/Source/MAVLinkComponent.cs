@@ -66,5 +66,17 @@ namespace MAVLinkSharp {
         /// </summary>
         virtual protected void OnSystemChange() { }
 
+        /// <summary>
+        /// Handler for messages aimed specifically to the owner system
+        /// </summary>
+        /// <param name="p_msg"></param>
+        virtual protected void OnSystemMessage(MAVLinkMessage p_msg) { }
+
+        /// <summary>
+        /// Internal message sender
+        /// </summary>
+        /// <param name="p_message"></param>
+        internal void OnSystemMessageInternal(MAVLinkMessage p_message) { OnSystemMessage(p_message); }
+
     }
 }

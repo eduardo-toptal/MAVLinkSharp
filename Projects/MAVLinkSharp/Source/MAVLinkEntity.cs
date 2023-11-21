@@ -261,6 +261,14 @@ namespace MAVLinkSharp {
             //Starts a BFS iteration of the network its made of a queue and list of visited
             Queue<MAVLinkEntity> q = new Queue<MAVLinkEntity>(m_siblings);
             List<MAVLinkEntity>  v = new List<MAVLinkEntity>();
+
+            MSG_ID msg_id = (MSG_ID)p_msg.msgid;
+
+            if(msg_id == MSG_ID.MANUAL_CONTROL) {
+                int i = 0;
+            }
+
+
             //Iterate until queue is empty.
             while(q.Count>0) {
                 //Fetch next node
@@ -300,11 +308,30 @@ namespace MAVLinkSharp {
             MAVLinkLiveEntity n_le = (n is MAVLinkLiveEntity) ? (MAVLinkLiveEntity)n : null;
             //If not of type, allow pass-thru
             if (n_le == null) return true;
-            //Locals
-            //Message id enum
-            MSG_ID msg_id = (MSG_ID)p_msg.msgid;
+            //Locals            
             byte n_sys = n_le.systemId;
             byte n_cmp = n_le.componentId;
+            //Validate COMMAND messages                
+            byte t_sys = 0; //Target SysId
+            byte t_cmp = 0; //Target CompId
+            //Fetch targets from message
+            GetMessageTargets(p_msg,out t_sys,out t_cmp);
+            //Block handling if not matching (if targets are 0 then its broadcast)
+            if (t_sys > 0) if (t_sys != n_sys) return false;
+            if (t_cmp > 0) if (t_cmp != n_cmp) return false;
+            //All good
+            return true;
+        }
+
+        /// <summary>
+        /// Utility to extract the target system and component from given type of messages
+        /// </summary>
+        /// <param name="p_msg"></param>
+        /// <param name="p_sys"></param>
+        /// <param name="p_cmp"></param>
+        protected void GetMessageTargets(MAVLinkMessage p_msg,out byte p_sys,out byte p_cmp) {
+            //Message id enum
+            MSG_ID msg_id = (MSG_ID)p_msg.msgid;
             //Validate COMMAND messages                
             byte t_sys = 0; //Target SysId
             byte t_cmp = 0; //Target CompId
@@ -318,12 +345,10 @@ namespace MAVLinkSharp {
                 case MSG_ID.PARAM_REQUEST_READ:           { PARAM_REQUEST_READ_MSG           d = p_msg.ToStructure<PARAM_REQUEST_READ_MSG          >(); t_sys = d.target_system; t_cmp = d.target_component; } break;
                 case MSG_ID.MISSION_REQUEST_LIST:         { MISSION_REQUEST_LIST_MSG         d = p_msg.ToStructure<MISSION_REQUEST_LIST_MSG        >(); t_sys = d.target_system; t_cmp = d.target_component; } break;
                 case MSG_ID.MISSION_REQUEST_PARTIAL_LIST: { MISSION_REQUEST_PARTIAL_LIST_MSG d = p_msg.ToStructure<MISSION_REQUEST_PARTIAL_LIST_MSG>(); t_sys = d.target_system; t_cmp = d.target_component; } break;
+                case MSG_ID.MANUAL_CONTROL:               { MANUAL_CONTROL_MSG               d = p_msg.ToStructure<MANUAL_CONTROL_MSG              >(); t_sys = d.target;        t_cmp =                  0; } break;
             }
-            //Block handling if not matching (if targets are 0 then its broadcast)
-            if (t_sys > 0) if (t_sys != n_sys) return false;
-            if (t_cmp > 0) if (t_cmp != n_cmp) return false;
-            //All good
-            return true;
+            p_sys = t_sys;
+            p_cmp = t_cmp;
         }
 
         /// <summary>
@@ -385,7 +410,8 @@ namespace MAVLinkSharp {
         /// </summary>
         virtual internal void Update() { 
             if(syncRate>0) {
-                m_rate_elapsed += network.clock.deltaTime * 1000.0;
+                double dt = network == null ? 0.0 : network.clock.deltaTime;
+                m_rate_elapsed += dt * 1000.0;
                 if (m_rate_elapsed < syncRate) return;
                 m_rate_elapsed = 0;
             }            

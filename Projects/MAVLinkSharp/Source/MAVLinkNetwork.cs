@@ -129,9 +129,9 @@ namespace MAVLinkSharp {
         /// </summary>
         /// <param name="p_caller"></param>
         /// <param name="p_msg"></param>
-        internal void OnMessageInternal(MAVLinkEntity p_caller,MAVLinkMessage p_msg) {
-            if (OnMessageEvent != null) OnMessageEvent(p_caller,p_msg);
+        internal void OnMessageInternal(MAVLinkEntity p_caller,MAVLinkMessage p_msg) {            
             OnMessage(p_caller,p_msg);
+            if (OnMessageEvent != null) OnMessageEvent(p_caller,p_msg);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace MAVLinkSharp {
         /// </summary>
         /// <param name="p_sender"></param>
         /// <param name="p_msg"></param>
-        protected void OnMessage(MAVLinkEntity p_sender,MAVLinkMessage p_msg) {
+        virtual protected void OnMessage(MAVLinkEntity p_sender,MAVLinkMessage p_msg) {
             switch((MSG_ID)p_msg.msgid) {
                 case MSG_ID.HEARTBEAT: {
                     HEARTBEAT_MSG d = p_msg.ToStructure<HEARTBEAT_MSG>();
@@ -161,9 +161,15 @@ namespace MAVLinkSharp {
                 case MSG_ID.SERIAL_CONTROL: {
                     SERIAL_CONTROL_MSG d = (SERIAL_CONTROL_MSG)p_msg.data;
                     string vs = System.Text.ASCIIEncoding.ASCII.GetString(d.data);
-                    Console.WriteLine($"{name}> SERIAL [{vs}]");
+                    //Console.WriteLine($"{name}> SERIAL [{vs}]");
                 }
                 break;
+
+                case MSG_ID.MANUAL_CONTROL: {
+                    //MANUAL_CONTROL_MSG d = (MANUAL_CONTROL_MSG)p_msg.data;                    
+                }
+                break;
+
             }
         }
 

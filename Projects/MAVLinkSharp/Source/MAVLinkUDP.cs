@@ -25,6 +25,11 @@ namespace MAVLinkSharp {
         public UdpClient client { get; set; }
 
         /// <summary>
+        /// Flag that tells there is a UDPClient and its connected
+        /// </summary>
+        public override bool connected { get { return client == null ? false : (client.Client==null ? false : client.Client.Connected); } }
+
+        /// <summary>
         /// Internals
         /// </summary>
         private Task<UdpReceiveResult> m_rcv_tsk;
@@ -73,6 +78,13 @@ namespace MAVLinkSharp {
             else {
                 m_rcv_tsk = client.ReceiveAsync();
             }
+        }
+
+        /// <summary>
+        /// Handler for when closing this interface
+        /// </summary>
+        protected override void OnClose() {
+            if (client != null) client.Close();
         }
 
     }

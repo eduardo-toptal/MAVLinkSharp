@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -26,10 +27,15 @@ namespace MAVLinkSharp {
         public TcpClient client { get; set; }
 
         /// <summary>
+        /// Flag that tells there is a TCPClient and its connected
+        /// </summary>
+        public override bool connected { get { return client == null ? false : client.Connected; } }
+
+        /// <summary>
         /// Internals
         /// </summary>
         private TcpListener m_server;
-        private Task<TcpClient> m_server_task;
+        private Task<TcpClient>   m_server_task;        
         private Task<int>       m_rcv_tsk;
         private byte[]          m_rcv_buff;
         
@@ -156,6 +162,15 @@ namespace MAVLinkSharp {
 
                 }
             }
+            
+        }
+
+        /// <summary>
+        /// Handler for when closing this interface
+        /// </summary>
+        protected override void OnClose() {
+            if (client != null)   client.Close();
+            if (m_server != null) m_server.Stop();
             
         }
 
