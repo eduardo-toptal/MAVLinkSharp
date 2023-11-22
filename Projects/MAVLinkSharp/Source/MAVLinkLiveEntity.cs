@@ -62,6 +62,11 @@ namespace MAVLinkSharp {
             m_hb_elapsed = 9999;
         }
 
+        /// <summary>
+        /// CTOR.
+        /// </summary>
+        public MAVLinkLiveEntity() : this(MAV_TYPE.GENERIC,"") { }
+
         #region Params
         /// <summary>
         /// Sends a PARAM_VALUE message

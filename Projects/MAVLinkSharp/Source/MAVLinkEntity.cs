@@ -204,7 +204,7 @@ namespace MAVLinkSharp {
         /// Create a new named connection.
         /// </summary>
         /// <param name="p_name"></param>
-        public MAVLinkEntity(string p_name="") {
+        public MAVLinkEntity(string p_name) {
             name        = p_name;
             allowed     = new List<MAVLinkMessageFilter>();
             ignored     = new List<MAVLinkMessageFilter>();
@@ -215,6 +215,11 @@ namespace MAVLinkSharp {
             syncRate    = 1;
             enabled     = true;
         }
+
+        /// <summary>
+        /// CTOR.
+        /// </summary>
+        public MAVLinkEntity() : this("") { }
 
         #region Topology
         /// <summary>

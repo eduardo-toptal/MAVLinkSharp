@@ -30,7 +30,7 @@ namespace MAVLinkSharp {
                 s = value;
                 if (s != null) s.ComponentAdd(this);
                 //Associate only the network instance
-                m_network = system.network;
+                m_network = s==null ? null : s.network;
                 OnSystemChange();
             }
         }
@@ -39,7 +39,7 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Component ID
         /// </summary>
-        public MAV_COMPONENT id { get { return (MAV_COMPONENT)base.componentId; } private set { base.componentId = (byte)value; } }
+        public MAV_COMPONENT id { get { return (MAV_COMPONENT)base.componentId; } set { base.componentId = (byte)value; } }
 
         /// <summary>
         /// CTOR.
@@ -60,6 +60,11 @@ namespace MAVLinkSharp {
         /// <param name="p_type"></param>
         /// <param name="p_name"></param>
         public MAVLinkComponent(MAV_COMPONENT p_id,string p_name = "") : this(p_id,MAV_TYPE.GENERIC,p_name) { }
+
+        /// <summary>
+        /// CTOR.
+        /// </summary>
+        public MAVLinkComponent() : this(MAV_COMPONENT.MAV_COMP_ID_ALL,"") { }
 
         /// <summary>
         /// Handler for when system instance has changed

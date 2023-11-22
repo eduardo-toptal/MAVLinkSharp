@@ -191,6 +191,17 @@ namespace MAVLinkSharp {
         }
 
         /// <summary>
+        /// CTOR.
+        /// </summary>
+        /// <param name="p_name"></param>
+        public MAVLinkSensor(string p_name) : this((MAV_SYS_STATUS_SENSOR)(0),MAV_COMPONENT.MAV_COMP_ID_ALL,MAV_TYPE.GENERIC,p_name) { }
+
+        /// <summary>
+        /// CTOR.
+        /// </summary>
+        public MAVLinkSensor() : this("") { }
+
+        /// <summary>
         /// Returns a flag telling if the channel is read/write by this sensor
         /// </summary>
         /// <param name="p_channel"></param>

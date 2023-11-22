@@ -71,7 +71,8 @@ namespace MAVLinkSharp {
                 gps_clock = 0;
 
                 //37.351282965432226, -121.92465272540913
-
+                //37.35260967945035, -121.92419287567044
+                /*
                 WriteInt(SensorChannel.LatitudeWGS,(int)(Noise(37.351282965432226f * 1E7f,0.01f)));
                 WriteInt(SensorChannel.LongitudeWGS,(int)(Noise(-121.92465272540913f * 1E7f,0.01f)));
                 WriteInt(SensorChannel.AltitudeGPS,(int)(Noise(122.0f,1) * 1E3));
@@ -83,7 +84,7 @@ namespace MAVLinkSharp {
                 WriteShort(SensorChannel.VelocityEast,(short)(Noise(0.1f,0.1f)));
                 WriteShort(SensorChannel.VelocityDown,(short)(Noise(0.1f,0.1f)));
                 WriteUShort(SensorChannel.GroundSpeedGPS,(ushort)(Noise(0.1f,0.1f)));
-
+                //*/
             }
         }
 
@@ -317,8 +318,7 @@ namespace MAVLinkSharp {
                 }
                 break;
 
-                case MAVLinkAppState.Initialize: {                    
-                    if (OnStateChangeEvent != null) OnStateChangeEvent(state);
+                case MAVLinkAppState.Initialize: {                                        
                     //Vehicle System
                     vehicle = new MAVLinkSystem(1,MAV_TYPE.QUADROTOR,"vehicle");
                     vehicle.network = this;
@@ -399,6 +399,8 @@ namespace MAVLinkSharp {
                     //Disable the system and block heartbeats
                     vehicle.enabled = false;
                     vehicle.alive = false;
+
+                    if (OnStateChangeEvent != null) OnStateChangeEvent(state);
 
                     //Starts Listening to PX4                        
                     switch (settings.GetPX4HILProtocol()) {
