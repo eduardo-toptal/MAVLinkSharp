@@ -38,9 +38,6 @@ namespace MAVLinkSharp {
             WriteFloat(SensorChannel.AccelerometerY,Noise(0f,0.1f));
             WriteFloat(SensorChannel.AccelerometerZ,Noise(-9.8f,0.1f));
 
-            WriteFloat(SensorChannel.AirspeedIndicated,Noise(0f,0.01f));
-            WriteFloat(SensorChannel.AirSpeedTrue,Noise(0f,0.01f));
-
             WriteFloat(SensorChannel.GyroscopeX,Noise(0f,0.1f));
             WriteFloat(SensorChannel.GyroscopeY,Noise(0f,0.1f));
             WriteFloat(SensorChannel.GyroscopeZ,Noise(0f,0.1f));
@@ -50,7 +47,7 @@ namespace MAVLinkSharp {
             WriteFloat(SensorChannel.MagnetometerZ,Noise(0.05f,0.01f));
 
             WriteFloat(SensorChannel.Temperature,Noise(30f,2f));
-            WriteFloat(SensorChannel.PressureAbsolute,Noise(1013f,5f));
+            WriteFloat(SensorChannel.PressureAbsolute,Noise(1013f,0.1f));
             WriteFloat(SensorChannel.PressureDifferential,Noise(0.1f,0.1f));
             WriteFloat(SensorChannel.PressureAltitude,Noise(0.1f,0.1f));
 
@@ -60,6 +57,9 @@ namespace MAVLinkSharp {
             WriteFloat(SensorChannel.YawSpeed,Noise(0f,0.1f));
             WriteFloat(SensorChannel.PitchSpeed,Noise(0f,0.1f));
             WriteFloat(SensorChannel.RollSpeed,Noise(0f,0.1f));
+
+            WriteFloat(SensorChannel.AirspeedIndicated,Noise(0f,0.01f));
+            WriteFloat(SensorChannel.AirSpeedTrue,Noise(0f,0.01f));
 
             WriteFloat(SensorChannel.QuatW,Noise(1f,0.1f));
             WriteFloat(SensorChannel.QuatX,Noise(0f,0.1f));
