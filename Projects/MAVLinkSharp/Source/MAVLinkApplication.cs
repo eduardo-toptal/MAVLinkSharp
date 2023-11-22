@@ -34,17 +34,19 @@ namespace MAVLinkSharp {
 
         protected override void OnUpdate() {
 
-            WriteFloat(SensorChannel.AccelerometerX,Noise(0f,0.1f));
-            WriteFloat(SensorChannel.AccelerometerY,Noise(0f,0.1f));
-            WriteFloat(SensorChannel.AccelerometerZ,Noise(-9.8f,0.1f));
+            WriteFloat(SensorChannel.AccelX,Noise(0f,0.1f));
+            WriteFloat(SensorChannel.AccelY,Noise(0f,0.1f));
+            WriteFloat(SensorChannel.AccelZ,Noise(-9.8f,0.1f));
 
             WriteFloat(SensorChannel.GyroscopeX,Noise(0f,0.1f));
             WriteFloat(SensorChannel.GyroscopeY,Noise(0f,0.1f));
             WriteFloat(SensorChannel.GyroscopeZ,Noise(0f,0.1f));
 
+            /*
             WriteFloat(SensorChannel.MagnetometerX,Noise(0.2f,0.01f));
             WriteFloat(SensorChannel.MagnetometerY,Noise(0.05f,0.01f));
             WriteFloat(SensorChannel.MagnetometerZ,Noise(0.05f,0.01f));
+            //*/
 
             WriteFloat(SensorChannel.Temperature,Noise(30f,2f));
             WriteFloat(SensorChannel.PressureAbsolute,Noise(1013f,0.1f));
@@ -534,7 +536,9 @@ namespace MAVLinkSharp {
                 #region PX4SensorWarmup
                 //During sensor warmup wait for the first HIL_ACTUATORS
                 case MAVLinkAppState.PX4SensorWarmup: {
-                    if(msg_id == MSG_ID.HIL_ACTUATOR_CONTROLS) m_hil_controls = true;
+                    if (msg_id == MSG_ID.HIL_ACTUATOR_CONTROLS) {
+                        m_hil_controls = true;
+                    }
                 }
                 break;
                 #endregion

@@ -19,9 +19,9 @@ namespace MAVLinkSharp {
         /// </summary>
         Invalid  = -1,
         __Accelerometer_   = 0,
-        AccelerometerX,
-        AccelerometerY,
-        AccelerometerZ,
+        AccelX,
+        AccelY,
+        AccelZ,
         __Gyro_            = __Accelerometer_+15,
         GyroscopeX,
         GyroscopeY,

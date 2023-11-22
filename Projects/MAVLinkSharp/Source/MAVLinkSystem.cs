@@ -367,6 +367,11 @@ namespace MAVLinkSharp {
         public bool armed { get { return ((byte)mode & (byte)MAV_MODE_FLAG.SAFETY_ARMED) != 0; } }
 
         /// <summary>
+        /// Flag that tells this system is receiving actuators in lockstep mode.
+        /// </summary>
+        public bool lockstep { get; private set; }
+
+        /// <summary>
         /// Returns the isolated flight mode flag
         /// </summary>
         public MAV_MODE_FLAG flightMode { 
@@ -408,11 +413,6 @@ namespace MAVLinkSharp {
         public Status status { get; private set; }
 
         /// <summary>
-        /// Flag that tells if lock step must be applied.
-        /// </summary>
-        public bool lockstep;
-
-        /// <summary>
         /// Internals
         /// </summary>
         internal List<MAVLinkComponent> m_components;
@@ -441,8 +441,7 @@ namespace MAVLinkSharp {
             alive        = true;
             mode         = (MAV_MODE)0;
             autopilot    = MAV_AUTOPILOT.GENERIC;
-            status       = new Status();
-            lockstep     = true;
+            status       = new Status();            
             lockstep_wait_actuator       = 1; 
             lockstep_actuator_active     = false;
             lockstep_delay               = 5.0;
@@ -596,6 +595,7 @@ namespace MAVLinkSharp {
                 case MSG_ID.HIL_ACTUATOR_CONTROLS: {
                     HIL_ACTUATOR_CONTROLS_MSG d = (HIL_ACTUATOR_CONTROLS_MSG)p_msg.data;
                     mode = (MAV_MODE)d.mode;
+                    lockstep = (d.flags & 0x1) != 0;
                     int c = Math.Min(d.controls.Length,actuators.Length);
                     for(int i=0;i<c;i++) actuators[i] = d.controls[i];                    
                     /*
@@ -707,9 +707,9 @@ namespace MAVLinkSharp {
                         SensorChannel sch = it.Key;
                         MAVLinkSensor            s   = it.Value;
                         switch(sch) {
-                            case SensorChannel.AccelerometerX         : { l_hil_sensors.xacc           = s.ReadFloat(sch); l_hil_quat.xacc = (short)(l_hil_sensors.xacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XACC;   has_sensor = has_quat = true; } break;
-                            case SensorChannel.AccelerometerY         : { l_hil_sensors.yacc           = s.ReadFloat(sch); l_hil_quat.yacc = (short)(l_hil_sensors.yacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YACC;   has_sensor = has_quat = true; } break;
-                            case SensorChannel.AccelerometerZ         : { l_hil_sensors.zacc           = s.ReadFloat(sch); l_hil_quat.zacc = (short)(l_hil_sensors.zacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ZACC;   has_sensor = has_quat = true; } break;
+                            case SensorChannel.AccelX         : { l_hil_sensors.xacc           = s.ReadFloat(sch); l_hil_quat.xacc = (short)(l_hil_sensors.xacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XACC;   has_sensor = has_quat = true; } break;
+                            case SensorChannel.AccelY         : { l_hil_sensors.yacc           = s.ReadFloat(sch); l_hil_quat.yacc = (short)(l_hil_sensors.yacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YACC;   has_sensor = has_quat = true; } break;
+                            case SensorChannel.AccelZ         : { l_hil_sensors.zacc           = s.ReadFloat(sch); l_hil_quat.zacc = (short)(l_hil_sensors.zacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ZACC;   has_sensor = has_quat = true; } break;
                             
                             case SensorChannel.GyroscopeX             : { l_hil_sensors.xgyro          = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XGYRO;         has_sensor = true; } break;
                             case SensorChannel.GyroscopeY             : { l_hil_sensors.ygyro          = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YGYRO;         has_sensor = true; } break;
