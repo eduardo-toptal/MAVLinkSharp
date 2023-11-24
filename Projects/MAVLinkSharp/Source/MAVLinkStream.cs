@@ -91,6 +91,8 @@ namespace MAVLinkSharp {
             //Local Streams
             Stream sb = m_buffer;
             Stream ss = m_stream;
+            bool is_valid = (sb.CanRead && sb.CanWrite && sb.CanSeek) && (ss.CanSeek && ss.CanRead && ss.CanWrite);
+            if (!is_valid) return;
             //Skip if empty
             if (sb.Length <= 0) return;
             //Transfer buffered data into 'stream'
@@ -196,9 +198,11 @@ namespace MAVLinkSharp {
             Stream   ss  = m_stream;
             Stream   cp  = m_copy;
             //Flushes any buffered data
-            Flush();
+            Flush(); 
             //Loop the 'stream' and extract the next message
             while (true) {
+                bool is_valid = ss.CanSeek && ss.CanRead && ss.CanWrite;
+                if (!is_valid) break;
                 //Skip if stream empty
                 if (ss.Length <= 0) break;
                 //Store the current position for backtracking

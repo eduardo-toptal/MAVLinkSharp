@@ -59,10 +59,12 @@ namespace MAVLinkSharp {
             base.OnUpdate();
             Task<UdpReceiveResult> tsk = m_rcv_tsk;
             bool is_receiving = tsk != null;
-            if(is_receiving) {                
+            bool is_valid = client == null ? false : (client.Client == null ? false : true);
+            if (!is_valid) return; ;
+            if (is_receiving) {                
                 switch(tsk.Status) {
-                    case TaskStatus.RanToCompletion: {
-                        UdpReceiveResult res = tsk.Result;
+                    case TaskStatus.RanToCompletion: { 
+                        UdpReceiveResult res = tsk.Result;                                                
                         IPEndPoint ep0 = client.Client.RemoteEndPoint is IPEndPoint ? (IPEndPoint)client.Client.RemoteEndPoint : null;
                         IPEndPoint ep1 = res.RemoteEndPoint;
                         bool match_ep = ep0==null ? true : (ep0.Port == ep1.Port && ep0.Address.Equals(ep1.Address));

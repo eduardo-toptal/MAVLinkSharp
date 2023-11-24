@@ -34,39 +34,44 @@ namespace MAVLinkSharp {
 
         protected override void OnUpdate() {
 
+            /*
             WriteFloat(SensorChannel.AccelX,Noise(0f,0.1f));
             WriteFloat(SensorChannel.AccelY,Noise(0f,0.1f));
             WriteFloat(SensorChannel.AccelZ,Noise(-9.8f,0.1f));
-
-            WriteFloat(SensorChannel.GyroscopeX,Noise(0f,0.1f));
-            WriteFloat(SensorChannel.GyroscopeY,Noise(0f,0.1f));
-            WriteFloat(SensorChannel.GyroscopeZ,Noise(0f,0.1f));
-
+            //*/
+            /*
+            WriteFloat(SensorChannel.GyroX,Noise(0f,0.1f));
+            WriteFloat(SensorChannel.GyroY,Noise(0f,0.1f));
+            WriteFloat(SensorChannel.GyroZ,Noise(0f,0.1f));
+            //*/
             /*
             WriteFloat(SensorChannel.MagnetometerX,Noise(0.2f,0.01f));
             WriteFloat(SensorChannel.MagnetometerY,Noise(0.05f,0.01f));
             WriteFloat(SensorChannel.MagnetometerZ,Noise(0.05f,0.01f));
             //*/
 
+            /*
             WriteFloat(SensorChannel.Temperature,Noise(30f,2f));
             WriteFloat(SensorChannel.PressureAbsolute,Noise(1013f,0.1f));
             WriteFloat(SensorChannel.PressureDifferential,Noise(0.1f,0.1f));
             WriteFloat(SensorChannel.PressureAltitude,Noise(0.1f,0.1f));
+            //*/
 
-            WriteFloat(SensorChannel.Yaw,Noise(0f,0.1f));
-            WriteFloat(SensorChannel.Pitch,Noise(0f,0.1f));
-            WriteFloat(SensorChannel.Roll,Noise(0f,0.1f));
+            /*
             WriteFloat(SensorChannel.YawSpeed,Noise(0f,0.1f));
             WriteFloat(SensorChannel.PitchSpeed,Noise(0f,0.1f));
             WriteFloat(SensorChannel.RollSpeed,Noise(0f,0.1f));
+            //*/
 
             WriteFloat(SensorChannel.AirspeedIndicated,Noise(0f,0.01f));
             WriteFloat(SensorChannel.AirSpeedTrue,Noise(0f,0.01f));
 
+            /*
             WriteFloat(SensorChannel.QuatW,Noise(1f,0.1f));
             WriteFloat(SensorChannel.QuatX,Noise(0f,0.1f));
             WriteFloat(SensorChannel.QuatY,Noise(0f,0.1f));
             WriteFloat(SensorChannel.QuatZ,Noise(0f,0.1f));
+            //*/
 
             gps_clock += clock.deltaTime * 1000.0;
             if (gps_clock > 100) {
@@ -306,7 +311,10 @@ namespace MAVLinkSharp {
         new public void Update() {
 
             switch (state) {
-                case MAVLinkAppState.Idle: { } break;
+                case MAVLinkAppState.Idle: { 
+
+                }
+                break;
 
                 case MAVLinkAppState.PX4Error: {
                     state = MAVLinkAppState.Idle;
@@ -315,14 +323,17 @@ namespace MAVLinkSharp {
                 break;
 
                 case MAVLinkAppState.PX4Disconnect: {
-                    state = MAVLinkAppState.PX4Error;
-                    if (OnStateChangeEvent != null) OnStateChangeEvent(state);
+                    Stop();
+                    Run();
+                    //state = MAVLinkAppState.PX4Error;
+                    //if (OnStateChangeEvent != null) OnStateChangeEvent(state);
                 }
                 break;
 
                 case MAVLinkAppState.Initialize: {                                        
                     //Vehicle System
                     vehicle = new MAVLinkSystem(1,MAV_TYPE.QUADROTOR,"vehicle");
+                    vehicle.syncRate = 5;
                     vehicle.network = this;
                     //PX4 GCS Networking
                     IPEndPoint hil_ep           = settings.GetPX4HILEndPoint();
@@ -367,7 +378,7 @@ namespace MAVLinkSharp {
                     //ctrl.Link(qgc);
                     
 
-                    /*
+                    
                     //Link HIL to messages debug on QGC
                     hil.Link(qgc);
                     //Ignored messages

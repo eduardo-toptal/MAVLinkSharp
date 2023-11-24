@@ -30,6 +30,11 @@ namespace MAVLinkSharp {
         virtual public bool connected { get {  return false; } }
 
         /// <summary>
+        /// Internals.
+        /// </summary>
+        private object lock_stream = new object();  
+
+        /// <summary>
         /// CTOR.
         /// </summary>
         /// <param name="p_name"></param>
@@ -43,8 +48,10 @@ namespace MAVLinkSharp {
         /// Closes this interface
         /// </summary>
         public void Close() {
-            if(sender  !=null) if(sender.BaseStream  !=null) sender.BaseStream.Close();
-            if(receiver!=null) if(receiver.BaseStream!=null) receiver.BaseStream.Close();
+            lock(lock_stream) { 
+                if(sender  !=null) if(sender.BaseStream  !=null) sender.BaseStream.Close();
+                if(receiver!=null) if(receiver.BaseStream!=null) receiver.BaseStream.Close();
+            }
             OnClose();
         }
 
@@ -88,16 +95,18 @@ namespace MAVLinkSharp {
         override protected void OnUpdate() {
             //Updates data handling loops
             OnDataUpdate();
-            //Process messages
-            if(receiver != null) {                
-                MAVLinkMessage msg = receiver.ReadMessage();                
-                if (msg != null) Send(msg);
-            }
-            //Check if sender has any pending data and sends it emptying the stream
-            if (sender != null) {                                     
-                byte[] d = sender.Read();                
-                if (d.Length>0) OnDataSend(d);                 
-            }
+            lock(lock_stream) {
+                //Process messages
+                if (receiver != null) {
+                    MAVLinkMessage msg = receiver.ReadMessage();
+                    if (msg != null) Send(msg);
+                }
+                //Check if sender has any pending data and sends it emptying the stream
+                if (sender != null) {
+                    byte[] d = sender.Read();
+                    if (d.Length > 0) OnDataSend(d);
+                }
+            }            
         }
 
         #region Virtuals

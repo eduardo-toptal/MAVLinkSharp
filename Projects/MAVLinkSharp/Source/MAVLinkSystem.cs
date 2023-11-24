@@ -706,67 +706,127 @@ namespace MAVLinkSharp {
                     foreach (KeyValuePair<SensorChannel,MAVLinkSensor> it in m_sensor_change_lut) {
                         SensorChannel sch = it.Key;
                         MAVLinkSensor            s   = it.Value;
-                        switch(sch) {
-                            case SensorChannel.AccelX         : { l_hil_sensors.xacc           = s.ReadFloat(sch); l_hil_quat.xacc = (short)(l_hil_sensors.xacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XACC;   has_sensor = has_quat = true; } break;
-                            case SensorChannel.AccelY         : { l_hil_sensors.yacc           = s.ReadFloat(sch); l_hil_quat.yacc = (short)(l_hil_sensors.yacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YACC;   has_sensor = has_quat = true; } break;
-                            case SensorChannel.AccelZ         : { l_hil_sensors.zacc           = s.ReadFloat(sch); l_hil_quat.zacc = (short)(l_hil_sensors.zacc*1000f/9.81f); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ZACC;   has_sensor = has_quat = true; } break;
-                            
-                            case SensorChannel.GyroscopeX             : { l_hil_sensors.xgyro          = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XGYRO;         has_sensor = true; } break;
-                            case SensorChannel.GyroscopeY             : { l_hil_sensors.ygyro          = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YGYRO;         has_sensor = true; } break;
-                            case SensorChannel.GyroscopeZ             : { l_hil_sensors.zgyro          = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ZGYRO;         has_sensor = true; } break;
-                            
-                            case SensorChannel.MagnetometerX          : { l_hil_sensors.xmag           = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XMAG;          has_sensor = true; } break;
-                            case SensorChannel.MagnetometerY          : { l_hil_sensors.ymag           = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YMAG;          has_sensor = true; } break;
-                            case SensorChannel.MagnetometerZ          : { l_hil_sensors.zmag           = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ZMAG;          has_sensor = true; } break;
-                            
-                            case SensorChannel.PressureAbsolute       : { l_hil_sensors.abs_pressure   = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ABS_PRESSURE;  has_sensor = true; } break;
-                            case SensorChannel.PressureAltitude       : { l_hil_sensors.pressure_alt   = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.PRESSURE_ALT;  has_sensor = true; } break;
-                            case SensorChannel.PressureDifferential   : { l_hil_sensors.diff_pressure  = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.DIFF_PRESSURE; has_sensor = true; } break;
 
-                            case SensorChannel.Temperature            : { l_hil_sensors.temperature    = s.ReadFloat(sch); l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.TEMPERATURE;   has_sensor = true; } break;
+                        #region HIL Sensor Flags/Bits
+                        //Update Change Flags and Dirty Bits
+                        switch (sch) {
+                            case SensorChannel.AccelX                 : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XACC;          has_sensor = has_quat = true; } break;
+                            case SensorChannel.AccelY                 : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YACC;          has_sensor = has_quat = true; } break;
+                            case SensorChannel.AccelZ                 : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ZACC;          has_sensor = has_quat = true; } break;                                                                                                                                                  
+                            case SensorChannel.GyroX                  : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XGYRO;         has_sensor = has_quat = true; } break;
+                            case SensorChannel.GyroY                  : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YGYRO;         has_sensor = has_quat = true; } break;
+                            case SensorChannel.GyroZ                  : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ZGYRO;         has_sensor = has_quat = true; } break;                                                                                                                                                  
+                            case SensorChannel.MagnetometerX          : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.XMAG;          has_sensor = true;            } break;
+                            case SensorChannel.MagnetometerY          : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.YMAG;          has_sensor = true;            } break;
+                            case SensorChannel.MagnetometerZ          : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ZMAG;          has_sensor = true;            } break;                            
+                            case SensorChannel.PressureAbsolute       : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.ABS_PRESSURE;  has_sensor = true; } break;
+                            case SensorChannel.PressureAltitude       : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.PRESSURE_ALT;  has_sensor = true; } break;
+                            case SensorChannel.PressureDifferential   : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.DIFF_PRESSURE; has_sensor = true; } break;
+                            case SensorChannel.Temperature            : { l_hil_sensors.fields_updated |= (uint)HIL_SENSORS_UPDATED.TEMPERATURE;   has_sensor = true; } break;
 
-                            case SensorChannel.YawSpeed               : { l_hil_quat.yawspeed               = s.ReadFloat(sch); has_quat = true; } break;
-                            case SensorChannel.PitchSpeed             : { l_hil_quat.pitchspeed             = s.ReadFloat(sch); has_quat = true; } break;
-                            case SensorChannel.RollSpeed              : { l_hil_quat.rollspeed              = s.ReadFloat(sch); has_quat = true; } break;
-                            case SensorChannel.QuatW                  : { l_hil_quat.attitude_quaternion[0] = s.ReadFloat(sch); has_quat = true; } break;
-                            case SensorChannel.QuatX                  : { l_hil_quat.attitude_quaternion[1] = s.ReadFloat(sch); has_quat = true; } break;
-                            case SensorChannel.QuatY                  : { l_hil_quat.attitude_quaternion[2] = s.ReadFloat(sch); has_quat = true; } break;
-                            case SensorChannel.QuatZ                  : { l_hil_quat.attitude_quaternion[3] = s.ReadFloat(sch); has_quat = true; } break;
-                            case SensorChannel.AirspeedIndicated      : { l_hil_quat.ind_airspeed           = (ushort)s.ReadFloat(sch); has_quat = true; } break;
-                            case SensorChannel.AirSpeedTrue           : { l_hil_quat.true_airspeed          = (ushort)s.ReadFloat(sch); has_quat = true; } break;
+                            case SensorChannel.YawSpeed               : { has_quat = true; } break;
+                            case SensorChannel.PitchSpeed             : { has_quat = true; } break;
+                            case SensorChannel.RollSpeed              : { has_quat = true; } break;
+                            case SensorChannel.QuatW                  : { has_quat = true; } break;
+                            case SensorChannel.QuatX                  : { has_quat = true; } break;
+                            case SensorChannel.QuatY                  : { has_quat = true; } break;
+                            case SensorChannel.QuatZ                  : { has_quat = true; } break;
+                            case SensorChannel.AirspeedIndicated      : { has_quat = true; } break;
+                            case SensorChannel.AirSpeedTrue           : { has_quat = true; } break;
 
-                            case SensorChannel.LatitudeWGS            : { l_hil_gps.lat                  = l_hil_quat.lat = s.ReadInt   (sch);    has_gps = has_quat = true; } break;
-                            case SensorChannel.LongitudeWGS           : { l_hil_gps.lon                  = l_hil_quat.lon = s.ReadInt   (sch);    has_gps = has_quat = true; } break;
-                            case SensorChannel.AltitudeGPS            : { l_hil_gps.alt                  = l_hil_quat.alt = s.ReadInt   (sch);    has_gps = has_quat = true; } break;
-                            case SensorChannel.GroundSpeedGPS         : { l_hil_gps.vel                  = s.ReadUShort(sch);    has_gps = true; } break;
-                            case SensorChannel.CourseOverGround       : { l_hil_gps.cog                  = s.ReadUShort(sch);    has_gps = true; } break;
-                            case SensorChannel.FixType                : { l_hil_gps.fix_type             = s.ReadByte  (sch);    has_gps = true; } break;
-                            case SensorChannel.SatelliteVisible       : { l_hil_gps.satellites_visible   = s.ReadByte  (sch);    has_gps = true; } break;
-                            case SensorChannel.HDOP                   : { l_hil_gps.eph                  = s.ReadUShort(sch);    has_gps = true; } break;
-                            case SensorChannel.VDOP                   : { l_hil_gps.epv                  = s.ReadUShort(sch);    has_gps = true; } break;
-                            case SensorChannel.VelocityNorth          : { l_hil_gps.vn                   = l_hil_quat.vx = s.ReadShort (sch);    has_gps = has_quat = true; } break;
-                            case SensorChannel.VelocityEast           : { l_hil_gps.ve                   = l_hil_quat.vy = s.ReadShort (sch);    has_gps = has_quat = true; } break;
-                            case SensorChannel.VelocityDown           : { l_hil_gps.vd                   = l_hil_quat.vz = s.ReadShort (sch);    has_gps = has_quat = true; } break;
-
-                            /*
-                            case SensorChannel.BatteryId:
-                            case SensorChannel.BatteryType:
-                            case SensorChannel.BatteryFunction:
-                            case SensorChannel.BatteryCurrent:
-                            case SensorChannel.BatteryCurrentConsumed:
-                            case SensorChannel.BatteryEnergyConsumed:
-                            case SensorChannel.BatteryVoltage:
-                            case SensorChannel.BatteryTemperature:
-                            case SensorChannel.BatteryChargeState:
-                            case SensorChannel.BatteryTimeRemaining:
-                            case SensorChannel.BatteryRemaining: {
-                                if (batt_list.Contains(it.Value)) break;
-                                batt_list.Add(it.Value);
-                            }
-                            break;
-                            //*/
-
+                            case SensorChannel.LatitudeWGS            : { has_gps = has_quat = true; } break;
+                            case SensorChannel.LongitudeWGS           : { has_gps = has_quat = true; } break;
+                            case SensorChannel.AltitudeGPS            : { has_gps = has_quat = true; } break;
+                            case SensorChannel.VelocityNorth          : { has_gps = has_quat = true; } break;
+                            case SensorChannel.VelocityEast           : { has_gps = has_quat = true; } break;
+                            case SensorChannel.VelocityDown           : { has_gps = has_quat = true; } break;
+                            case SensorChannel.GroundSpeedGPS         : { has_gps = true;            } break;
+                            case SensorChannel.CourseOverGround       : { has_gps = true;            } break;
+                            case SensorChannel.FixType                : { has_gps = true;            } break;
+                            case SensorChannel.SatelliteVisible       : { has_gps = true;            } break;
+                            case SensorChannel.HDOP                   : { has_gps = true;            } break;
+                            case SensorChannel.VDOP                   : { has_gps = true;            } break;
                         }
+                        #endregion
+
+                        #region HIL_SENSOR
+                        //Update HIL Sensors
+                        switch (sch) {
+                            case SensorChannel.AccelX                 : { l_hil_sensors.xacc           = s.ReadFloat(sch); } break;
+                            case SensorChannel.AccelY                 : { l_hil_sensors.yacc           = s.ReadFloat(sch); } break;
+                            case SensorChannel.AccelZ                 : { l_hil_sensors.zacc           = s.ReadFloat(sch); } break;                            
+                            case SensorChannel.GyroX                  : { l_hil_sensors.xgyro          = s.ReadFloat(sch); } break;
+                            case SensorChannel.GyroY                  : { l_hil_sensors.ygyro          = s.ReadFloat(sch); } break;
+                            case SensorChannel.GyroZ                  : { l_hil_sensors.zgyro          = s.ReadFloat(sch); } break;                            
+                            case SensorChannel.MagnetometerX          : { l_hil_sensors.xmag           = s.ReadFloat(sch); } break;
+                            case SensorChannel.MagnetometerY          : { l_hil_sensors.ymag           = s.ReadFloat(sch); } break;
+                            case SensorChannel.MagnetometerZ          : { l_hil_sensors.zmag           = s.ReadFloat(sch); } break;                            
+                            case SensorChannel.PressureAbsolute       : { l_hil_sensors.abs_pressure   = s.ReadFloat(sch); } break;
+                            case SensorChannel.PressureAltitude       : { l_hil_sensors.pressure_alt   = s.ReadFloat(sch); } break;
+                            case SensorChannel.PressureDifferential   : { l_hil_sensors.diff_pressure  = s.ReadFloat(sch); } break;
+                            case SensorChannel.Temperature            : { l_hil_sensors.temperature    = s.ReadFloat(sch); } break;
+                        }
+                        #endregion
+
+                        #region HIL_GPS
+                        //Update HIL GPS
+                        switch (sch) {
+                            case SensorChannel.LatitudeWGS            : { l_hil_gps.lat                  = s.ReadInt   (sch);   } break;
+                            case SensorChannel.LongitudeWGS           : { l_hil_gps.lon                  = s.ReadInt   (sch);   } break;
+                            case SensorChannel.AltitudeGPS            : { l_hil_gps.alt                  = s.ReadInt   (sch);   } break;
+                            case SensorChannel.GroundSpeedGPS         : { l_hil_gps.vel                  = s.ReadUShort(sch);   } break;
+                            case SensorChannel.CourseOverGround       : { l_hil_gps.cog                  = s.ReadUShort(sch);   } break;
+                            case SensorChannel.FixType                : { l_hil_gps.fix_type             = s.ReadByte  (sch);   } break;
+                            case SensorChannel.SatelliteVisible       : { l_hil_gps.satellites_visible   = s.ReadByte  (sch);   } break;
+                            case SensorChannel.HDOP                   : { l_hil_gps.eph                  = s.ReadUShort(sch);   } break;
+                            case SensorChannel.VDOP                   : { l_hil_gps.epv                  = s.ReadUShort(sch);   } break;
+                            case SensorChannel.VelocityNorth          : { l_hil_gps.vn                   = s.ReadShort (sch);   } break;
+                            case SensorChannel.VelocityEast           : { l_hil_gps.ve                   = s.ReadShort (sch);   } break;
+                            case SensorChannel.VelocityDown           : { l_hil_gps.vd                   = s.ReadShort (sch);   } break;
+                        }
+                        #endregion
+
+                        #region HIL_STATE_QUATERNION
+                        //Update HIL Quaternion
+                        switch (sch) {
+                            case SensorChannel.AccelX                 : { l_hil_quat.xacc                   = (short)(l_hil_sensors.xacc*1000f/9.81f);  } break; //mG
+                            case SensorChannel.AccelY                 : { l_hil_quat.yacc                   = (short)(l_hil_sensors.yacc*1000f/9.81f);  } break; //mG
+                            case SensorChannel.AccelZ                 : { l_hil_quat.zacc                   = (short)(l_hil_sensors.zacc*1000f/9.81f);  } break; //mG                        
+                            case SensorChannel.GyroX                  : { l_hil_quat.rollspeed              = l_hil_sensors.xgyro;                      } break;
+                            case SensorChannel.GyroY                  : { l_hil_quat.pitchspeed             = l_hil_sensors.ygyro;                      } break;
+                            case SensorChannel.GyroZ                  : { l_hil_quat.yawspeed               = l_hil_sensors.zgyro;                      } break;                            
+                            case SensorChannel.QuatW                  : { l_hil_quat.attitude_quaternion[0] = s.ReadFloat(sch);                         } break;
+                            case SensorChannel.QuatX                  : { l_hil_quat.attitude_quaternion[1] = s.ReadFloat(sch);                         } break;
+                            case SensorChannel.QuatY                  : { l_hil_quat.attitude_quaternion[2] = s.ReadFloat(sch);                         } break;
+                            case SensorChannel.QuatZ                  : { l_hil_quat.attitude_quaternion[3] = s.ReadFloat(sch);                         } break;
+                            case SensorChannel.AirspeedIndicated      : { l_hil_quat.ind_airspeed           = (ushort)s.ReadFloat(sch);                 } break;
+                            case SensorChannel.AirSpeedTrue           : { l_hil_quat.true_airspeed          = (ushort)s.ReadFloat(sch);                 } break;
+                            case SensorChannel.LatitudeWGS            : { l_hil_quat.lat                    = l_hil_gps.lat;                            } break;
+                            case SensorChannel.LongitudeWGS           : { l_hil_quat.lon                    = l_hil_gps.lon;                            } break;
+                            case SensorChannel.AltitudeGPS            : { l_hil_quat.alt                    = l_hil_gps.alt;                            } break;
+                            case SensorChannel.VelocityNorth          : { l_hil_quat.vx                     = l_hil_gps.vn;                             } break;
+                            case SensorChannel.VelocityEast           : { l_hil_quat.vy                     = l_hil_gps.ve;                             } break;
+                            case SensorChannel.VelocityDown           : { l_hil_quat.vz                     = l_hil_gps.vd;                             } break;
+                        }
+                        #endregion
+
+                        /*
+                        case SensorChannel.BatteryId:
+                        case SensorChannel.BatteryType:
+                        case SensorChannel.BatteryFunction:
+                        case SensorChannel.BatteryCurrent:
+                        case SensorChannel.BatteryCurrentConsumed:
+                        case SensorChannel.BatteryEnergyConsumed:
+                        case SensorChannel.BatteryVoltage:
+                        case SensorChannel.BatteryTemperature:
+                        case SensorChannel.BatteryChargeState:
+                        case SensorChannel.BatteryTimeRemaining:
+                        case SensorChannel.BatteryRemaining: {
+                            if (batt_list.Contains(it.Value)) break;
+                            batt_list.Add(it.Value);
+                        }
+                        break;
+                        //*/
 
                     }
                     //Re-assign struct with new values
