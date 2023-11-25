@@ -847,7 +847,7 @@ namespace MAVLinkSharp {
 
             if(send_hil) {
                 if (has_sensor) {  msg = CreateMessage(MSG_ID.HIL_SENSOR          ,l_hil_sensors ,false,id,componentId); Send(msg);  }                            
-                if (has_quat  ) {  msg = CreateMessage(MSG_ID.HIL_STATE_QUATERNION,l_hil_quat    ,false,id,componentId); Send(msg);  }
+                //if (has_quat  ) {  msg = CreateMessage(MSG_ID.HIL_STATE_QUATERNION,l_hil_quat    ,false,id,componentId); Send(msg);  }
                 if (has_gps   ) {  msg = CreateMessage(MSG_ID.HIL_GPS             ,l_hil_gps     ,false,id,componentId); Send(msg);  }
                 //Console.WriteLine($"[{lockstep_wait_actuator,3}][{lockstep_frame}] SENSORS");
                 //lockstep_wait_actuator--;
