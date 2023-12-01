@@ -159,8 +159,8 @@ namespace MAVLinkSharp {
                 if (network == null) return default;
                 double sr = ((double)syncRate) / 1000.0;
                 double dt = network.clock.deltaTime;
-                if (dt <= 0f) dt = 0.01;
-                double r = sr / dt;
+                if (dt <= 0f) dt = 0.001;
+                double r = Math.Max(1,sr / dt);
                 Clock res = network.clock;
                 res.deltaTime = dt * r;
                 return res;
@@ -264,16 +264,16 @@ namespace MAVLinkSharp {
         /// <param name="p_send_to_self"></param>
         public void Send(MAVLinkMessage p_msg,bool p_send_to_self=false,bool p_force=false) {
             //Starts a BFS iteration of the network its made of a queue and list of visited
-            Queue<MAVLinkEntity> q = new Queue<MAVLinkEntity>(m_siblings);
-            List<MAVLinkEntity>  v = new List<MAVLinkEntity>();
-
+            //Add self even if not using
+            List<MAVLinkEntity> ql = new List<MAVLinkEntity>() { this };                        
+            //Add siblings
+            ql.AddRange(m_siblings);
+            Queue<MAVLinkEntity> q = new Queue<MAVLinkEntity>(ql);
+            List<MAVLinkEntity>  v = new List<MAVLinkEntity>();            
             MSG_ID msg_id = (MSG_ID)p_msg.msgid;
-
-            if(msg_id == MSG_ID.MANUAL_CONTROL) {
+            if(msg_id == MSG_ID.HIL_ACTUATOR_CONTROLS) {
                 int i = 0;
             }
-
-
             //Iterate until queue is empty.
             while(q.Count>0) {
                 //Fetch next node
@@ -413,7 +413,7 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Handles internal logic updates
         /// </summary>
-        virtual internal void Update() { 
+        virtual public void Update() { 
             if(syncRate>0) {
                 double dt = network == null ? 0.0 : network.clock.deltaTime;
                 m_rate_elapsed += dt * 1000.0;

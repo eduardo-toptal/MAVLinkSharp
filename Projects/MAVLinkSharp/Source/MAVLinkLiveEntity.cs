@@ -140,7 +140,7 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Handles keep-alive loop
         /// </summary>
-        internal override void Update() {
+        override public void Update() {
             base.Update();
             if (alive) {
                 m_hb_elapsed += network==null ? 0f : network.clock.deltaTime * 1000.0;

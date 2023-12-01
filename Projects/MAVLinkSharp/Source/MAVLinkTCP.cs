@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -81,12 +82,17 @@ namespace MAVLinkSharp {
             if(client == null)    return;
             if(!client.Connected) return;
             NetworkStream ns = client.GetStream();
+            //if (!clk.IsRunning) clk.Start();
+            //clk.Restart();
             try {
-                if(ns!=null)ns.Write(p_data,0,p_data.Length);
+                if(ns!=null)ns.Write(p_data,0,p_data.Length);                
             }
             catch (Exception) {                
-            }            
+            }
+            //double t_s = ((double)clk.ElapsedTicks / (double)Stopwatch.Frequency);            
+            //UnityEngine.Debug.Log($"MAVLinkTCP> Write [data: {p_data.Length}] {t_s*1000000}us");            
         }
+        private Stopwatch clk = new Stopwatch();
 
         /// <summary>
         /// Handles the UDP client network logixc
@@ -152,6 +158,8 @@ namespace MAVLinkSharp {
                         case TaskStatus.RanToCompletion: {
                             //Fetch the client and log the results
                             client = tsk.Result;
+                            client.NoDelay = true;
+                            client.SendBufferSize = client.ReceiveBufferSize = 512 * 1024;
                             IPEndPoint ep = (client.Client.RemoteEndPoint is IPEndPoint) ? (IPEndPoint)client.Client.RemoteEndPoint : null;
                             string ip_s = ep == null ? $"<null>" : ep.Address.ToString();
                             string p_s  = ep == null ? $"<null>" : ep.Port.ToString();

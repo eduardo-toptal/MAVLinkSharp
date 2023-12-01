@@ -59,14 +59,9 @@ namespace MAVLinkSharp {
         public Clock clock;
 
         /// <summary>
-        /// Elapsed microsseconds
+        /// Flag that enables the network loops to run.
         /// </summary>
-        public ulong elapsedUS;
-
-        /// <summary>
-        /// Elapsed microsseconds
-        /// </summary>
-        public ulong elapsedMS;
+        public bool enabled;
 
         /// <summary>
         /// Handler for messages to be interacted by external code.
@@ -92,6 +87,7 @@ namespace MAVLinkSharp {
                 deltaTime = 0
             };
             m_entities = new List<MAVLinkEntity>();
+            enabled    = true;
         }
 
         /// <summary>
@@ -129,7 +125,8 @@ namespace MAVLinkSharp {
         /// </summary>
         /// <param name="p_caller"></param>
         /// <param name="p_msg"></param>
-        internal void OnMessageInternal(MAVLinkEntity p_caller,MAVLinkMessage p_msg) {            
+        internal void OnMessageInternal(MAVLinkEntity p_caller,MAVLinkMessage p_msg) {
+            if (!enabled) return;
             OnMessage(p_caller,p_msg);
             if (OnMessageEvent != null) OnMessageEvent(p_caller,p_msg);
         }
@@ -177,6 +174,7 @@ namespace MAVLinkSharp {
         /// Executes the update loop in all entities
         /// </summary>
         public void Update() {
+            if (!enabled) return;
             //Update internal clocks
             Stopwatch clk = m_clock;
             if (!clk.IsRunning) clk.Start();

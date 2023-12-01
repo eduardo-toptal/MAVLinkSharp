@@ -369,7 +369,7 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Flag that tells this system is receiving actuators in lockstep mode.
         /// </summary>
-        public bool lockstep { get; private set; }
+        public bool lockstep { get; set; }
 
         /// <summary>
         /// Returns the isolated flight mode flag
@@ -418,8 +418,9 @@ namespace MAVLinkSharp {
         internal List<MAVLinkComponent> m_components;
         internal Dictionary<SensorChannel,MAVLinkSensor> m_sensor_change_lut;
         internal object m_sensor_change_lock;
-        internal HIL_GPS_MSG              hil_gps_d;        
-        internal HIL_STATE_QUATERNION_MSG hil_quat_d;        
+        internal HIL_GPS_MSG              hil_gps_d;
+        internal HIL_STATE_QUATERNION_MSG hil_quat_d;
+        internal HIL_SENSOR_MSG           hil_sensor_d;
         internal float[]                  hil_quat_v = new float[4];
         internal List<MAVLinkSensor>      batt_list;
         internal int                      lockstep_wait_actuator;
@@ -429,6 +430,10 @@ namespace MAVLinkSharp {
         internal bool                     has_sensor;
         internal bool                     has_quat;
         internal bool                     has_gps;
+        internal string                   lockstep_log;
+        internal ulong                    lockstep_actuator_time;
+        internal ulong                    lockstep_sensor_time;
+        internal ulong                    lockstep_clock_us;
 
         /// <summary>
         /// CTOR.
@@ -467,6 +472,11 @@ namespace MAVLinkSharp {
                 time_usec = 0,
                 attitude_quaternion = new float[4],                
             };
+            //Keep the past sensor data
+            hil_sensor_d = new HIL_SENSOR_MSG() {
+                time_usec=0
+            };
+
             //Create battery changed list
             batt_list = new List<MAVLinkSensor>();
         }
@@ -599,15 +609,22 @@ namespace MAVLinkSharp {
                     HIL_ACTUATOR_CONTROLS_MSG d = (HIL_ACTUATOR_CONTROLS_MSG)p_msg.data;
                     mode = (MAV_MODE)d.mode;
                     lockstep = (d.flags & 0x1) != 0;
+                    ulong t_us = network == null ? 0 : network.clock.elapsedUS;
                     int c = Math.Min(d.controls.Length,actuators.Length);
                     for(int i=0;i<c;i++) actuators[i] = d.controls[i];                    
                     
                     lockstep_actuator_active = true;
                     if (lockstep_wait_actuator > 0) break;
                     lockstep_wait_actuator = 1;
-                    lockstep_frame++;
-                    UnityEngine.Debug.Log($"[{d.time_usec}us][{lockstep_wait_actuator,3}][{lockstep_frame}] ACTUATOR");
                     
+                    //lockstep_actuator_time = t_us;
+                    ulong dt_us = lockstep_actuator_time - lockstep_sensor_time;
+                    if(lockstep_clock_us<=0) lockstep_clock_us = lockstep_actuator_time; else lockstep_clock_us += dt_us;
+                    //lockstep_log += $"ACTUATOR [{d.time_usec / 1000}ms][{lockstep_frame}]";
+                    lockstep_frame++;
+                    //UnityEngine.Debug.Log(lockstep_log);
+                    //lockstep_log = "";
+
                     //*/
                 }
                 break;
@@ -670,7 +687,7 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Special case for System and Components where components updates are related to the owner system
         /// </summary>
-        override internal void Update() {
+        override public void Update() {
             base.Update();
             for (int i = 0;i < m_components.Count;i++) {
                 if(m_components[i]!=null) m_components[i].Update();
@@ -682,29 +699,40 @@ namespace MAVLinkSharp {
         /// </summary>
         protected override void OnUpdate() {
 
+            
+
             base.OnUpdate();
 
             HIL_SENSOR_MSG           l_hil_sensors   = default;
             HIL_GPS_MSG              l_hil_gps       = default;
             HIL_STATE_QUATERNION_MSG l_hil_quat      = default;
-            
+
+            //Global microsseconds
+            ulong t_us = network == null ? 0 : network.clock.elapsedUS;
+            //if(lockstep_clock_us>0) t_us = lockstep_clock_us;
+            //Assign current state
+            l_hil_sensors = hil_sensor_d; l_hil_sensors.time_usec = t_us; 
+            l_hil_gps     = hil_gps_d   ; l_hil_gps    .time_usec = t_us;
+            l_hil_quat    = hil_quat_d  ; l_hil_quat   .time_usec = t_us;
+
             //bool has_sensor   = false;            
             //bool has_gps      = false;
             //bool has_quat     = false;
-            
+
+            has_sensor   = true;
+            //has_gps    = true;
+            has_quat     = true;
+
             //Clear changed batteries
             batt_list.Clear();
 
             lock (m_sensor_change_lock) {
                 //If there are sensor changes
                 if(m_sensor_change_lut.Count > 0) {
-                    //Global microsseconds
-                    ulong t_us = network == null ? 0 : network.clock.elapsedUS;
-                    //For sensors create empty and flag the changes
-                    l_hil_sensors  = new HIL_SENSOR_MSG()  { time_usec = t_us, fields_updated = 0 };
-                    //For others re-use latest sample
-                    l_hil_gps   = hil_gps_d;  l_hil_gps .time_usec = t_us;
-                    l_hil_quat  = hil_quat_d; l_hil_quat.time_usec = t_us;
+
+                    //Reset bit flags
+                    l_hil_sensors.fields_updated = 0;
+
                     //Iterate sensor's channel changes
                     foreach (KeyValuePair<SensorChannel,MAVLinkSensor> it in m_sensor_change_lut) {
                         SensorChannel sch = it.Key;
@@ -832,14 +860,18 @@ namespace MAVLinkSharp {
                         //*/
 
                     }
-                    //Re-assign struct with new values
-                    hil_quat_d = l_hil_quat;
-                    hil_gps_d  = l_hil_gps;
-                    
                 }
+                //Re-assign struct with new values (or same if no changes)
+                hil_quat_d   = l_hil_quat;
+                hil_gps_d    = l_hil_gps;
+                hil_sensor_d = l_hil_sensors;
+
                 //Clear the sensor changes
                 m_sensor_change_lut.Clear();
             }
+
+            string tl = ((hil_sensor_d.time_usec / 1000) % 100).ToString("00");
+            //UnityEngine.Debug.Log($"[{tl}ms] OnUpdate");
 
             MAVLinkMessage msg = null;
 
@@ -848,14 +880,36 @@ namespace MAVLinkSharp {
             if(lockstep && lockstep_actuator_active) if(lockstep_wait_actuator<=0) { send_hil = false;  }
             //if (lockstep_actuator_active) if (lockstep_delay > 0.0) { lockstep_delay -= clock.deltaTime; send_hil = true; }
 
-            if(send_hil) {
-                if (has_sensor) {  msg = CreateMessage(MSG_ID.HIL_SENSOR          ,l_hil_sensors ,false,id,componentId); Send(msg); has_sensor = false;  }
-              //if (has_quat  ) {  msg = CreateMessage(MSG_ID.HIL_STATE_QUATERNION,l_hil_quat    ,false,id,componentId); Send(msg); has_quat   = false;  }
-                if (has_gps   ) {  msg = CreateMessage(MSG_ID.HIL_GPS             ,l_hil_gps     ,false,id,componentId); Send(msg); has_gps    = false;  }
-                UnityEngine.Debug.Log($"[{l_hil_sensors.time_usec}us][{lockstep_wait_actuator,3}][{lockstep_frame}] SENSORS");
+            if (send_hil) {
+                if (has_sensor) {
+                    /*
+                    string hsgl = "";
+                    string hsal = "";
+                    float vl;
+                    vl = hil_sensor_d.xgyro; hsgl  = vl.ToString("0.000") + ",";
+                    vl = hil_sensor_d.ygyro; hsgl += vl.ToString("0.000") + ",";
+                    vl = hil_sensor_d.zgyro; hsgl += vl.ToString("0.000");
+
+                    vl = hil_sensor_d.xacc; hsal  =  vl.ToString("0.000") + ",";
+                    vl = hil_sensor_d.yacc; hsal +=  vl.ToString("0.000") + ",";
+                    vl = hil_sensor_d.zacc; hsal +=  vl.ToString("0.000");
+                    
+                    UnityEngine.Debug.Log($"[{tl}ms] gyro[{hsgl}] accel[{hsal}] fields[{hil_sensor_d.fields_updated}]");
+                    //*/
+                    msg = CreateMessage(MSG_ID.HIL_SENSOR          ,hil_sensor_d,false,0,0); Send(msg); has_sensor = false;
+
+                    lockstep_sensor_time = hil_sensor_d.time_usec;
+
+                }
+                //if (has_quat  ) {  msg = CreateMessage(MSG_ID.HIL_STATE_QUATERNION,l_hil_quat    ,false,id,componentId); Send(msg); has_quat   = false;  }                
+                //lockstep_log = $"[{lockstep_frame}][{l_hil_sensors.time_usec / 1000}ms] SENSOR -> ";
+                //UnityEngine.Debug.Log($"[{l_hil_sensors.time_usec}us][{lockstep_wait_actuator,3}][{lockstep_frame}] SENSORS");
                 lockstep_wait_actuator=0;
+
             }
-            
+
+            if (has_gps) { msg = CreateMessage(MSG_ID.HIL_GPS,hil_gps_d,false,id,componentId); Send(msg); has_gps = false; }
+
 
             /*
             for(int i=0;i<batt_list.Count;i++) {

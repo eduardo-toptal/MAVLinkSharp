@@ -277,7 +277,7 @@ namespace MAVLinkSharp {
             state           = MAVLinkAppState.Initialize;
             m_thread_active = true;
             m_thread = new Thread(OnThreadUpdate);
-            m_thread.Priority = ThreadPriority.Normal;
+            //m_thread.Priority = ThreadPriority.Normal;
             m_thread.Start();
         }
 
@@ -310,6 +310,8 @@ namespace MAVLinkSharp {
         /// </summary>
         new public void Update() {
 
+            if (!enabled) return;
+
             switch (state) {
                 case MAVLinkAppState.Idle: { 
 
@@ -332,8 +334,7 @@ namespace MAVLinkSharp {
 
                 case MAVLinkAppState.Initialize: {                                        
                     //Vehicle System
-                    vehicle = new MAVLinkSystem(1,MAV_TYPE.QUADROTOR,"vehicle");
-                    vehicle.syncRate = 5;
+                    vehicle = new MAVLinkSystem(1,MAV_TYPE.QUADROTOR,"vehicle");                    
                     vehicle.network = this;
                     //PX4 GCS Networking
                     IPEndPoint hil_ep           = settings.GetPX4HILEndPoint();
@@ -352,23 +353,29 @@ namespace MAVLinkSharp {
                     }
                     hil.network = this;
 
+                    MAVLinkEntity px4_qgc_router = new MAVLinkEntity($"px4-qgc-router");
+                    px4_qgc_router.syncRate = 0;
+                    px4_qgc_router.network = this;
+                    // GCS <- vehicle -> PX4 CTRL
+
                     //UDP Links such as GCS/PX4 CTRL
 
-                    UdpClient ctrl_udp = new UdpClient(ctrl_local_ep);
+
+                    /*
+                    UdpClient ctrl_udp = new UdpClient(ctrl_local_ep);                    
                     ctrl_udp.Connect(ctrl_remote_ep);
+                    ctrl_udp.Client.ReceiveBufferSize = ctrl_udp.Client.SendBufferSize = 512 * 1024;                    
                     ctrl = new MAVLinkUDP(ctrl_udp,"ctrl");
+                    ctrl.syncRate = 4;
                     ctrl.network = this;
 
                     UdpClient gcs_udp = new UdpClient();
                     gcs_udp.Connect(qgc_ep);
+                    gcs_udp.Client.ReceiveBufferSize = ctrl_udp.Client.SendBufferSize = 512 * 1024;                    
                     qgc = new MAVLinkUDP(gcs_udp,"qgc");
+                    qgc.syncRate = 4;
                     qgc.network = this;
 
-
-                    MAVLinkEntity px4_qgc_router = new MAVLinkEntity($"px4-qgc-router");
-                    px4_qgc_router.network = this;
-                    // GCS <- vehicle -> PX4 CTRL
-                    
                     qgc.Link(px4_qgc_router);
                     px4_qgc_router.Link(ctrl);
                     ctrl.Link(px4_qgc_router);
@@ -378,7 +385,7 @@ namespace MAVLinkSharp {
                     //ctrl.Link(qgc);
                     
 
-                    
+                    /*
                     //Link HIL to messages debug on QGC
                     hil.Link(qgc);
                     //Ignored messages
@@ -441,16 +448,21 @@ namespace MAVLinkSharp {
                             if (cl.client == null)    break;
                             if (!cl.client.Connected) break;
                             if (!m_hil_heartbeat)     break;
+
+                            /*
                             //Activate the vehicle
                             vehicle.alive   = true;
                             vehicle.enabled = true;
 
-                            UberSensor s = new UberSensor();
-                            s.syncRate = 5;
-                            s.system   = vehicle;
+                            //UberSensor s = new UberSensor();
+                            //s.syncRate = 5;
+                            //s.system   = vehicle;
 
                             //Prepare sensor warmup to send first batch of data
                             state = MAVLinkAppState.PX4SensorWarmup;
+                            //*/
+
+                            state = MAVLinkAppState.Running;
                             if (OnStateChangeEvent != null) OnStateChangeEvent(state);
                         }
                         break;
@@ -468,6 +480,11 @@ namespace MAVLinkSharp {
 
                 case MAVLinkAppState.PX4Success: {
                     //Sends QGC a ping to trigger all mavlink handshakes
+                    if (qgc == null) {
+                        state = MAVLinkAppState.QGCSuccess;
+                        if (OnStateChangeEvent != null) OnStateChangeEvent(state);
+                        break;
+                    }
                     HEARTBEAT_MSG qgc_ping = new HEARTBEAT_MSG() {
                         autopilot = (byte)MAV_AUTOPILOT.PX4,
                         type = (byte)MAV_TYPE.GCS,
@@ -524,6 +541,7 @@ namespace MAVLinkSharp {
         /// <param name="p_sender"></param>
         /// <param name="p_msg"></param>
         protected override void OnMessage(MAVLinkEntity p_sender,MAVLinkMessage p_msg) {
+
             base.OnMessage(p_sender,p_msg);
 
             MSG_ID msg_id = (MSG_ID)p_msg.msgid;
@@ -577,6 +595,7 @@ namespace MAVLinkSharp {
         private void OnThreadUpdate() {
             while(true) {
                 if (!m_thread_active) break;
+                if (!enabled) continue;
                 switch (state) {
                     case MAVLinkAppState.Idle: break;
                     default:                    

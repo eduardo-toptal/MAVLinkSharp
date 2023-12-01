@@ -41,7 +41,7 @@ namespace MAVLinkSharp {
         public MAVLinkInterface(string p_name="") : base(p_name) {
             sender   = new MAVLinkStream();
             receiver = new MAVLinkStream();
-            syncRate = 5;
+            syncRate = 0;
         }
 
         /// <summary>
@@ -95,18 +95,20 @@ namespace MAVLinkSharp {
         override protected void OnUpdate() {
             //Updates data handling loops
             OnDataUpdate();
-            lock(lock_stream) {
+            lock (lock_stream) {
                 //Process messages
                 if (receiver != null) {
                     MAVLinkMessage msg = receiver.ReadMessage();
-                    if (msg != null) Send(msg);
+                    if (msg != null) {
+                        Send(msg,true);
+                    }
                 }
                 //Check if sender has any pending data and sends it emptying the stream
                 if (sender != null) {
                     byte[] d = sender.Read();
                     if (d.Length > 0) OnDataSend(d);
                 }
-            }            
+            }
         }
 
         #region Virtuals

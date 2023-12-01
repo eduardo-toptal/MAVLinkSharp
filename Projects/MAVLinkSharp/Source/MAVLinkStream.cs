@@ -92,11 +92,11 @@ namespace MAVLinkSharp {
             Stream sb = m_buffer;
             Stream ss = m_stream;
             bool is_valid = (sb.CanRead && sb.CanWrite && sb.CanSeek) && (ss.CanSeek && ss.CanRead && ss.CanWrite);
-            if (!is_valid) return;
-            //Skip if empty
-            if (sb.Length <= 0) return;
+            if (!is_valid) return;            
             //Transfer buffered data into 'stream'
             lock (m_buffer_lock) {
+                //Skip if empty
+                if (sb.Length <= 0) return;
                 //Write stream
                 sb.Position = 0;
                 sb.CopyTo(ss);
@@ -266,13 +266,13 @@ namespace MAVLinkSharp {
         public byte[] Read() {
             Flush();
             long len = valid ? m_stream.Length : 0;
-            byte[] b = len<=0 ? m_empty_buff : new byte[len];
-            if (len <= 0) return b;            
+            byte[] b = len<0 ? m_empty_buff : new byte[len];
+            if (b.Length <= 0) return b;            
             m_stream.Position = 0;
             m_stream.Read(b,0,(int)len);
             m_stream.SetLength(0);
             return b;
-        }
+        }        
         static byte[] m_empty_buff = new byte[0];
 
     }
