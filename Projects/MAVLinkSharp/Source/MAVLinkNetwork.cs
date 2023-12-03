@@ -171,21 +171,28 @@ namespace MAVLinkSharp {
         }
 
         /// <summary>
-        /// Executes the update loop in all entities
+        /// Updates this network clocking
         /// </summary>
-        public void Update() {
-            if (!enabled) return;
+        public void UpdateClock() {
             //Update internal clocks
             Stopwatch clk = m_clock;
             if (!clk.IsRunning) clk.Start();
-            double t_s  = ((double)clk.ElapsedTicks / (double)Stopwatch.Frequency);            
-            Clock last_timer = clock;           
+            double t_s = ((double)clk.ElapsedTicks / (double)Stopwatch.Frequency);
+            Clock last_timer = clock;
             clock = new Clock() {
-                elapsed   = t_s,
+                elapsed = t_s,
                 elapsedUS = (ulong)(t_s * 1000000.0),
                 elapsedMS = (ulong)(t_s * 1000.0),
                 deltaTime = t_s - last_timer.elapsed
             };
+        }
+
+        /// <summary>
+        /// Executes the update loop in all entities
+        /// </summary>
+        public void Update() {
+            if (!enabled) return;
+            UpdateClock();
             lock(m_entities) { for (int i=0;i<m_entities.Count;i++) if (m_entities[i].enabled)m_entities[i].Update();}
         }        
     }
