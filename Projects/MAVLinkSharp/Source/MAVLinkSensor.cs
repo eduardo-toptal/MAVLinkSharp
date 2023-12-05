@@ -245,17 +245,17 @@ namespace MAVLinkSharp {
         /// <typeparam name="T"></typeparam>
         /// <param name="p_channel"></param>
         /// <returns></returns>
-        public void WriteByte  (SensorChannel p_channel,byte   p_value) { m_u8_lut [p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void WriteSByte (SensorChannel p_channel,sbyte  p_value) { m_i8_lut [p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void WriteUShort(SensorChannel p_channel,ushort p_value) { m_u16_lut[p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void WriteShort (SensorChannel p_channel,short  p_value) { m_i16_lut[p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void WriteUInt  (SensorChannel p_channel,uint   p_value) { m_u32_lut[p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void WriteInt   (SensorChannel p_channel,int    p_value) { m_i32_lut[p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void WriteULong (SensorChannel p_channel,ulong  p_value) { m_u64_lut[p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void WriteLong  (SensorChannel p_channel,long   p_value) { m_i64_lut[p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }        
-        public void WriteFloat (SensorChannel p_channel,float  p_value) { m_f_lut  [p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void WriteDouble(SensorChannel p_channel,double p_value) { m_d_lut  [p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
-        public void Write      (SensorChannel p_channel,object p_value) { m_obj_lut[p_channel] = p_value; if (system != null) system.OnSensortChannelChanged(this,p_channel); }
+        public void WriteByte  (SensorChannel p_channel,byte   p_value) { m_u8_lut [p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void WriteSByte (SensorChannel p_channel,sbyte  p_value) { m_i8_lut [p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void WriteUShort(SensorChannel p_channel,ushort p_value) { m_u16_lut[p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void WriteShort (SensorChannel p_channel,short  p_value) { m_i16_lut[p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void WriteUInt  (SensorChannel p_channel,uint   p_value) { m_u32_lut[p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void WriteInt   (SensorChannel p_channel,int    p_value) { m_i32_lut[p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void WriteULong (SensorChannel p_channel,ulong  p_value) { m_u64_lut[p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void WriteLong  (SensorChannel p_channel,long   p_value) { m_i64_lut[p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }        
+        public void WriteFloat (SensorChannel p_channel,float  p_value) { m_f_lut  [p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void WriteDouble(SensorChannel p_channel,double p_value) { m_d_lut  [p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
+        public void Write      (SensorChannel p_channel,object p_value) { m_obj_lut[p_channel] = p_value; if (system != null) system.OnSensorChannelChanged(this,p_channel); }
 
         /// <summary>
         /// Updates the sensort logic

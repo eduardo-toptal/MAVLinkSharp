@@ -149,7 +149,7 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Milisseconds between each sync
         /// </summary>
-        public int syncRate;
+        public uint syncRate;
 
         /// <summary>
         /// Local clock instance for syncRate adjusted time tracking
@@ -212,7 +212,7 @@ namespace MAVLinkSharp {
             parser      = new MavlinkParse();
             m_clk       = new Stopwatch();
             m_rate_elapsed = 9999f;
-            syncRate    = 1;
+            syncRate    = 0;
             enabled     = true;
         }
 
@@ -413,11 +413,12 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Handles internal logic updates
         /// </summary>
-        virtual public void Update() { 
-            if(syncRate>0) {
+        virtual public void Update() {
+            uint sr = syncRate;
+            if(sr>0) {
                 double dt = network == null ? 0.0 : network.clock.deltaTime;
                 m_rate_elapsed += dt * 1000.0;
-                if (m_rate_elapsed < syncRate) return;
+                if (m_rate_elapsed < sr) return;
                 m_rate_elapsed = 0;
             }            
             OnUpdate();

@@ -40,8 +40,7 @@ namespace MAVLinkSharp {
         /// <param name="p_name"></param>
         public MAVLinkInterface(string p_name="") : base(p_name) {
             sender   = new MAVLinkStream();
-            receiver = new MAVLinkStream();
-            syncRate = 0;
+            receiver = new MAVLinkStream();            
         }
 
         /// <summary>
