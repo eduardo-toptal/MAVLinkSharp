@@ -706,7 +706,7 @@ namespace MAVLinkSharp {
             //Init not sending hil data
             bool send_hil = false;
 
-            UnityEngine.Debug.Log($"[{t_us / 1000}ms] system update");
+            //UnityEngine.Debug.Log($"[{t_us / 1000}ms] system update");
 
             lock (m_sensor_change_lock) {
                 //If there are sensor changes
