@@ -607,8 +607,7 @@ namespace MAVLinkSharp {
                     int c = Math.Min(d.controls.Length,actuators.Length);
                     for(int i=0;i<c;i++) actuators[i] = d.controls[i];
                     lockstep_wait_actuator = false;
-
-                    UnityEngine.Debug.Log($"[{d.time_usec/1000}ms] hil_actuators");
+                    //UnityEngine.Debug.Log($"[{d.time_usec/1000}ms] hil_actuators");
                 }
                 break;
 
@@ -866,7 +865,7 @@ namespace MAVLinkSharp {
                     msg = CreateMessage(MSG_ID.HIL_SENSOR,hil_sensor_d,false,id,componentId);
                     Send(msg); 
                     has_sensor = false;
-                    UnityEngine.Debug.Log($"[{hil_sensor_d.time_usec / 1000}ms] hil_sensors");
+                    //UnityEngine.Debug.Log($"[{hil_sensor_d.time_usec / 1000}ms] hil_sensors");
                 }
                 //if (has_quat  ) {  msg = CreateMessage(MSG_ID.HIL_STATE_QUATERNION,l_hil_quat    ,false,id,componentId); Send(msg); has_quat   = false;  }                
                 //lockstep_log = $"[{lockstep_frame}][{l_hil_sensors.time_usec / 1000}ms] SENSOR -> ";
