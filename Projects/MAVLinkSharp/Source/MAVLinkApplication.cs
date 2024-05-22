@@ -425,8 +425,14 @@ namespace MAVLinkSharp {
                     //Starts Listening to PX4                        
                     switch (settings.GetPX4HILProtocol()) {
                         case ProtocolType.Tcp: {
-                            ((MAVLinkTCP)hil).Listen(hil_ep.Address,hil_ep.Port);
                             state = MAVLinkAppState.PX4Wait;
+                            try {
+                                ((MAVLinkTCP)hil).Listen(hil_ep.Address, hil_ep.Port);
+                            }
+                            catch(Exception p_err) {
+                                state = MAVLinkAppState.PX4Error;
+                                Console.WriteLine($"MAVLinkApplication> Initialize / {p_err.Message}");
+                            }                            
                             if (OnStateChangeEvent != null) OnStateChangeEvent(state);
                         }
                         break;
