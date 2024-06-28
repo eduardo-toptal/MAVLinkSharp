@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Codice.Client.BaseCommands.BranchExplorer;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -7,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine.Experimental.AI;
 using static MAVLink;
 
 #pragma warning disable CS8600
@@ -228,12 +231,12 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Reference to the CTRL interface (PX4 -> QGC)
         /// </summary>
-        public MAVLinkInterface ctrl { get; private set; }
-
+        public MAVLinkInterface px4 { get; private set; }
+        
         /// <summary>
         /// Reference to the QGC interface (QGC -> PX4)
         /// </summary>
-        public MAVLinkInterface qgc { get; private set; }
+        public MAVLinkInterface gcs { get; private set; }
 
         /// <summary>
         /// Speed of execution
@@ -257,6 +260,7 @@ namespace MAVLinkSharp {
         private bool   m_hil_heartbeat;
         private bool   m_qgc_heartbeat;
         private bool   m_hil_controls;
+        private bool   m_debug_thread_alive;
 
         /// <summary>
         /// CTOR.
@@ -300,9 +304,108 @@ namespace MAVLinkSharp {
             m_hil_controls  = false;
             m_qgc_heartbeat = false;
             OnDispose();
-            if (hil  != null) { hil.Close();  }
-            if (qgc  != null) { qgc.Close();  }
-            if (ctrl != null) { ctrl.Close(); }
+            if (hil  != null) { hil.Close(); }
+            if (gcs  != null) { gcs.Close(); }
+            if (px4  != null) { px4.Close(); }            
+            m_debug_thread_alive = false;
+        }
+
+        public enum MAVLinkCommModeFlag {            
+            Receive = (1<<0),
+            Send    = (1<<1)
+        }
+
+        public class MAVLinkComm {
+
+            public MAVLinkCommModeFlag mode;
+
+            public string name;
+
+            public Socket conn;
+
+            private MAVLinkStream m_snd;
+            private MAVLinkStream m_rcv;
+            private Task<SocketReceiveFromResult> m_rcv_task;
+            private IPEndPoint m_rcv_ep;
+            private byte[] m_rcv_d;
+            private ArraySegment<byte> m_rcv_buffer;   
+            
+            public MAVLinkComm(IPEndPoint p_endpoint,ProtocolType p_protocol,MAVLinkCommModeFlag p_mode) {
+                mode = p_mode;
+                conn = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, p_protocol);
+                
+                IPEndPoint any_ep = new IPEndPoint(IPAddress.Any,p_endpoint.Port);
+
+                if((mode & MAVLinkCommModeFlag.Receive)!=0) {                    
+                    conn.Bind(any_ep);
+                }
+
+                if((mode & MAVLinkCommModeFlag.Send)!=0) {                    
+                    conn.Connect(p_endpoint);
+                }
+
+                if((mode & MAVLinkCommModeFlag.Send   )!=0) m_snd = new MAVLinkStream();
+                if((mode & MAVLinkCommModeFlag.Receive)!=0) m_rcv = new MAVLinkStream();
+
+                m_rcv_ep = new IPEndPoint(IPAddress.Any,0);
+                m_rcv_d  = new byte[16*1024];
+                m_rcv_buffer = new ArraySegment<byte>(m_rcv_d);
+
+            }
+
+            public MAVLinkComm(string p_address,int p_port,ProtocolType p_protocol,MAVLinkCommModeFlag p_mode) : this(new IPEndPoint(IPAddress.Parse(p_address),p_port),p_protocol,p_mode) { }
+
+            public MAVLinkComm(IPAddress p_address,int p_port,ProtocolType p_protocol,MAVLinkCommModeFlag p_mode) : this(new IPEndPoint(p_address,p_port),p_protocol,p_mode) { }
+
+            public MAVLinkComm(int p_port,ProtocolType p_protocol) : this("0.0.0.0",p_port,p_protocol, MAVLinkCommModeFlag.Receive) { }
+
+            public void Write(MAVLinkMessage p_message) {
+                if(m_snd==null) return;                
+                m_snd.Write(p_message);
+            }
+
+            public MAVLinkMessage Read() {
+                if(m_rcv==null) return null;                
+                return m_rcv.ReadMessage();                
+            }
+
+            public void Close() {
+                if(conn!=null) {
+                    conn.Close();                    
+                }
+            }
+
+            public void Update() {
+
+                if((mode & MAVLinkCommModeFlag.Receive)!=0) {
+                    //If not receiving start task
+                    if(m_rcv_task==null) { 
+                        m_rcv_task = conn.ReceiveFromAsync(m_rcv_buffer, SocketFlags.None,m_rcv_ep);                         
+                    }
+                    //If receiving poll result
+                    else {
+                        bool is_completed = m_rcv_task.IsCompleted;
+                        if(is_completed) {
+                            bool is_error = m_rcv_task.IsCanceled || m_rcv_task.IsFaulted;
+                            if(!is_error) {
+                                SocketReceiveFromResult res = m_rcv_task.Result;
+                                int len = res.ReceivedBytes;
+                                if(len>0) m_rcv.Write(m_rcv_d,0,len);
+                                //IPEndPoint res_ep = res.RemoteEndPoint is IPEndPoint ? (IPEndPoint)res.RemoteEndPoint : null;
+                                //if(res_ep!=null) UnityEngine.Debug.Log($"[{name}] RECEIVE >> {res_ep.Address}:{res_ep.Port}");
+                            }                        
+                            m_rcv_task=null;
+                        }                        
+                    }                    
+                }
+
+                if((mode & MAVLinkCommModeFlag.Send)!=0) {
+                    byte[] d = m_snd.Read();                    
+                    if(d!=null) if(d.Length>0) conn.Send(d);
+                }
+
+            }
+
         }
 
         /// <summary>
@@ -358,67 +461,93 @@ namespace MAVLinkSharp {
                     px4_qgc_router.network = this;
                     // GCS <- vehicle -> PX4 CTRL
 
+                    /*
+                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating CTRL UDP [{ctrl_remote_ep.Address}:{ctrl_remote_ep.Port}]");
+
+                    MAVLinkComm gcs_snd = new MAVLinkComm(qgc_ep.Address, 19570, ProtocolType.Udp, MAVLinkCommModeFlag.Send | MAVLinkCommModeFlag.Receive);
+                    gcs_snd.name = "GCS";
+                    MAVLinkComm px4_snd = new MAVLinkComm(ctrl_remote_ep.Address, 18570, ProtocolType.Udp, MAVLinkCommModeFlag.Send | MAVLinkCommModeFlag.Receive);
+                    px4_snd.name = "PX4";
+
+                    Thread thd = 
+                    new Thread(delegate() {    
+
+                        if(gcs_snd==null) return;                        
+                        if(px4_snd==null) return;
+
+                        MAVLinkMessage msg;
+                        MSG_ID msg_id;
+
+
+                        while(true) {
+                            Thread.Sleep(1);
+                            if(!m_debug_thread_alive) break;
+
+                            //Receive GCS
+                            msg = gcs_snd.Read();
+                            if(msg!=null) {
+                                msg_id = (MSG_ID)msg.msgid;
+                                UnityEngine.Debug.Log($"MAVLinkApplication> [GCS] [{msg_id}]");
+                                px4_snd.Write(msg);
+                            }
+
+                            //Receive PX4
+                            
+                            msg = px4_snd.Read();
+                            if(msg!=null) {
+                                msg_id = (MSG_ID)msg.msgid;
+                                UnityEngine.Debug.Log($"MAVLinkApplication> [PX4] [{msg_id}]");
+                                gcs_snd.Write(msg);
+                            }
+                                                        
+                            gcs_snd.Update();                            
+                            px4_snd.Update();
+                            
+                        }
+
+                        
+                        gcs_snd.Close();                        
+                        px4_snd.Close();                        
+
+                    });
+
+                    m_debug_thread_alive = true;
+                    thd.Start();
+                    //*/
+
                     //UDP Links such as GCS/PX4 CTRL
-
-
-                    /*
-                    UdpClient ctrl_udp = new UdpClient(ctrl_local_ep);                    
-                    ctrl_udp.Connect(ctrl_remote_ep);
-                    ctrl_udp.Client.ReceiveBufferSize = ctrl_udp.Client.SendBufferSize = 512 * 1024;                    
-                    ctrl = new MAVLinkUDP(ctrl_udp,"ctrl");
-                    ctrl.syncRate = 4;
-                    ctrl.network = this;
-
-                    UdpClient gcs_udp = new UdpClient();
-                    gcs_udp.Connect(qgc_ep);
-                    gcs_udp.Client.ReceiveBufferSize = ctrl_udp.Client.SendBufferSize = 512 * 1024;                    
-                    qgc = new MAVLinkUDP(gcs_udp,"qgc");
-                    qgc.syncRate = 4;
-                    qgc.network = this;
-
-                    qgc.Link(px4_qgc_router);
-                    px4_qgc_router.Link(ctrl);
-                    ctrl.Link(px4_qgc_router);
-                    px4_qgc_router.Link(qgc);
-                    //*/
-                    //qgc.Link(ctrl);
-                    //ctrl.Link(qgc);
                     
+                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP [{ctrl_remote_ep.Address}:{ctrl_remote_ep.Port}]");
+                    UdpClient conn_px4 = new UdpClient(ctrl_remote_ep.Port);                    
+                    conn_px4.Connect(ctrl_remote_ep);                                    
+                    px4 = new MAVLinkUDP(conn_px4,"px4");                    
+                    px4.network  = this;
 
-                    /*
-                    //Link HIL to messages debug on QGC
-                    hil.Link(qgc);
-                    //Ignored messages
-                    qgc.ignored = new List<MAVLinkMessageFilter>() {
-                        MAVLinkMessageFilter.FilterAll($"vehicle|HEARTBEAT")
-                    };
-                    //*/
+                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating GCS UDP [{qgc_ep.Address}:{qgc_ep.Port}]");
+                    UdpClient conn_gcs = new UdpClient(qgc_ep.Port);
+                    conn_gcs.Connect(qgc_ep);                    
+                    gcs = new MAVLinkUDP(conn_gcs,"gcs");                    
+                    gcs.network  = this;
 
+                    gcs.Link(px4);
+                    px4.Link(gcs);    
+                    
+                    //For Manual Control
+                    px4.Link(vehicle);
+                    gcs.Link(vehicle);
+                    
                     //Link PX4 HIL to get actuators                    
                     vehicle.Link(hil);
                     hil.Link(vehicle);
 
-                    //Link vehicle[N] to router for systems to intercept QGC <> PX4 messageflow                    
-                    px4_qgc_router.Link(vehicle);
                     //Make PX4 HIL ignore the QGC and CTRL
-                    hil.ignored = new List<MAVLinkMessageFilter>() { MAVLinkMessageFilter.FilterSender($"ctrl|qgc") };
-
-                    /*
-                    mv_logger.ignored = new List<MAVLinkMessageFilter>() {
-                        MAVLinkMessageFilter.FilterMessage("GPS_RAW_INT|VIBRATION|MANUAL_CONTROL|HIGHRES_IMU|SYS_STATUS|TIMESYNC|ACTUATOR_CONTROL_TARGET|SERVO_OUTPUT_RAW"),
-                        MAVLinkMessageFilter.FilterMessage("EXTENDED_SYS_STATE|BATTERY_STATUS|PING|LINK_NODE_STATUS|HOME_POSITION|SYSTEM_TIME|UTM_GLOBAL_POSITION|GLOBAL_POSITION_INT"),
-                        MAVLinkMessageFilter.FilterMessage("ODOMETRY|VFR_HUD|ATTITUDE_QUATERNION|ATTITUDE|ATTITUDE_TARGET|ALTITUDE|POSITION_TARGET_LOCAL_NED|GPS_GLOBAL_ORIGIN|ESTIMATOR_STATUS|LOCAL_POSITION_NED"),
-                        MAVLinkMessageFilter.FilterMessage("HEARTBEAT"),
-                        MAVLinkMessageFilter.FilterMessage("HIL_*")
-                    };
-                    //*/
-
+                    hil.ignored = new List<MAVLinkMessageFilter>() { MAVLinkMessageFilter.FilterSender($"px4|gcs") };
 
                     //Set system as PX4
                     vehicle.autopilot = MAV_AUTOPILOT.PX4;
                     //Disable the system and block heartbeats
                     vehicle.enabled = false;
-                    vehicle.alive = false;
+                    vehicle.alive   = false;
 
                     if (OnStateChangeEvent != null) OnStateChangeEvent(state);
 
@@ -486,7 +615,7 @@ namespace MAVLinkSharp {
 
                 case MAVLinkAppState.PX4Success: {
                     //Sends QGC a ping to trigger all mavlink handshakes
-                    if (qgc == null) {
+                    if (gcs == null) {
                         state = MAVLinkAppState.QGCSuccess;
                         if (OnStateChangeEvent != null) OnStateChangeEvent(state);
                         break;
@@ -496,8 +625,8 @@ namespace MAVLinkSharp {
                         type = (byte)MAV_TYPE.GCS,
                         mavlink_version = 3
                     };
-                    MAVLinkMessage qgc_ping_msg = qgc.CreateMessage(MSG_ID.HEARTBEAT,qgc_ping,false,0,0);
-                    qgc.Send(qgc_ping_msg,true,true);
+                    MAVLinkMessage qgc_ping_msg = gcs.CreateMessage(MSG_ID.HEARTBEAT,qgc_ping,false,0,0);
+                    gcs.Send(qgc_ping_msg,true,true);
                     state = MAVLinkAppState.QGCWait;
                     if (OnStateChangeEvent != null) OnStateChangeEvent(state);
                 }

@@ -683,6 +683,9 @@ namespace MAVLinkSharp {
 
             base.OnUpdate();
 
+            //TODO: Rollback entity based sensord
+            return;
+
             HIL_SENSOR_MSG           l_hil_sensors   = default;
             HIL_GPS_MSG              l_hil_gps       = default;
             HIL_STATE_QUATERNION_MSG l_hil_quat      = default;
@@ -858,7 +861,7 @@ namespace MAVLinkSharp {
 
             //If lockstep enabled and waiting for actuators, skip sensors
             if(lockstep) if (lockstep_wait_actuator) { send_hil = false; }
-
+            /*
             if (send_hil) {
 
                 if (has_sensor) {                    
@@ -875,14 +878,14 @@ namespace MAVLinkSharp {
                     msg = CreateMessage(MSG_ID.HIL_GPS,hil_gps_d,false,id,componentId); 
                     Send(msg); 
                     has_gps = false;
-                    UnityEngine.Debug.Log($"[{hil_sensor_d.time_usec / 1000}ms] hil_gps");
+                    //UnityEngine.Debug.Log($"[{hil_sensor_d.time_usec / 1000}ms] hil_gps");
                 }
 
                 //Send sensors wait for actuators.
                 lockstep_wait_actuator = true;
 
             }
-
+            //*/
             /*
             for(int i=0;i<batt_list.Count;i++) {
                 MAVLinkSensor it = batt_list[i];

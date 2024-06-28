@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codice.Client.Common.WebApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -41,6 +42,8 @@ namespace MAVLinkSharp {
         public MAVLinkUDP(UdpClient p_client,string p_name = "") : base(p_name) {
             if (p_client == null) throw new ArgumentNullException();
             client = p_client;
+            client.Client.ReceiveBufferSize = 1024 * 512;
+            client.Client.SendBufferSize    = 1024 * 512;
         }
 
         /// <summary>
@@ -48,7 +51,13 @@ namespace MAVLinkSharp {
         /// </summary>
         /// <param name="p_data"></param>
         protected override void OnDataSend(byte[] p_data) {
-            if(client!=null) client.Send(p_data,p_data.Length);                   
+            if(client==null) return;
+            if(client.Client==null) return;                        
+            try {
+                client.Send(p_data,p_data.Length);                            
+            }
+            catch(System.Exception) {                
+            }            
         }
 
         /// <summary>
@@ -57,19 +66,18 @@ namespace MAVLinkSharp {
         override protected void OnUpdate() {
             //Updates the main logic
             base.OnUpdate();
+
             Task<UdpReceiveResult> tsk = m_rcv_tsk;
             bool is_receiving = tsk != null;
             bool is_valid = client == null ? false : (client.Client == null ? false : true);
-            if (!is_valid) return; ;
+
+            if (!is_valid) return;            
             if (is_receiving) {                
                 switch(tsk.Status) {
                     case TaskStatus.RanToCompletion: { 
-                        UdpReceiveResult res = tsk.Result;                                                
-                        IPEndPoint ep0 = client.Client.RemoteEndPoint is IPEndPoint ? (IPEndPoint)client.Client.RemoteEndPoint : null;
-                        IPEndPoint ep1 = res.RemoteEndPoint;
-                        bool match_ep = ep0==null ? true : (ep0.Port == ep1.Port && ep0.Address.Equals(ep1.Address));
+                        UdpReceiveResult res = tsk.Result;                       
                         byte[] b = res.Buffer;
-                        if (match_ep) OnDataReceive(b,0,b.Length);
+                        OnDataReceive(b,0,b.Length);
                         m_rcv_tsk = null;
                     }
                     break;

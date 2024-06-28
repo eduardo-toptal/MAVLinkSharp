@@ -262,7 +262,7 @@ namespace MAVLinkSharp {
         /// </summary>
         /// <param name="p_msg"></param>
         /// <param name="p_send_to_self"></param>
-        public void Send(MAVLinkMessage p_msg,bool p_send_to_self=false,bool p_force=false) {
+        public void Send(MAVLinkMessage p_msg,bool p_send_to_self=false,bool p_force=false) {            
             //Starts a BFS iteration of the network its made of a queue and list of visited
             //Add self even if not using
             List<MAVLinkEntity> ql = new List<MAVLinkEntity>() { this };                        
@@ -282,15 +282,15 @@ namespace MAVLinkSharp {
                 if (v.Contains(n)) continue;
                 //Add to visited
                 v.Add(n);
-                //Ignore self if needed
-                if (!p_send_to_self) if (n == this) continue;                
+                //Ignore self if needed, but dispatch the event
+                if (!p_send_to_self) if (n == this) { if(OnMessageEvent!=null) OnMessageEvent(this,p_msg); continue; }
                 //Enqueue siblings 
                 for(int i=0;i<n.m_siblings.Count;i++) if (n.m_siblings[i]!=null)q.Enqueue(n.m_siblings[i]);                
                 //If entity is not allowed to process the msg then continue
-                bool is_allowed = p_force || IsMessageAllowed(n,p_msg);                
+                bool is_allowed = p_force || IsMessageAllowed(n,p_msg);                   
                 //Invoke message handler
                 if(is_allowed) n.OnMessageInternal(this,p_msg);
-            }
+            }            
             if (network != null) network.OnMessageInternal(this,p_msg);
         }
 

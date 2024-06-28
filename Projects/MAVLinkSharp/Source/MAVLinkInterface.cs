@@ -40,7 +40,7 @@ namespace MAVLinkSharp {
         /// <param name="p_name"></param>
         public MAVLinkInterface(string p_name="") : base(p_name) {
             sender   = new MAVLinkStream();
-            receiver = new MAVLinkStream();            
+            receiver = new MAVLinkStream();                     
         }
 
         /// <summary>
@@ -69,20 +69,10 @@ namespace MAVLinkSharp {
         /// Handles incoming messages and forward them
         /// </summary>
         /// <param name="p_msg"></param>
-        override protected void OnMessage(MAVLinkEntity p_caller,MAVLinkMessage p_msg) {            
-            if (sender != null) {
+        override protected void OnMessage(MAVLinkEntity p_caller,MAVLinkMessage p_msg) {                    
+            if (sender != null) {   
                 MSG_ID msg_id = (MSG_ID)p_msg.msgid;
-                switch(msg_id) {
-                    case MSG_ID.PARAM_VALUE:
-                    case MSG_ID.PARAM_EXT_VALUE:
-                    case MSG_ID.PARAM_REQUEST_READ:
-                    case MSG_ID.PARAM_EXT_REQUEST_READ:
-                    case MSG_ID.PARAM_EXT_REQUEST_LIST:
-                    case MSG_ID.PARAM_REQUEST_LIST: {
-                        //Console.WriteLine($">>> {msg_id}");
-                    }
-                    break;
-                }                
+                //UnityEngine.Debug.Log($"MAVLinkInterface> [{name}] Sender = {msg_id }");
                 sender.Write(p_msg);                
             }
         }
@@ -99,7 +89,9 @@ namespace MAVLinkSharp {
                 if (receiver != null) {
                     MAVLinkMessage msg = receiver.ReadMessage();
                     if (msg != null) {
-                        Send(msg,true);
+                        MSG_ID msg_id = (MSG_ID)msg.msgid;
+                        //UnityEngine.Debug.Log($"MAVLinkInterface> [{name}] Receiver = {msg_id }");
+                        Send(msg);
                     }
                 }
                 //Check if sender has any pending data and sends it emptying the stream

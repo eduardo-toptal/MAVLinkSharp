@@ -126,7 +126,8 @@ namespace MAVLinkSharp {
         /// <param name="p_caller"></param>
         /// <param name="p_msg"></param>
         internal void OnMessageInternal(MAVLinkEntity p_caller,MAVLinkMessage p_msg) {
-            if (!enabled) return;
+            //TODO put it back
+            //if (!enabled) return;
             OnMessage(p_caller,p_msg);
             if (OnMessageEvent != null) OnMessageEvent(p_caller,p_msg);
         }
