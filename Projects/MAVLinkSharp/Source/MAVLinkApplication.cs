@@ -1,5 +1,4 @@
-﻿using Codice.Client.BaseCommands.BranchExplorer;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -517,9 +516,9 @@ namespace MAVLinkSharp {
 
                     //UDP Links such as GCS/PX4 CTRL
                     
-                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP [{ctrl_remote_ep.Address}:{ctrl_remote_ep.Port}]");
-                    UdpClient conn_px4 = new UdpClient(ctrl_remote_ep.Port);                    
-                    conn_px4.Connect(ctrl_remote_ep);                                    
+                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP [{ctrl_remote_ep.Address}:{18570}]");
+                    UdpClient conn_px4 = new UdpClient(14550);
+                    conn_px4.Connect(new IPEndPoint(ctrl_remote_ep.Address,18570));                                    
                     px4 = new MAVLinkUDP(conn_px4,"px4");                    
                     px4.network  = this;
 
