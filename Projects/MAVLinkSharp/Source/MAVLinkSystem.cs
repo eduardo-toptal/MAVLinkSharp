@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 using static MAVLink;
 
@@ -141,7 +143,10 @@ namespace MAVLinkSharp {
         Button9,
         Button10,
         Button11,
-        Button12
+        Button12,
+        MountControlYaw,
+        MountControlPitch,        
+        MountControlRoll
     }
     #endregion
 
@@ -150,6 +155,15 @@ namespace MAVLinkSharp {
     /// Class that envelops input information coming from MAVLink messaging
     /// </summary>
     public class MAVLinkInput {
+
+        #region struct MountControlSample
+        private struct MountControlSample {
+            public float time;
+            public float yaw;
+            public float pitch;
+            public float roll;
+        }
+        #endregion
 
         /// <summary>
         /// List of input axis
@@ -170,6 +184,24 @@ namespace MAVLinkSharp {
         /// Internal
         /// </summary>
         private Dictionary<MAVLinkInputField,int> m_field_lut;
+        private List<MountControlSample> m_mount_ctrl_samples;
+        private Stopwatch m_mount_ctrl_sample_t;
+        private Stopwatch m_mount_ctrl_timeout;
+        private Stopwatch m_mount_ctrl_clk;
+        private MountControlSample m_mount_ctrl_speed;
+        
+        internal Stopwatch m_input_t;
+        internal bool  m_mount_control_dirty;
+        internal float m_mount_control_timeout;
+        internal DateTime m_mount_control_t;
+        internal float m_mount_control_dt;
+        internal float m_mount_pitch_next;
+        internal float m_mount_yaw_next;
+        internal float m_mount_roll_next;
+        internal float m_mount_pitch_v;
+        internal float m_mount_yaw_v;
+        internal float m_mount_roll_v;
+        internal float m_mount_control_smooth = 0.15f;
 
         /// <summary>
         /// CTOR.
@@ -178,6 +210,18 @@ namespace MAVLinkSharp {
         public MAVLinkInput (int p_length) {
             Resize(p_length);
             m_field_lut = new Dictionary<MAVLinkInputField,int>();
+            m_mount_control_dt=0f;
+            m_mount_control_dirty=false;
+            m_input_t = new Stopwatch();
+            m_input_t.Restart();
+
+            m_mount_ctrl_samples = new List<MountControlSample>();
+            m_mount_ctrl_sample_t = new Stopwatch();
+            m_mount_ctrl_sample_t.Start();
+            m_mount_ctrl_timeout = new Stopwatch();
+            m_mount_ctrl_timeout.Start();
+            m_mount_ctrl_clk = new Stopwatch();
+            m_mount_ctrl_clk.Start();
         }
 
         /// <summary>
@@ -237,6 +281,21 @@ namespace MAVLinkSharp {
         }
 
         /// <summary>
+        /// Returns the pure axis value
+        /// </summary>
+        /// <param name="p_field"></param>
+        /// <param name="p_default"></param>
+        /// <returns></returns>
+        public double GetAxisRaw(MAVLinkInputField p_field,double p_default=0) {
+            if (axis == null) return p_default;
+            if (!m_field_lut.ContainsKey(p_field)) return p_default;
+            int idx = m_field_lut[p_field];
+            if(idx<0)             return p_default;
+            if(idx>=axis.Length)  return p_default;
+            return axis[idx];            
+        }
+
+        /// <summary>
         /// Returns the associated axis
         /// </summary>
         /// <param name="p_field"></param>
@@ -269,6 +328,114 @@ namespace MAVLinkSharp {
             buttons   = new bool[p_length];
             for (int i = 0;i < p_length;i++) axis[i] = deadzones[i] = 0;
             for (int i = 0;i < p_length;i++) buttons [i] = false;
+        }
+
+        internal void StepMountControl(float p_yaw,float p_pitch,float p_roll) {
+
+            //Wrap values to 0-360
+            if(p_yaw   < 0f) p_yaw   = 360f+p_yaw;
+            if(p_pitch < 0f) p_pitch = 360f+p_pitch;
+            if(p_roll  < 0f) p_roll  = 360f+p_roll;
+
+            m_mount_ctrl_timeout.Restart();
+
+            float  t = (float)(((double)m_mount_ctrl_sample_t.ElapsedMilliseconds)/1000.0);            
+            MountControlSample s1 = new MountControlSample() { 
+                time  = t,
+                yaw   = p_yaw,
+                pitch = p_pitch,
+                roll  = p_roll                
+            };
+
+            //UnityEngine.Debug.Log($"MAVLinkSystem> Mount CTRL Values / [T:{t} | Y:{p_yaw} | P:{p_pitch} | R:{p_roll}]");
+
+            if(m_mount_ctrl_samples.Count <= 1) {
+                m_mount_ctrl_samples.Add(s1);
+                return;
+            }
+
+            MountControlSample s0 = m_mount_ctrl_samples.Count>1 ? m_mount_ctrl_samples[m_mount_ctrl_samples.Count-1] : default;
+
+            m_mount_ctrl_samples.Add(s1);
+
+            float sc=0f;
+            float v_yaw   = 0f;
+            float v_pitch = 0f;
+            float v_roll  = 0f;
+            float v_dt    = 0f;
+
+            for(int i=1;i<m_mount_ctrl_samples.Count;i++) {
+                s0 = m_mount_ctrl_samples[i-1];
+                s1 = m_mount_ctrl_samples[i  ];
+                float dt    = s1.time - s0.time;
+                float d_yaw   = s1.yaw    - s0.yaw;
+                float d_pitch = s1.pitch  - s0.pitch;
+                float d_roll  = s1.roll   - s0.roll;
+                float idt = dt<=0f ? 0f : 1f/dt;
+                v_yaw   += d_yaw   * idt;
+                v_pitch += d_pitch * idt;
+                v_roll  += d_roll  * idt;
+                v_dt    += dt;
+                sc += 1f;
+            }
+
+            if(sc>0f) v_yaw   /= sc;
+            if(sc>0f) v_pitch /= sc;
+            if(sc>0f) v_roll  /= sc;
+            if(sc>0f) v_dt    /= sc;
+
+            //Too high speed means degree wrapping
+            if(Mathf.Abs(v_yaw  )>90f) return;
+            if(Mathf.Abs(v_pitch)>90f) return;
+            if(Mathf.Abs(v_roll )>90f) return;
+
+            m_mount_ctrl_speed = new MountControlSample() {
+                time  = v_dt,
+                yaw   = v_yaw,
+                pitch = v_pitch,
+                roll  = v_roll
+            };
+            
+            m_mount_ctrl_samples.Clear();
+
+            //UnityEngine.Debug.Log($"MAVLinkSystem> Mount CTRL Speed / [T:{s1.time}/{v_dt} | VY:{v_yaw} | VP:{v_pitch} | VR:{v_roll}]");
+
+
+        }
+
+        internal void UpdateMountControl() {
+
+            if(m_mount_ctrl_clk.Elapsed.TotalSeconds<0.02f) return;
+            m_mount_ctrl_clk.Restart();
+
+            float t = (float)m_mount_ctrl_timeout.Elapsed.TotalSeconds;
+            float dt_avg = m_mount_ctrl_speed.time;
+            if(dt_avg <=0f) dt_avg = 0.1f;
+            if(t > (dt_avg*2f)) {
+                m_mount_ctrl_speed = new MountControlSample();        
+                m_mount_ctrl_samples.Clear();
+                m_mount_ctrl_timeout.Restart();
+            }
+
+            MountControlSample s = m_mount_ctrl_speed;
+
+            int idx;
+            idx = (int)MAVLinkInputField.MountControlYaw;   axis[idx] = Mathf.Lerp((float)axis[idx],s.yaw  ,0.2f);
+            idx = (int)MAVLinkInputField.MountControlPitch; axis[idx] = Mathf.Lerp((float)axis[idx],s.pitch,0.2f);
+            idx = (int)MAVLinkInputField.MountControlRoll;  axis[idx] = Mathf.Lerp((float)axis[idx],s.roll ,0.2f);
+
+            float v_yaw   = (float)axis[(int)MAVLinkInputField.MountControlYaw  ];
+            float v_pitch = (float)axis[(int)MAVLinkInputField.MountControlPitch];
+            float v_roll  = (float)axis[(int)MAVLinkInputField.MountControlRoll ];
+
+            //UnityEngine.Debug.Log($"MAVLinkSystem> Update Mount CTRL / [T:{t.ToString("0.00")}/{dt_avg.ToString("0.00")} | VY:{v_yaw.ToString("0.0")} | VP:{v_pitch.ToString("0.0")} | VR:{v_roll.ToString("0.0")}]");
+
+        }
+
+        internal void Update() {
+
+            UpdateMountControl();
+          
         }
 
     }
@@ -446,7 +613,7 @@ namespace MAVLinkSharp {
             
             lockstep_wait_actuator = false;
             
-            input     = new MAVLinkInput(16);
+            input     = new MAVLinkInput(48);
             actuators = new double[16];
 
             //Thre is no 'fields updated' so we iteratively change fields and re-use the struct
@@ -638,9 +805,35 @@ namespace MAVLinkSharp {
                 }
                 break;
 
+                
+
                 case MSG_ID.COMMAND_LONG: {
-                    COMMAND_LONG_MSG cmd_d = (COMMAND_LONG_MSG)p_msg.data;
-                    //switch((MAV_CMD)cmd_d.command) { }
+                    COMMAND_LONG_MSG msg_d = (COMMAND_LONG_MSG)p_msg.data;
+                    MAV_CMD cmd_f = (MAV_CMD)msg_d.command;                    
+                    switch(cmd_f) {
+                        case MAV_CMD.DO_MOUNT_CONTROL: {
+                            float v1 = msg_d.param1;
+                            float v2 = msg_d.param2;
+                            float v3 = msg_d.param3;
+                            float v4 = msg_d.param4;
+                            float v5 = msg_d.param5;
+                            float v6 = msg_d.param6;
+                            int   v7 = (int)msg_d.param7;
+
+                            float mount_yaw   = v3;
+                            float mount_pitch = v1;
+                            float mount_roll  = v2;
+
+                            //UnityEngine.Debug.Log($">>>>>>>> y: {mount_yaw} | p: {mount_pitch}");
+
+                            
+                            if(input!=null) input.StepMountControl(mount_yaw,mount_pitch,mount_roll);
+
+                            MAV_MOUNT_MODE mount_mode = (MAV_MOUNT_MODE)v7;
+                        }
+                        break;
+                    }
+                    
                 }
                 break;
             }
@@ -671,6 +864,7 @@ namespace MAVLinkSharp {
         /// </summary>
         override public void Update() {
             base.Update();
+            if(input!=null) input.Update();
             for (int i = 0;i < m_components.Count;i++) {
                 if(m_components[i]!=null) m_components[i].Update();
             }
