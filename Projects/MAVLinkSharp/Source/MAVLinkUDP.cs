@@ -25,6 +25,11 @@ namespace MAVLinkSharp {
         public UdpClient client { get; set; }
 
         /// <summary>
+        /// Latest endpoint from the last message
+        /// </summary>
+        public IPEndPoint messageEndPoint {get; private set; }
+
+        /// <summary>
         /// Flag that tells there is a UDPClient and its connected
         /// </summary>
         public override bool connected { get { return client == null ? false : (client.Client==null ? false : client.Client.Connected); } }
@@ -76,6 +81,7 @@ namespace MAVLinkSharp {
                     case TaskStatus.RanToCompletion: { 
                         UdpReceiveResult res = tsk.Result;                       
                         byte[] b = res.Buffer;
+                        messageEndPoint = res.RemoteEndPoint;
                         OnDataReceive(b,0,b.Length);
                         m_rcv_tsk = null;
                     }

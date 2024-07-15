@@ -132,22 +132,27 @@ namespace MAVLinkSharp {
         /// <summary>
         /// Address to access the ground control system
         /// </summary>
-        public string QGCAddress     = $"udp://127.0.0.1:14550";
+        public string GCSAddress     = $"udp://127.0.0.1:19570";
         /// <summary>
         /// Address to access PX4 in SITL mode and sync HIL data
         /// </summary>
-        public string PX4HILAddress  = $"tcp://127.0.0.1:4560";
+        public string PX4HILAddress  = $"tcp://0.0.0.0:4560";
         /// <summary>
         /// [optional] Address to access PX4 and intercep CTRL messages between PX4 and QCG
         /// </summary>
-        public string PX4CtrlAddress = $"udp://127.0.0.1:14580";
+        public string PX4CtrlAddress = $"udp://127.0.0.1:18570";
+
+        /// <summary>
+        /// Port to listen incoming PX4 messages
+        /// </summary>
+        public int PX4LocalPort = 14550;
 
         #region Protocols
         /// <summary>
         /// Returns the network protocol for the 
         /// </summary>
         /// <returns></returns>
-        public ProtocolType GetQGCProtocol    () { return ParseProtocol(QGCAddress   ); }
+        public ProtocolType GetGCSProtocol    () { return ParseProtocol(GCSAddress   ); }
         public ProtocolType GetPX4HILProtocol () { return ParseProtocol(PX4HILAddress); }
         public ProtocolType GetPX4CtrlProtocol() { return ParseProtocol(PX4CtrlAddress); }
 
@@ -167,7 +172,7 @@ namespace MAVLinkSharp {
         /// Returns the QGC EndPoint
         /// </summary>
         /// <returns></returns>
-        public IPEndPoint GetQGCEndPoint() { return ParseEndPoint(QGCAddress);  }
+        public IPEndPoint GetGCSEndpoint() { return ParseEndPoint(GCSAddress);  }
 
         /// <summary>
         /// Returns the PX4 HIL EndPoint
@@ -250,6 +255,11 @@ namespace MAVLinkSharp {
         /// Handler for when this app is looping in a state
         /// </summary>
         public Action<MAVLinkAppState> OnStateUpdateEvent;
+
+        /// <summary>
+        /// Flag that tells to skip HIL clients and start running
+        /// </summary>
+        public bool skipHILConnection;
 
         /// <summary>
         /// Internals
@@ -442,7 +452,7 @@ namespace MAVLinkSharp {
                     IPEndPoint hil_ep           = settings.GetPX4HILEndPoint();
                     IPEndPoint ctrl_local_ep    = new IPEndPoint(hil_ep.Address,0);
                     IPEndPoint ctrl_remote_ep   = settings.GetPX4CtrlEndPoint();
-                    IPEndPoint qgc_ep           = settings.GetQGCEndPoint();
+                    IPEndPoint qgc_ep           = settings.GetGCSEndpoint();
 
                     //HIL/PX4 Links
                     switch (settings.GetPX4HILProtocol()) {
@@ -516,9 +526,9 @@ namespace MAVLinkSharp {
 
                     //UDP Links such as GCS/PX4 CTRL
                     
-                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP [{ctrl_remote_ep.Address}:{18570}]");
-                    UdpClient conn_px4 = new UdpClient(14550);
-                    conn_px4.Connect(new IPEndPoint(ctrl_remote_ep.Address,18570));                                    
+                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP [{ctrl_remote_ep.Address}:{ctrl_remote_ep.Port}]");
+                    UdpClient conn_px4 = new UdpClient(settings.PX4LocalPort);
+                    conn_px4.Connect(ctrl_remote_ep);
                     px4 = new MAVLinkUDP(conn_px4,"px4");                    
                     px4.network  = this;
 
@@ -554,13 +564,15 @@ namespace MAVLinkSharp {
                     switch (settings.GetPX4HILProtocol()) {
                         case ProtocolType.Tcp: {
                             state = MAVLinkAppState.PX4Wait;
-                            try {
-                                ((MAVLinkTCP)hil).Listen(hil_ep.Address, hil_ep.Port);
-                            }
-                            catch(Exception p_err) {
-                                state = MAVLinkAppState.PX4Error;
-                                Console.WriteLine($"MAVLinkApplication> Initialize / {p_err.Message}");
-                            }                            
+                            Task.Run(delegate() { 
+                                try {
+                                    ((MAVLinkTCP)hil).Listen(hil_ep.Address, hil_ep.Port);
+                                }
+                                catch(Exception p_err) {
+                                    state = MAVLinkAppState.PX4Error;
+                                    Console.WriteLine($"MAVLinkApplication> Initialize / {p_err.Message}");
+                                }                            
+                            });                            
                             if (OnStateChangeEvent != null) OnStateChangeEvent(state);
                         }
                         break;
@@ -579,9 +591,16 @@ namespace MAVLinkSharp {
                     switch (settings.GetPX4HILProtocol()) {
                         case ProtocolType.Tcp: {
                             MAVLinkTCP cl = hil as MAVLinkTCP;
-                            if (cl.client == null)    break;
-                            if (!cl.client.Connected) break;
-                            if (!m_hil_heartbeat)     break;
+
+                            bool can_run = true;
+
+                            if (cl.client == null)    can_run = false; else
+                            if (!cl.client.Connected) can_run = false; else
+                            if (!m_hil_heartbeat)     can_run = false;
+
+                            if(skipHILConnection)     can_run = true;
+
+                            if(!can_run) break;
 
                             /*
                             //Activate the vehicle
@@ -647,8 +666,9 @@ namespace MAVLinkSharp {
 
                 case MAVLinkAppState.Running: {
                     bool is_connected = true;
-                    if ( hil == null  ) is_connected = false; else
-                    if (!hil.connected) is_connected = false;
+                    if ( hil == null  ) is_connected   = false; else
+                    if (!hil.connected) is_connected   = false;
+                    if(skipHILConnection) is_connected = true;
                     if(!is_connected) {
                         state = MAVLinkAppState.PX4Disconnect;
                         if (OnStateChangeEvent != null) OnStateChangeEvent(state);

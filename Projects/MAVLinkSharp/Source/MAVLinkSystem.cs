@@ -145,8 +145,9 @@ namespace MAVLinkSharp {
         Button11,
         Button12,
         MountControlYaw,
-        MountControlPitch,        
-        MountControlRoll
+        MountControlPitch,
+        MountControlRoll,
+        MountControlZoom,        
     }
     #endregion
 
@@ -164,6 +165,11 @@ namespace MAVLinkSharp {
             public float roll;
         }
         #endregion
+
+        /// <summary>
+        /// Owner system
+        /// </summary>
+        public MAVLinkSystem system {get; internal set; }
 
         /// <summary>
         /// List of input axis
@@ -405,6 +411,8 @@ namespace MAVLinkSharp {
 
         internal void UpdateMountControl() {
 
+            if(system.mountControlCommand != MAV_CMD.DO_MOUNT_CONTROL) return;
+
             if(m_mount_ctrl_clk.Elapsed.TotalSeconds<0.02f) return;
             m_mount_ctrl_clk.Restart();
 
@@ -433,9 +441,7 @@ namespace MAVLinkSharp {
         }
 
         internal void Update() {
-
-            UpdateMountControl();
-          
+            UpdateMountControl();          
         }
 
     }
@@ -556,6 +562,11 @@ namespace MAVLinkSharp {
         }
 
         /// <summary>
+        /// Command Flag to affect gimbal inputs
+        /// </summary>
+        public MAV_CMD mountControlCommand = MAV_CMD.DO_MOUNT_CONTROL;
+
+        /// <summary>
         /// Reference to the input data.
         /// </summary>
         public MAVLinkInput input { get; private set; }
@@ -613,7 +624,8 @@ namespace MAVLinkSharp {
             
             lockstep_wait_actuator = false;
             
-            input     = new MAVLinkInput(48);
+            input        = new MAVLinkInput(48);
+            input.system = this;
             actuators = new double[16];
 
             //Thre is no 'fields updated' so we iteratively change fields and re-use the struct
@@ -762,7 +774,9 @@ namespace MAVLinkSharp {
             //Send msg to base
             base.OnMessage(p_caller,p_msg);
 
-            switch ((MSG_ID)p_msg.msgid) {
+            MSG_ID msg_id = (MSG_ID)p_msg.msgid;
+
+            switch (msg_id) {
 
                 case MSG_ID.HIL_ACTUATOR_CONTROLS: {
                     //Lockstep enabled and actuator just sennt, skip
@@ -805,13 +819,12 @@ namespace MAVLinkSharp {
                 }
                 break;
 
-                
-
                 case MSG_ID.COMMAND_LONG: {
                     COMMAND_LONG_MSG msg_d = (COMMAND_LONG_MSG)p_msg.data;
                     MAV_CMD cmd_f = (MAV_CMD)msg_d.command;                    
                     switch(cmd_f) {
                         case MAV_CMD.DO_MOUNT_CONTROL: {
+                            if(mountControlCommand != cmd_f) break;
                             float v1 = msg_d.param1;
                             float v2 = msg_d.param2;
                             float v3 = msg_d.param3;
@@ -836,6 +849,25 @@ namespace MAVLinkSharp {
                     
                 }
                 break;
+
+                case MSG_ID.SMART_BATTERY_INFO: {
+                    SMART_BATTERY_INFO_MSG msg_d = (SMART_BATTERY_INFO_MSG)p_msg.data;
+                    //UnityEngine.Debug.Log($"MAVLinkSystem> [{name}] [{msg_id}] #{msg_d.id} | {msg_d.capacity_full}mAh");
+                }
+                break;
+
+                case MSG_ID.SMART_BATTERY_STATUS: {
+                    SMART_BATTERY_STATUS_MSG msg_d = (SMART_BATTERY_STATUS_MSG )p_msg.data;
+                    //UnityEngine.Debug.Log($"MAVLinkSystem> [{name}] [{msg_id}] #{msg_d.id} | {msg_d.time_remaining} seconds");
+                }
+                break;
+
+                case MSG_ID.BATTERY_STATUS: {
+                    BATTERY_STATUS_MSG msg_d = (BATTERY_STATUS_MSG)p_msg.data;                    
+                    //UnityEngine.Debug.Log($"MAVLinkSystem> [{name}] [{msg_id}] #{msg_d.id} | {(MAV_BATTERY_FUNCTION)msg_d.battery_function} | charge: {msg_d.battery_remaining}% | cells: [{string.Join(',',msg_d.voltages)}] {msg_d.time_remaining} seconds");
+                }
+                break;
+
             }
 
             //Check msg sysid and skip if not matching
