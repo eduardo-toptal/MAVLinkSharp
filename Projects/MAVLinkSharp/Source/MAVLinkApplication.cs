@@ -130,22 +130,38 @@ namespace MAVLinkSharp {
     public class MAVLinkAppSettings {
 
         /// <summary>
-        /// Address to access the ground control system
-        /// </summary>
-        public string GCSAddress     = $"udp://127.0.0.1:19570";
-        /// <summary>
         /// Address to access PX4 in SITL mode and sync HIL data
         /// </summary>
         public string PX4HILAddress  = $"tcp://0.0.0.0:4560";
+
+        /// <summary>
+        /// Address to access the ground control system
+        /// </summary>
+        public string GCSAddress = $"udp://127.0.0.1";        
         /// <summary>
         /// [optional] Address to access PX4 and intercep CTRL messages between PX4 and QCG
         /// </summary>
-        public string PX4CtrlAddress = $"udp://127.0.0.1:18570";
+        public string PX4Address = $"udp://127.0.0.1";
 
         /// <summary>
-        /// Port to listen incoming PX4 messages
+        /// Port to listen incoming MAVLink messages
         /// </summary>
-        public int PX4LocalPort = 14550;
+        public int PX4LocalPort = 18570;
+
+        /// <summary>
+        /// Port to send MAVLink messages
+        /// </summary>
+        public int PX4RemotePort = 18570;
+
+        /// <summary>
+        /// Port to listen incoming MAVLink messages
+        /// </summary>
+        public int GCSLocalPort = 14550;
+
+        /// <summary>
+        /// Port to send MAVLink messages
+        /// </summary>
+        public int GCSRemotePort = 14550;
 
         #region Protocols
         /// <summary>
@@ -154,7 +170,7 @@ namespace MAVLinkSharp {
         /// <returns></returns>
         public ProtocolType GetGCSProtocol    () { return ParseProtocol(GCSAddress   ); }
         public ProtocolType GetPX4HILProtocol () { return ParseProtocol(PX4HILAddress); }
-        public ProtocolType GetPX4CtrlProtocol() { return ParseProtocol(PX4CtrlAddress); }
+        public ProtocolType GetPX4Protocol    () { return ParseProtocol(PX4Address); }
 
         /// <summary>
         /// Utility
@@ -184,7 +200,7 @@ namespace MAVLinkSharp {
         /// Returns the PX4 Ctrl EndPoint
         /// </summary>
         /// <returns></returns>
-        public IPEndPoint GetPX4CtrlEndPoint() { return ParseEndPoint(PX4CtrlAddress); }
+        public IPEndPoint GetPX4EndPoint() { return ParseEndPoint(PX4Address); }
 
         /// <summary>
         /// Utility
@@ -449,10 +465,9 @@ namespace MAVLinkSharp {
                     vehicle = new MAVLinkSystem(1,MAV_TYPE.QUADROTOR,"vehicle");                    
                     vehicle.network = this;
                     //PX4 GCS Networking
-                    IPEndPoint hil_ep           = settings.GetPX4HILEndPoint();
-                    IPEndPoint ctrl_local_ep    = new IPEndPoint(hil_ep.Address,0);
-                    IPEndPoint ctrl_remote_ep   = settings.GetPX4CtrlEndPoint();
-                    IPEndPoint qgc_ep           = settings.GetGCSEndpoint();
+                    IPEndPoint hil_ep           = settings.GetPX4HILEndPoint();                    
+                    IPEndPoint px4_ep           = settings.GetPX4EndPoint();
+                    IPEndPoint gcs_ep           = settings.GetGCSEndpoint();
 
                     //HIL/PX4 Links
                     switch (settings.GetPX4HILProtocol()) {
@@ -525,16 +540,21 @@ namespace MAVLinkSharp {
                     //*/
 
                     //UDP Links such as GCS/PX4 CTRL
+
+                    int px4_local_port  = settings.PX4LocalPort;
+                    int px4_remote_port = settings.PX4RemotePort;
+                    int gcs_local_port  = settings.GCSLocalPort;
+                    int gcs_remote_port = settings.GCSRemotePort;
                     
-                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP [{ctrl_remote_ep.Address}:{ctrl_remote_ep.Port}]");
-                    UdpClient conn_px4 = new UdpClient(settings.PX4LocalPort);
-                    conn_px4.Connect(ctrl_remote_ep);
+                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP / Listen: {px4_local_port} Connect: {px4_ep.Address}:{px4_remote_port}");
+                    UdpClient conn_px4 = new UdpClient(px4_local_port);
+                    conn_px4.Connect(new IPEndPoint(px4_ep.Address,px4_remote_port));
                     px4 = new MAVLinkUDP(conn_px4,"px4");                    
                     px4.network  = this;
 
-                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating GCS UDP [{qgc_ep.Address}:{qgc_ep.Port}]");
-                    UdpClient conn_gcs = new UdpClient(qgc_ep.Port);
-                    conn_gcs.Connect(qgc_ep);                    
+                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating GCS UDP / Listen: {gcs_local_port} Connect: {gcs_ep.Address}:{gcs_remote_port}");
+                    UdpClient conn_gcs = new UdpClient(gcs_local_port);
+                    conn_gcs.Connect(new IPEndPoint(gcs_ep.Address,gcs_remote_port));                    
                     gcs = new MAVLinkUDP(conn_gcs,"gcs");                    
                     gcs.network  = this;
 
