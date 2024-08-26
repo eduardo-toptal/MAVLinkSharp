@@ -266,7 +266,7 @@ namespace MAVLinkSharp {
         public byte[] Read() {
             Flush();
             long len = valid ? m_stream.Length : 0;
-            byte[] b = len<0 ? m_empty_buff : new byte[len];
+            byte[] b = len<=0 ? m_empty_buff : new byte[len];
             if (b.Length <= 0) return b;            
             m_stream.Position = 0;
             m_stream.Read(b,0,(int)len);
