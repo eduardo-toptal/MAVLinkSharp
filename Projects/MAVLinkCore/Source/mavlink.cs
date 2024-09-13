@@ -213,6 +213,7 @@ public partial class MAVLink
         new message_info(371, "SMART_BATTERY_STATUS", 161, 50, 50, typeof( SMART_BATTERY_STATUS_MSG )),
         new message_info(375, "ACTUATOR_OUTPUT_STATUS", 251, 140, 140, typeof( ACTUATOR_OUTPUT_STATUS_MSG )),
         new message_info(380, "TIME_ESTIMATE_TO_TARGET", 232, 20, 20, typeof( TIME_ESTIMATE_TO_TARGET_MSG )),
+        new message_info(385, "TUNNEL", 147, 133, 133, typeof( TUNNEL_MSG )),
         new message_info(9000, "WHEEL_DISTANCE", 113, 137, 137, typeof( WHEEL_DISTANCE_MSG )),
 
     };
@@ -426,6 +427,7 @@ public partial class MAVLink
         SMART_BATTERY_STATUS = 371,
         ACTUATOR_OUTPUT_STATUS = 375,
         TIME_ESTIMATE_TO_TARGET = 380,
+        TUNNEL = 385,
         WHEEL_DISTANCE = 9000,
     }
     
@@ -10340,6 +10342,43 @@ public partial class MAVLink
         [Units("")]
         [Description("Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=249)]
+		public byte[] payload;
+    
+    };
+
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=133)]
+    ///<summary> Message for transporting "arbitrary" variable-length data from one component to another (broadcast is not forbidden, but discouraged) </summary>
+    public struct TUNNEL_MSG {
+        public TUNNEL_MSG(/*MAV_TUNNEL_PAYLOAD_TYPE*/ushort payload_type,byte target_system,byte target_component,byte payload_length,byte[] payload) 
+        {
+              this.payload_type = payload_type;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.payload_length = payload_length;
+              this.payload = payload;
+            
+        }
+        /// <summary>A code that identifies the content of the payload (0 for unknown, which is the default). If this code is less than 32768, it is a 'registered' payload type and the corresponding code should be added to the MAV_TUNNEL_PAYLOAD_TYPE enum. Software creators can register blocks of types as needed. Codes greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase. MAV_TUNNEL_PAYLOAD_TYPE  </summary>
+        [Units("")]
+        [Description("A code that identifies the content of the payload (0 for unknown, which is the default). If this code is less than 32768, it is a 'registered' payload type and the corresponding code should be added to the MAV_TUNNEL_PAYLOAD_TYPE enum. Software creators can register blocks of types as needed. Codes greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.")]
+        public  /*MAV_TUNNEL_PAYLOAD_TYPE*/ushort payload_type;
+            /// <summary>System ID (can be 0 for broadcast, but this is discouraged)   </summary>
+        [Units("")]
+        [Description("System ID (can be 0 for broadcast, but this is discouraged)")]
+        public  byte target_system;
+            /// <summary>Component ID (can be 0 for broadcast, but this is discouraged)   </summary>
+        [Units("")]
+        [Description("Component ID (can be 0 for broadcast, but this is discouraged)")]
+        public  byte target_component;
+            /// <summary>Length of the data transported in payload   </summary>
+        [Units("")]
+        [Description("Length of the data transported in payload")]
+        public  byte payload_length;
+            /// <summary>Variable length payload. The payload length is defined by payload_length. The entire content of this block is opaque unless you understand the encoding specified by payload_type.   </summary>
+        [Units("")]
+        [Description("Variable length payload. The payload length is defined by payload_length. The entire content of this block is opaque unless you understand the encoding specified by payload_type.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=128)]
 		public byte[] payload;
     
     };
