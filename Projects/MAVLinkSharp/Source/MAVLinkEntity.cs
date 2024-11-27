@@ -271,9 +271,9 @@ namespace MAVLinkSharp {
             Queue<MAVLinkEntity> q = new Queue<MAVLinkEntity>(ql);
             List<MAVLinkEntity>  v = new List<MAVLinkEntity>();            
             MSG_ID msg_id = (MSG_ID)p_msg.msgid;
-            if(msg_id == MSG_ID.HIL_ACTUATOR_CONTROLS) {
-                int i = 0;
-            }
+            //if(msg_id == MSG_ID.HIL_ACTUATOR_CONTROLS) {
+                //int i = 0;
+            //}
             //Iterate until queue is empty.
             while(q.Count>0) {
                 //Fetch next node

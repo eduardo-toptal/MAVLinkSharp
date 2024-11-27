@@ -285,7 +285,7 @@ namespace MAVLinkSharp {
         private bool   m_hil_heartbeat;
         private bool   m_qgc_heartbeat;
         private bool   m_hil_controls;
-        private bool   m_debug_thread_alive;
+        //private bool   m_debug_thread_alive;
 
         /// <summary>
         /// CTOR.
@@ -332,7 +332,7 @@ namespace MAVLinkSharp {
             if (hil  != null) { hil.Close(); }
             if (gcs  != null) { gcs.Close(); }
             if (px4  != null) { px4.Close(); }            
-            m_debug_thread_alive = false;
+            //m_debug_thread_alive = false;
         }
 
         public enum MAVLinkCommModeFlag {            

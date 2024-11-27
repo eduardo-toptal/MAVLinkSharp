@@ -14,6 +14,7 @@ using static MAVLink;
 #pragma warning disable CS8604
 #pragma warning disable CS8618
 #pragma warning disable CS8625
+#pragma warning disable CS0162
 
 namespace MAVLinkSharp {
 
@@ -938,6 +939,7 @@ namespace MAVLinkSharp {
 
             //UnityEngine.Debug.Log($"[{t_us / 1000}ms] system update");
 
+
             lock (m_sensor_change_lock) {
                 //If there are sensor changes
                 if(m_sensor_change_lut.Count > 0) {
@@ -1085,7 +1087,7 @@ namespace MAVLinkSharp {
                 m_sensor_change_lut.Clear();
             }
 
-            MAVLinkMessage msg = null;
+            //MAVLinkMessage msg = null;
 
             //If lockstep enabled and waiting for actuators, skip sensors
             if(lockstep) if (lockstep_wait_actuator) { send_hil = false; }
