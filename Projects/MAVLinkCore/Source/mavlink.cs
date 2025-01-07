@@ -214,7 +214,9 @@ public partial class MAVLink
         new message_info(375, "ACTUATOR_OUTPUT_STATUS", 251, 140, 140, typeof( ACTUATOR_OUTPUT_STATUS_MSG )),
         new message_info(380, "TIME_ESTIMATE_TO_TARGET", 232, 20, 20, typeof( TIME_ESTIMATE_TO_TARGET_MSG )),
         new message_info(385, "TUNNEL", 147, 133, 133, typeof( TUNNEL_MSG )),
+        new message_info(390, "ONBOARD_COMPUTER_STATUS", 156, 238, 238, typeof( MAVLINK_ONBOARD_COMPUTER_STATUS_MSG )),
         new message_info(9000, "WHEEL_DISTANCE", 113, 137, 137, typeof( WHEEL_DISTANCE_MSG )),
+        
 
     };
 
@@ -12362,5 +12364,135 @@ public partial class MAVLink
         public  byte count;
     
     };
+
+    
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=238)]
+    ///<summary> Hardware status sent by an onboard computer. </summary>
+    public struct MAVLINK_ONBOARD_COMPUTER_STATUS_MSG
+    {
+        public MAVLINK_ONBOARD_COMPUTER_STATUS_MSG(ulong time_usec,uint uptime,uint ram_usage,uint ram_total,uint[] storage_type,uint[] storage_usage,uint[] storage_total,uint[] link_type,uint[] link_tx_rate,uint[] link_rx_rate,uint[] link_tx_max,uint[] link_rx_max,short[] fan_speed,byte type,byte[] cpu_cores,byte[] cpu_combined,byte[] gpu_cores,byte[] gpu_combined,sbyte temperature_board,sbyte[] temperature_core) 
+        {
+              this.time_usec = time_usec;
+              this.uptime = uptime;
+              this.ram_usage = ram_usage;
+              this.ram_total = ram_total;
+              this.storage_type = storage_type;
+              this.storage_usage = storage_usage;
+              this.storage_total = storage_total;
+              this.link_type = link_type;
+              this.link_tx_rate = link_tx_rate;
+              this.link_rx_rate = link_rx_rate;
+              this.link_tx_max = link_tx_max;
+              this.link_rx_max = link_rx_max;
+              this.fan_speed = fan_speed;
+              this.type = type;
+              this.cpu_cores = cpu_cores;
+              this.cpu_combined = cpu_combined;
+              this.gpu_cores = gpu_cores;
+              this.gpu_combined = gpu_combined;
+              this.temperature_board = temperature_board;
+              this.temperature_core = temperature_core;
+            
+        }
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
+        [Units("[us]")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
+        public  ulong time_usec;
+            /// <summary>Time since system boot.  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Time since system boot.")]
+        public  uint uptime;
+            /// <summary>Amount of used RAM on the component system. A value of UINT32_MAX implies the field is unused.  [MiB] </summary>
+        [Units("[MiB]")]
+        [Description("Amount of used RAM on the component system. A value of UINT32_MAX implies the field is unused.")]
+        public  uint ram_usage;
+            /// <summary>Total amount of RAM on the component system. A value of UINT32_MAX implies the field is unused.  [MiB] </summary>
+        [Units("[MiB]")]
+        [Description("Total amount of RAM on the component system. A value of UINT32_MAX implies the field is unused.")]
+        public  uint ram_total;
+            /// <summary>Storage type: 0: HDD, 1: SSD, 2: EMMC, 3: SD card (non-removable), 4: SD card (removable). A value of UINT32_MAX implies the field is unused.   </summary>
+        [Units("")]
+        [Description("Storage type: 0: HDD, 1: SSD, 2: EMMC, 3: SD card (non-removable), 4: SD card (removable). A value of UINT32_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public uint[] storage_type;
+            /// <summary>Amount of used storage space on the component system. A value of UINT32_MAX implies the field is unused.  [MiB] </summary>
+        [Units("[MiB]")]
+        [Description("Amount of used storage space on the component system. A value of UINT32_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public uint[] storage_usage;
+            /// <summary>Total amount of storage space on the component system. A value of UINT32_MAX implies the field is unused.  [MiB] </summary>
+        [Units("[MiB]")]
+        [Description("Total amount of storage space on the component system. A value of UINT32_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public uint[] storage_total;
+            /// <summary>Link type: 0-9: UART, 10-19: Wired network, 20-29: Wifi, 30-39: Point-to-point proprietary, 40-49: Mesh proprietary   </summary>
+        [Units("")]
+        [Description("Link type: 0-9: UART, 10-19: Wired network, 20-29: Wifi, 30-39: Point-to-point proprietary, 40-49: Mesh proprietary")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=6)]
+		public uint[] link_type;
+            /// <summary>Network traffic from the component system. A value of UINT32_MAX implies the field is unused.  [KiB/s] </summary>
+        [Units("[KiB/s]")]
+        [Description("Network traffic from the component system. A value of UINT32_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=6)]
+		public uint[] link_tx_rate;
+            /// <summary>Network traffic to the component system. A value of UINT32_MAX implies the field is unused.  [KiB/s] </summary>
+        [Units("[KiB/s]")]
+        [Description("Network traffic to the component system. A value of UINT32_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=6)]
+		public uint[] link_rx_rate;
+            /// <summary>Network capacity from the component system. A value of UINT32_MAX implies the field is unused.  [KiB/s] </summary>
+        [Units("[KiB/s]")]
+        [Description("Network capacity from the component system. A value of UINT32_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=6)]
+		public uint[] link_tx_max;
+            /// <summary>Network capacity to the component system. A value of UINT32_MAX implies the field is unused.  [KiB/s] </summary>
+        [Units("[KiB/s]")]
+        [Description("Network capacity to the component system. A value of UINT32_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=6)]
+		public uint[] link_rx_max;
+            /// <summary>Fan speeds. A value of INT16_MAX implies the field is unused.  [rpm] </summary>
+        [Units("[rpm]")]
+        [Description("Fan speeds. A value of INT16_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public short[] fan_speed;
+            /// <summary>Type of the onboard computer: 0: Mission computer primary, 1: Mission computer backup 1, 2: Mission computer backup 2, 3: Compute node, 4-5: Compute spares, 6-9: Payload computers.   </summary>
+        [Units("")]
+        [Description("Type of the onboard computer: 0: Mission computer primary, 1: Mission computer backup 1, 2: Mission computer backup 2, 3: Compute node, 4-5: Compute spares, 6-9: Payload computers.")]
+        public  byte type;
+            /// <summary>CPU usage on the component in percent (100 - idle). A value of UINT8_MAX implies the field is unused.   </summary>
+        [Units("")]
+        [Description("CPU usage on the component in percent (100 - idle). A value of UINT8_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
+		public byte[] cpu_cores;
+            /// <summary>Combined CPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the field is unused.   </summary>
+        [Units("")]
+        [Description("Combined CPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=10)]
+		public byte[] cpu_combined;
+            /// <summary>GPU usage on the component in percent (100 - idle). A value of UINT8_MAX implies the field is unused.   </summary>
+        [Units("")]
+        [Description("GPU usage on the component in percent (100 - idle). A value of UINT8_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public byte[] gpu_cores;
+            /// <summary>Combined GPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the field is unused.   </summary>
+        [Units("")]
+        [Description("Combined GPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=10)]
+		public byte[] gpu_combined;
+            /// <summary>Temperature of the board. A value of INT8_MAX implies the field is unused.  [degC] </summary>
+        [Units("[degC]")]
+        [Description("Temperature of the board. A value of INT8_MAX implies the field is unused.")]
+        public  sbyte temperature_board;
+            /// <summary>Temperature of the CPU core. A value of INT8_MAX implies the field is unused.  [degC] </summary>
+        [Units("[degC]")]
+        [Description("Temperature of the CPU core. A value of INT8_MAX implies the field is unused.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
+		public sbyte[] temperature_core;
+    
+    };
+
+
 
 }
