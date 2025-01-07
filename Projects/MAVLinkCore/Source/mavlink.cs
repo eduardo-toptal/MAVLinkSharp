@@ -430,6 +430,7 @@ public partial class MAVLink
         ACTUATOR_OUTPUT_STATUS = 375,
         TIME_ESTIMATE_TO_TARGET = 380,
         TUNNEL = 385,
+        ONBOARD_COMPUTER_STATUS = 390,
         WHEEL_DISTANCE = 9000,
     }
     
