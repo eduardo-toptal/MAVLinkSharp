@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 
+//(mavlink_)(([a-zA-Z0-9]+_)+)(t) -> $2MSG
+
 public partial class MAVLink
 {
-    public const string MAVLINK_BUILD_DATE = "Tue Nov 07 2023";
+    public const string MAVLINK_BUILD_DATE = "Thu Jan 30 2025";
     public const string MAVLINK_WIRE_PROTOCOL_VERSION = "2.0";
     public const int MAVLINK_MAX_PAYLOAD_LEN = 255;
 
@@ -38,7 +40,7 @@ public partial class MAVLink
     // msgid, name, crc, minlength, length, type
     public static message_info[] MAVLINK_MESSAGE_INFOS = new message_info[] {
         new message_info(0, "HEARTBEAT", 50, 9, 9, typeof( HEARTBEAT_MSG )),
-        new message_info(1, "SYS_STATUS", 124, 31, 31, typeof( SYS_STATUS_MSG )),
+        new message_info(1, "SYS_STATUS", 124, 31, 43, typeof( SYS_STATUS_MSG )),
         new message_info(2, "SYSTEM_TIME", 137, 12, 12, typeof( SYSTEM_TIME_MSG )),
         new message_info(4, "PING", 237, 14, 14, typeof( PING_MSG )),
         new message_info(5, "CHANGE_OPERATOR_CONTROL", 217, 28, 28, typeof( CHANGE_OPERATOR_CONTROL_MSG )),
@@ -50,14 +52,14 @@ public partial class MAVLink
         new message_info(21, "PARAM_REQUEST_LIST", 159, 2, 2, typeof( PARAM_REQUEST_LIST_MSG )),
         new message_info(22, "PARAM_VALUE", 220, 25, 25, typeof( PARAM_VALUE_MSG )),
         new message_info(23, "PARAM_SET", 168, 23, 23, typeof( PARAM_SET_MSG )),
-        new message_info(24, "GPS_RAW_INT", 24, 30, 50, typeof( GPS_RAW_INT_MSG )),
+        new message_info(24, "GPS_RAW_INT", 24, 30, 52, typeof( GPS_RAW_INT_MSG )),
         new message_info(25, "GPS_STATUS", 23, 101, 101, typeof( GPS_STATUS_MSG )),
-        new message_info(26, "SCALED_IMU", 170, 22, 22, typeof( SCALED_IMU_MSG )),
-        new message_info(27, "RAW_IMU", 144, 26, 26, typeof( RAW_IMU_MSG )),
+        new message_info(26, "SCALED_IMU", 170, 22, 24, typeof( SCALED_IMU_MSG )),
+        new message_info(27, "RAW_IMU", 144, 26, 29, typeof( RAW_IMU_MSG )),
         new message_info(28, "RAW_PRESSURE", 67, 16, 16, typeof( RAW_PRESSURE_MSG )),
-        new message_info(29, "SCALED_PRESSURE", 115, 14, 14, typeof( SCALED_PRESSURE_MSG )),
+        new message_info(29, "SCALED_PRESSURE", 115, 14, 16, typeof( SCALED_PRESSURE_MSG )),
         new message_info(30, "ATTITUDE", 39, 28, 28, typeof( ATTITUDE_MSG )),
-        new message_info(31, "ATTITUDE_QUATERNION", 246, 32, 32, typeof( ATTITUDE_QUATERNION_MSG )),
+        new message_info(31, "ATTITUDE_QUATERNION", 246, 32, 48, typeof( ATTITUDE_QUATERNION_MSG )),
         new message_info(32, "LOCAL_POSITION_NED", 185, 28, 28, typeof( LOCAL_POSITION_NED_MSG )),
         new message_info(33, "GLOBAL_POSITION_INT", 104, 28, 28, typeof( GLOBAL_POSITION_INT_MSG )),
         new message_info(34, "RC_CHANNELS_SCALED", 237, 22, 22, typeof( RC_CHANNELS_SCALED_MSG )),
@@ -78,7 +80,6 @@ public partial class MAVLink
         new message_info(49, "GPS_GLOBAL_ORIGIN", 39, 12, 20, typeof( GPS_GLOBAL_ORIGIN_MSG )),
         new message_info(50, "PARAM_MAP_RC", 78, 37, 37, typeof( PARAM_MAP_RC_MSG )),
         new message_info(51, "MISSION_REQUEST_INT", 196, 4, 5, typeof( MISSION_REQUEST_INT_MSG )),
-        new message_info(52, "MISSION_CHANGED", 132, 7, 7, typeof( MISSION_CHANGED_MSG )),
         new message_info(54, "SAFETY_SET_ALLOWED_AREA", 15, 27, 27, typeof( SAFETY_SET_ALLOWED_AREA_MSG )),
         new message_info(55, "SAFETY_ALLOWED_AREA", 3, 25, 25, typeof( SAFETY_ALLOWED_AREA_MSG )),
         new message_info(61, "ATTITUDE_QUATERNION_COV", 167, 72, 72, typeof( ATTITUDE_QUATERNION_COV_MSG )),
@@ -88,15 +89,16 @@ public partial class MAVLink
         new message_info(65, "RC_CHANNELS", 118, 42, 42, typeof( RC_CHANNELS_MSG )),
         new message_info(66, "REQUEST_DATA_STREAM", 148, 6, 6, typeof( REQUEST_DATA_STREAM_MSG )),
         new message_info(67, "DATA_STREAM", 21, 4, 4, typeof( DATA_STREAM_MSG )),
-        new message_info(69, "MANUAL_CONTROL", 243, 11, 11, typeof( MANUAL_CONTROL_MSG )),
+        new message_info(69, "MANUAL_CONTROL", 243, 11, 18, typeof( MANUAL_CONTROL_MSG )),
         new message_info(70, "RC_CHANNELS_OVERRIDE", 124, 18, 38, typeof( RC_CHANNELS_OVERRIDE_MSG )),
         new message_info(73, "MISSION_ITEM_INT", 38, 37, 38, typeof( MISSION_ITEM_INT_MSG )),
         new message_info(74, "VFR_HUD", 20, 20, 20, typeof( VFR_HUD_MSG )),
         new message_info(75, "COMMAND_INT", 158, 35, 35, typeof( COMMAND_INT_MSG )),
         new message_info(76, "COMMAND_LONG", 152, 33, 33, typeof( COMMAND_LONG_MSG )),
         new message_info(77, "COMMAND_ACK", 143, 3, 10, typeof( COMMAND_ACK_MSG )),
+        new message_info(80, "COMMAND_CANCEL", 14, 4, 4, typeof( COMMAND_CANCEL_MSG )),
         new message_info(81, "MANUAL_SETPOINT", 106, 22, 22, typeof( MANUAL_SETPOINT_MSG )),
-        new message_info(82, "SET_ATTITUDE_TARGET", 49, 39, 39, typeof( SET_ATTITUDE_TARGET_MSG )),
+        new message_info(82, "SET_ATTITUDE_TARGET", 49, 39, 51, typeof( SET_ATTITUDE_TARGET_MSG )),
         new message_info(83, "ATTITUDE_TARGET", 22, 37, 37, typeof( ATTITUDE_TARGET_MSG )),
         new message_info(84, "SET_POSITION_TARGET_LOCAL_NED", 143, 53, 53, typeof( SET_POSITION_TARGET_LOCAL_NED_MSG )),
         new message_info(85, "POSITION_TARGET_LOCAL_NED", 140, 51, 51, typeof( POSITION_TARGET_LOCAL_NED_MSG )),
@@ -112,18 +114,18 @@ public partial class MAVLink
         new message_info(102, "VISION_POSITION_ESTIMATE", 158, 32, 117, typeof( VISION_POSITION_ESTIMATE_MSG )),
         new message_info(103, "VISION_SPEED_ESTIMATE", 208, 20, 57, typeof( VISION_SPEED_ESTIMATE_MSG )),
         new message_info(104, "VICON_POSITION_ESTIMATE", 56, 32, 116, typeof( VICON_POSITION_ESTIMATE_MSG )),
-        new message_info(105, "HIGHRES_IMU", 93, 62, 62, typeof( HIGHRES_IMU_MSG )),
+        new message_info(105, "HIGHRES_IMU", 93, 62, 63, typeof( HIGHRES_IMU_MSG )),
         new message_info(106, "OPTICAL_FLOW_RAD", 138, 44, 44, typeof( OPTICAL_FLOW_RAD_MSG )),
-        new message_info(107, "HIL_SENSOR", 108, 64, 64, typeof( HIL_SENSOR_MSG )),
+        new message_info(107, "HIL_SENSOR", 108, 64, 65, typeof( HIL_SENSOR_MSG )),
         new message_info(108, "SIM_STATE", 32, 84, 84, typeof( SIM_STATE_MSG )),
         new message_info(109, "RADIO_STATUS", 185, 9, 9, typeof( RADIO_STATUS_MSG )),
         new message_info(110, "FILE_TRANSFER_PROTOCOL", 84, 254, 254, typeof( FILE_TRANSFER_PROTOCOL_MSG )),
         new message_info(111, "TIMESYNC", 34, 16, 16, typeof( TIMESYNC_MSG )),
         new message_info(112, "CAMERA_TRIGGER", 174, 12, 12, typeof( CAMERA_TRIGGER_MSG )),
-        new message_info(113, "HIL_GPS", 124, 36, 36, typeof( HIL_GPS_MSG )),
+        new message_info(113, "HIL_GPS", 124, 36, 39, typeof( HIL_GPS_MSG )),
         new message_info(114, "HIL_OPTICAL_FLOW", 237, 44, 44, typeof( HIL_OPTICAL_FLOW_MSG )),
         new message_info(115, "HIL_STATE_QUATERNION", 4, 64, 64, typeof( HIL_STATE_QUATERNION_MSG )),
-        new message_info(116, "SCALED_IMU2", 76, 22, 22, typeof( SCALED_IMU2_MSG )),
+        new message_info(116, "SCALED_IMU2", 76, 22, 24, typeof( SCALED_IMU2_MSG )),
         new message_info(117, "LOG_REQUEST_LIST", 128, 6, 6, typeof( LOG_REQUEST_LIST_MSG )),
         new message_info(118, "LOG_ENTRY", 56, 14, 14, typeof( LOG_ENTRY_MSG )),
         new message_info(119, "LOG_REQUEST_DATA", 116, 12, 12, typeof( LOG_REQUEST_DATA_MSG )),
@@ -131,34 +133,37 @@ public partial class MAVLink
         new message_info(121, "LOG_ERASE", 237, 2, 2, typeof( LOG_ERASE_MSG )),
         new message_info(122, "LOG_REQUEST_END", 203, 2, 2, typeof( LOG_REQUEST_END_MSG )),
         new message_info(123, "GPS_INJECT_DATA", 250, 113, 113, typeof( GPS_INJECT_DATA_MSG )),
-        new message_info(124, "GPS2_RAW", 87, 35, 35, typeof( GPS2_RAW_MSG )),
+        new message_info(124, "GPS2_RAW", 87, 35, 57, typeof( GPS2_RAW_MSG )),
         new message_info(125, "POWER_STATUS", 203, 6, 6, typeof( POWER_STATUS_MSG )),
-        new message_info(126, "SERIAL_CONTROL", 220, 79, 79, typeof( SERIAL_CONTROL_MSG )),
+        new message_info(126, "SERIAL_CONTROL", 220, 79, 81, typeof( SERIAL_CONTROL_MSG )),
         new message_info(127, "GPS_RTK", 25, 35, 35, typeof( GPS_RTK_MSG )),
         new message_info(128, "GPS2_RTK", 226, 35, 35, typeof( GPS2_RTK_MSG )),
-        new message_info(129, "SCALED_IMU3", 46, 22, 22, typeof( SCALED_IMU3_MSG )),
+        new message_info(129, "SCALED_IMU3", 46, 22, 24, typeof( SCALED_IMU3_MSG )),
         new message_info(130, "DATA_TRANSMISSION_HANDSHAKE", 29, 13, 13, typeof( DATA_TRANSMISSION_HANDSHAKE_MSG )),
         new message_info(131, "ENCAPSULATED_DATA", 223, 255, 255, typeof( ENCAPSULATED_DATA_MSG )),
-        new message_info(132, "DISTANCE_SENSOR", 85, 14, 38, typeof( DISTANCE_SENSOR_MSG )),
+        new message_info(132, "DISTANCE_SENSOR", 85, 14, 39, typeof( DISTANCE_SENSOR_MSG )),
         new message_info(133, "TERRAIN_REQUEST", 6, 18, 18, typeof( TERRAIN_REQUEST_MSG )),
         new message_info(134, "TERRAIN_DATA", 229, 43, 43, typeof( TERRAIN_DATA_MSG )),
         new message_info(135, "TERRAIN_CHECK", 203, 8, 8, typeof( TERRAIN_CHECK_MSG )),
         new message_info(136, "TERRAIN_REPORT", 1, 22, 22, typeof( TERRAIN_REPORT_MSG )),
-        new message_info(137, "SCALED_PRESSURE2", 195, 14, 14, typeof( SCALED_PRESSURE2_MSG )),
+        new message_info(137, "SCALED_PRESSURE2", 195, 14, 16, typeof( SCALED_PRESSURE2_MSG )),
         new message_info(138, "ATT_POS_MOCAP", 109, 36, 120, typeof( ATT_POS_MOCAP_MSG )),
         new message_info(139, "SET_ACTUATOR_CONTROL_TARGET", 168, 43, 43, typeof( SET_ACTUATOR_CONTROL_TARGET_MSG )),
         new message_info(140, "ACTUATOR_CONTROL_TARGET", 181, 41, 41, typeof( ACTUATOR_CONTROL_TARGET_MSG )),
         new message_info(141, "ALTITUDE", 47, 32, 32, typeof( ALTITUDE_MSG )),
         new message_info(142, "RESOURCE_REQUEST", 72, 243, 243, typeof( RESOURCE_REQUEST_MSG )),
-        new message_info(143, "SCALED_PRESSURE3", 131, 14, 14, typeof( SCALED_PRESSURE3_MSG )),
+        new message_info(143, "SCALED_PRESSURE3", 131, 14, 16, typeof( SCALED_PRESSURE3_MSG )),
         new message_info(144, "FOLLOW_TARGET", 127, 93, 93, typeof( FOLLOW_TARGET_MSG )),
         new message_info(146, "CONTROL_SYSTEM_STATE", 103, 100, 100, typeof( CONTROL_SYSTEM_STATE_MSG )),
-        new message_info(147, "BATTERY_STATUS", 154, 36, 41, typeof( BATTERY_STATUS_MSG )),
+        new message_info(147, "BATTERY_STATUS", 154, 36, 54, typeof( BATTERY_STATUS_MSG )),
         new message_info(148, "AUTOPILOT_VERSION", 178, 60, 78, typeof( AUTOPILOT_VERSION_MSG )),
         new message_info(149, "LANDING_TARGET", 200, 30, 60, typeof( LANDING_TARGET_MSG )),
+        new message_info(162, "FENCE_STATUS", 189, 8, 9, typeof( FENCE_STATUS_MSG )),
+        new message_info(192, "MAG_CAL_REPORT", 36, 44, 54, typeof( MAG_CAL_REPORT_MSG )),
+        new message_info(225, "EFI_STATUS", 208, 65, 69, typeof( EFI_STATUS_MSG )),
         new message_info(230, "ESTIMATOR_STATUS", 163, 42, 42, typeof( ESTIMATOR_STATUS_MSG )),
         new message_info(231, "WIND_COV", 105, 40, 40, typeof( WIND_COV_MSG )),
-        new message_info(232, "GPS_INPUT", 151, 63, 63, typeof( GPS_INPUT_MSG )),
+        new message_info(232, "GPS_INPUT", 151, 63, 65, typeof( GPS_INPUT_MSG )),
         new message_info(233, "GPS_RTCM_DATA", 35, 182, 182, typeof( GPS_RTCM_DATA_MSG )),
         new message_info(234, "HIGH_LATENCY", 150, 40, 40, typeof( HIGH_LATENCY_MSG )),
         new message_info(235, "HIGH_LATENCY2", 179, 42, 42, typeof( HIGH_LATENCY2_MSG )),
@@ -174,15 +179,15 @@ public partial class MAVLink
         new message_info(250, "DEBUG_VECT", 49, 30, 30, typeof( DEBUG_VECT_MSG )),
         new message_info(251, "NAMED_VALUE_FLOAT", 170, 18, 18, typeof( NAMED_VALUE_FLOAT_MSG )),
         new message_info(252, "NAMED_VALUE_INT", 44, 18, 18, typeof( NAMED_VALUE_INT_MSG )),
-        new message_info(253, "STATUSTEXT", 83, 51, 51, typeof( STATUSTEXT_MSG )),
+        new message_info(253, "STATUSTEXT", 83, 51, 54, typeof( STATUSTEXT_MSG )),
         new message_info(254, "DEBUG", 46, 9, 9, typeof( DEBUG_MSG )),
         new message_info(256, "SETUP_SIGNING", 71, 42, 42, typeof( SETUP_SIGNING_MSG )),
         new message_info(257, "BUTTON_CHANGE", 131, 9, 9, typeof( BUTTON_CHANGE_MSG )),
         new message_info(258, "PLAY_TUNE", 187, 32, 232, typeof( PLAY_TUNE_MSG )),
         new message_info(259, "CAMERA_INFORMATION", 92, 235, 235, typeof( CAMERA_INFORMATION_MSG )),
         new message_info(260, "CAMERA_SETTINGS", 146, 5, 13, typeof( CAMERA_SETTINGS_MSG )),
-        new message_info(261, "STORAGE_INFORMATION", 179, 27, 27, typeof( STORAGE_INFORMATION_MSG )),
-        new message_info(262, "CAMERA_CAPTURE_STATUS", 12, 18, 18, typeof( CAMERA_CAPTURE_STATUS_MSG )),
+        new message_info(261, "STORAGE_INFORMATION", 179, 27, 61, typeof( STORAGE_INFORMATION_MSG )),
+        new message_info(262, "CAMERA_CAPTURE_STATUS", 12, 18, 22, typeof( CAMERA_CAPTURE_STATUS_MSG )),
         new message_info(263, "CAMERA_IMAGE_CAPTURED", 133, 255, 255, typeof( CAMERA_IMAGE_CAPTURED_MSG )),
         new message_info(264, "FLIGHT_INFORMATION", 49, 28, 28, typeof( FLIGHT_INFORMATION_MSG )),
         new message_info(265, "MOUNT_ORIENTATION", 26, 16, 20, typeof( MOUNT_ORIENTATION_MSG )),
@@ -191,8 +196,23 @@ public partial class MAVLink
         new message_info(268, "LOGGING_ACK", 14, 4, 4, typeof( LOGGING_ACK_MSG )),
         new message_info(269, "VIDEO_STREAM_INFORMATION", 109, 213, 213, typeof( VIDEO_STREAM_INFORMATION_MSG )),
         new message_info(270, "VIDEO_STREAM_STATUS", 59, 19, 19, typeof( VIDEO_STREAM_STATUS_MSG )),
-        new message_info(299, "WIFI_CONFIG_AP", 19, 96, 96, typeof( WIFI_CONFIG_AP_MSG )),
+        new message_info(271, "CAMERA_FOV_STATUS", 22, 52, 52, typeof( CAMERA_FOV_STATUS_MSG )),
+        new message_info(275, "CAMERA_TRACKING_IMAGE_STATUS", 126, 31, 31, typeof( CAMERA_TRACKING_IMAGE_STATUS_MSG )),
+        new message_info(276, "CAMERA_TRACKING_GEO_STATUS", 18, 49, 49, typeof( CAMERA_TRACKING_GEO_STATUS_MSG )),
+        new message_info(280, "GIMBAL_MANAGER_INFORMATION", 70, 33, 33, typeof( GIMBAL_MANAGER_INFORMATION_MSG )),
+        new message_info(281, "GIMBAL_MANAGER_STATUS", 48, 13, 13, typeof( GIMBAL_MANAGER_STATUS_MSG )),
+        new message_info(282, "GIMBAL_MANAGER_SET_ATTITUDE", 123, 35, 35, typeof( GIMBAL_MANAGER_SET_ATTITUDE_MSG )),
+        new message_info(283, "GIMBAL_DEVICE_INFORMATION", 74, 144, 144, typeof( GIMBAL_DEVICE_INFORMATION_MSG )),
+        new message_info(284, "GIMBAL_DEVICE_SET_ATTITUDE", 99, 32, 32, typeof( GIMBAL_DEVICE_SET_ATTITUDE_MSG )),
+        new message_info(285, "GIMBAL_DEVICE_ATTITUDE_STATUS", 137, 40, 40, typeof( GIMBAL_DEVICE_ATTITUDE_STATUS_MSG )),
+        new message_info(286, "AUTOPILOT_STATE_FOR_GIMBAL_DEVICE", 210, 53, 53, typeof( AUTOPILOT_STATE_FOR_GIMBAL_DEVICE_MSG )),
+        new message_info(287, "GIMBAL_MANAGER_SET_PITCHYAW", 1, 23, 23, typeof( GIMBAL_MANAGER_SET_PITCHYAW_MSG )),
+        new message_info(288, "GIMBAL_MANAGER_SET_MANUAL_CONTROL", 20, 23, 23, typeof( GIMBAL_MANAGER_SET_MANUAL_CONTROL_MSG )),
+        new message_info(290, "ESC_INFO", 251, 46, 46, typeof( ESC_INFO_MSG )),
+        new message_info(291, "ESC_STATUS", 10, 57, 57, typeof( ESC_STATUS_MSG )),
+        new message_info(299, "WIFI_CONFIG_AP", 19, 96, 98, typeof( WIFI_CONFIG_AP_MSG )),
         new message_info(300, "PROTOCOL_VERSION", 217, 22, 22, typeof( PROTOCOL_VERSION_MSG )),
+        new message_info(301, "AIS_VESSEL", 243, 58, 58, typeof( AIS_VESSEL_MSG )),
         new message_info(310, "UAVCAN_NODE_STATUS", 28, 17, 17, typeof( UAVCAN_NODE_STATUS_MSG )),
         new message_info(311, "UAVCAN_NODE_INFO", 95, 116, 116, typeof( UAVCAN_NODE_INFO_MSG )),
         new message_info(320, "PARAM_EXT_REQUEST_READ", 243, 20, 20, typeof( PARAM_EXT_REQUEST_READ_MSG )),
@@ -200,23 +220,46 @@ public partial class MAVLink
         new message_info(322, "PARAM_EXT_VALUE", 243, 149, 149, typeof( PARAM_EXT_VALUE_MSG )),
         new message_info(323, "PARAM_EXT_SET", 78, 147, 147, typeof( PARAM_EXT_SET_MSG )),
         new message_info(324, "PARAM_EXT_ACK", 132, 146, 146, typeof( PARAM_EXT_ACK_MSG )),
-        new message_info(330, "OBSTACLE_DISTANCE", 23, 158, 166, typeof( OBSTACLE_DISTANCE_MSG )),
-        new message_info(331, "ODOMETRY", 91, 230, 231, typeof( ODOMETRY_MSG )),
-        new message_info(332, "TRAJECTORY_REPRESENTATION_WAYPOINTS", 91, 229, 229, typeof( TRAJECTORY_REPRESENTATION_WAYPOINTS_MSG )),
+        new message_info(330, "OBSTACLE_DISTANCE", 23, 158, 167, typeof( OBSTACLE_DISTANCE_MSG )),
+        new message_info(331, "ODOMETRY", 91, 230, 233, typeof( ODOMETRY_MSG )),
+        new message_info(332, "TRAJECTORY_REPRESENTATION_WAYPOINTS", 236, 239, 239, typeof( TRAJECTORY_REPRESENTATION_WAYPOINTS_MSG )),
         new message_info(333, "TRAJECTORY_REPRESENTATION_BEZIER", 231, 109, 109, typeof( TRAJECTORY_REPRESENTATION_BEZIER_MSG )),
-        new message_info(334, "CELLULAR_STATUS", 135, 14, 14, typeof( CELLULAR_STATUS_MSG )),
+        new message_info(334, "CELLULAR_STATUS", 72, 10, 10, typeof( CELLULAR_STATUS_MSG )),
+        new message_info(335, "ISBD_LINK_STATUS", 225, 24, 24, typeof( ISBD_LINK_STATUS_MSG )),
+        new message_info(336, "CELLULAR_CONFIG", 245, 84, 84, typeof( CELLULAR_CONFIG_MSG )),
+        new message_info(339, "RAW_RPM", 199, 5, 5, typeof( RAW_RPM_MSG )),
         new message_info(340, "UTM_GLOBAL_POSITION", 99, 70, 70, typeof( UTM_GLOBAL_POSITION_MSG )),
         new message_info(350, "DEBUG_FLOAT_ARRAY", 232, 20, 252, typeof( DEBUG_FLOAT_ARRAY_MSG )),
         new message_info(360, "ORBIT_EXECUTION_STATUS", 11, 25, 25, typeof( ORBIT_EXECUTION_STATUS_MSG )),
-        new message_info(365, "STATUSTEXT_LONG", 36, 255, 255, typeof( STATUSTEXT_LONG_MSG )),
-        new message_info(370, "SMART_BATTERY_INFO", 98, 73, 73, typeof( SMART_BATTERY_INFO_MSG )),
-        new message_info(371, "SMART_BATTERY_STATUS", 161, 50, 50, typeof( SMART_BATTERY_STATUS_MSG )),
+        new message_info(370, "SMART_BATTERY_INFO", 75, 87, 109, typeof( SMART_BATTERY_INFO_MSG )),
+        new message_info(373, "GENERATOR_STATUS", 117, 42, 42, typeof( GENERATOR_STATUS_MSG )),
         new message_info(375, "ACTUATOR_OUTPUT_STATUS", 251, 140, 140, typeof( ACTUATOR_OUTPUT_STATUS_MSG )),
         new message_info(380, "TIME_ESTIMATE_TO_TARGET", 232, 20, 20, typeof( TIME_ESTIMATE_TO_TARGET_MSG )),
         new message_info(385, "TUNNEL", 147, 133, 133, typeof( TUNNEL_MSG )),
-        new message_info(390, "ONBOARD_COMPUTER_STATUS", 156, 238, 238, typeof( MAVLINK_ONBOARD_COMPUTER_STATUS_MSG )),
+        new message_info(386, "CAN_FRAME", 132, 16, 16, typeof( CAN_FRAME_MSG )),
+        new message_info(387, "CANFD_FRAME", 4, 72, 72, typeof( CANFD_FRAME_MSG )),
+        new message_info(388, "CAN_FILTER_MODIFY", 8, 37, 37, typeof( CAN_FILTER_MODIFY_MSG )),
+        new message_info(390, "ONBOARD_COMPUTER_STATUS", 156, 238, 238, typeof( ONBOARD_COMPUTER_STATUS_MSG )),
+        new message_info(395, "COMPONENT_INFORMATION", 0, 212, 212, typeof( COMPONENT_INFORMATION_MSG )),
+        new message_info(397, "COMPONENT_METADATA", 182, 108, 108, typeof( COMPONENT_METADATA_MSG )),
+        new message_info(400, "PLAY_TUNE_V2", 110, 254, 254, typeof( PLAY_TUNE_V2_MSG )),
+        new message_info(401, "SUPPORTED_TUNES", 183, 6, 6, typeof( SUPPORTED_TUNES_MSG )),
+        new message_info(410, "EVENT", 160, 53, 53, typeof( EVENT_MSG )),
+        new message_info(411, "CURRENT_EVENT_SEQUENCE", 106, 3, 3, typeof( CURRENT_EVENT_SEQUENCE_MSG )),
+        new message_info(412, "REQUEST_EVENT", 33, 6, 6, typeof( REQUEST_EVENT_MSG )),
+        new message_info(413, "RESPONSE_EVENT_ERROR", 77, 7, 7, typeof( RESPONSE_EVENT_ERROR_MSG )),
         new message_info(9000, "WHEEL_DISTANCE", 113, 137, 137, typeof( WHEEL_DISTANCE_MSG )),
-        
+        new message_info(9005, "WINCH_STATUS", 117, 34, 34, typeof( WINCH_STATUS_MSG )),
+        new message_info(12900, "OPEN_DRONE_ID_BASIC_ID", 114, 44, 44, typeof( OPEN_DRONE_ID_BASIC_ID_MSG )),
+        new message_info(12901, "OPEN_DRONE_ID_LOCATION", 254, 59, 59, typeof( OPEN_DRONE_ID_LOCATION_MSG )),
+        new message_info(12902, "OPEN_DRONE_ID_AUTHENTICATION", 140, 53, 53, typeof( OPEN_DRONE_ID_AUTHENTICATION_MSG )),
+        new message_info(12903, "OPEN_DRONE_ID_SELF_ID", 249, 46, 46, typeof( OPEN_DRONE_ID_SELF_ID_MSG )),
+        new message_info(12904, "OPEN_DRONE_ID_SYSTEM", 77, 54, 54, typeof( OPEN_DRONE_ID_SYSTEM_MSG )),
+        new message_info(12905, "OPEN_DRONE_ID_OPERATOR_ID", 49, 43, 43, typeof( OPEN_DRONE_ID_OPERATOR_ID_MSG )),
+        new message_info(12915, "OPEN_DRONE_ID_MESSAGE_PACK", 94, 249, 249, typeof( OPEN_DRONE_ID_MESSAGE_PACK_MSG )),
+        new message_info(12918, "OPEN_DRONE_ID_ARM_STATUS", 139, 51, 51, typeof( OPEN_DRONE_ID_ARM_STATUS_MSG )),
+        new message_info(12919, "OPEN_DRONE_ID_SYSTEM_UPDATE", 7, 18, 18, typeof( OPEN_DRONE_ID_SYSTEM_UPDATE_MSG )),
+        new message_info(12920, "HYGROMETER_SENSOR", 20, 5, 5, typeof( HYGROMETER_SENSOR_MSG )),
 
     };
 
@@ -250,7 +293,7 @@ public partial class MAVLink
         }
     }   
 
-    public enum MSG_ID
+    public enum MSG_ID 
     {
 
         HEARTBEAT = 0,
@@ -294,7 +337,6 @@ public partial class MAVLink
         GPS_GLOBAL_ORIGIN = 49,
         PARAM_MAP_RC = 50,
         MISSION_REQUEST_INT = 51,
-        MISSION_CHANGED = 52,
         SAFETY_SET_ALLOWED_AREA = 54,
         SAFETY_ALLOWED_AREA = 55,
         ATTITUDE_QUATERNION_COV = 61,
@@ -311,6 +353,7 @@ public partial class MAVLink
         COMMAND_INT = 75,
         COMMAND_LONG = 76,
         COMMAND_ACK = 77,
+        COMMAND_CANCEL = 80,
         MANUAL_SETPOINT = 81,
         SET_ATTITUDE_TARGET = 82,
         ATTITUDE_TARGET = 83,
@@ -372,6 +415,9 @@ public partial class MAVLink
         BATTERY_STATUS = 147,
         AUTOPILOT_VERSION = 148,
         LANDING_TARGET = 149,
+        FENCE_STATUS = 162,
+        MAG_CAL_REPORT = 192,
+        EFI_STATUS = 225,
         ESTIMATOR_STATUS = 230,
         WIND_COV = 231,
         GPS_INPUT = 232,
@@ -407,8 +453,23 @@ public partial class MAVLink
         LOGGING_ACK = 268,
         VIDEO_STREAM_INFORMATION = 269,
         VIDEO_STREAM_STATUS = 270,
+        CAMERA_FOV_STATUS = 271,
+        CAMERA_TRACKING_IMAGE_STATUS = 275,
+        CAMERA_TRACKING_GEO_STATUS = 276,
+        GIMBAL_MANAGER_INFORMATION = 280,
+        GIMBAL_MANAGER_STATUS = 281,
+        GIMBAL_MANAGER_SET_ATTITUDE = 282,
+        GIMBAL_DEVICE_INFORMATION = 283,
+        GIMBAL_DEVICE_SET_ATTITUDE = 284,
+        GIMBAL_DEVICE_ATTITUDE_STATUS = 285,
+        AUTOPILOT_STATE_FOR_GIMBAL_DEVICE = 286,
+        GIMBAL_MANAGER_SET_PITCHYAW = 287,
+        GIMBAL_MANAGER_SET_MANUAL_CONTROL = 288,
+        ESC_INFO = 290,
+        ESC_STATUS = 291,
         WIFI_CONFIG_AP = 299,
         PROTOCOL_VERSION = 300,
+        AIS_VESSEL = 301,
         UAVCAN_NODE_STATUS = 310,
         UAVCAN_NODE_INFO = 311,
         PARAM_EXT_REQUEST_READ = 320,
@@ -421,190 +482,43 @@ public partial class MAVLink
         TRAJECTORY_REPRESENTATION_WAYPOINTS = 332,
         TRAJECTORY_REPRESENTATION_BEZIER = 333,
         CELLULAR_STATUS = 334,
+        ISBD_LINK_STATUS = 335,
+        CELLULAR_CONFIG = 336,
+        RAW_RPM = 339,
         UTM_GLOBAL_POSITION = 340,
         DEBUG_FLOAT_ARRAY = 350,
         ORBIT_EXECUTION_STATUS = 360,
-        STATUSTEXT_LONG = 365,
         SMART_BATTERY_INFO = 370,
-        SMART_BATTERY_STATUS = 371,
+        GENERATOR_STATUS = 373,
         ACTUATOR_OUTPUT_STATUS = 375,
         TIME_ESTIMATE_TO_TARGET = 380,
         TUNNEL = 385,
+        CAN_FRAME = 386,
+        CANFD_FRAME = 387,
+        CAN_FILTER_MODIFY = 388,
         ONBOARD_COMPUTER_STATUS = 390,
+        COMPONENT_INFORMATION = 395,
+        COMPONENT_METADATA = 397,
+        PLAY_TUNE_V2 = 400,
+        SUPPORTED_TUNES = 401,
+        EVENT = 410,
+        CURRENT_EVENT_SEQUENCE = 411,
+        REQUEST_EVENT = 412,
+        RESPONSE_EVENT_ERROR = 413,
         WHEEL_DISTANCE = 9000,
+        WINCH_STATUS = 9005,
+        OPEN_DRONE_ID_BASIC_ID = 12900,
+        OPEN_DRONE_ID_LOCATION = 12901,
+        OPEN_DRONE_ID_AUTHENTICATION = 12902,
+        OPEN_DRONE_ID_SELF_ID = 12903,
+        OPEN_DRONE_ID_SYSTEM = 12904,
+        OPEN_DRONE_ID_OPERATOR_ID = 12905,
+        OPEN_DRONE_ID_MESSAGE_PACK = 12915,
+        OPEN_DRONE_ID_ARM_STATUS = 12918,
+        OPEN_DRONE_ID_SYSTEM_UPDATE = 12919,
+        HYGROMETER_SENSOR = 12920,
     }
     
-    
-    ///<summary> Micro air vehicle / autopilot classes. This identifies the individual model. </summary>
-    public enum MAV_AUTOPILOT: byte
-    {
-        ///<summary> Generic autopilot, full support for everything | </summary>
-        [Description("Generic autopilot, full support for everything")]
-        GENERIC=0, 
-        ///<summary> Reserved for future use. | </summary>
-        [Description("Reserved for future use.")]
-        RESERVED=1, 
-        ///<summary> SLUGS autopilot, http://slugsuav.soe.ucsc.edu | </summary>
-        [Description("SLUGS autopilot, http://slugsuav.soe.ucsc.edu")]
-        SLUGS=2, 
-        ///<summary> ArduPilot - Plane/Copter/Rover/Sub/Tracker, http://ardupilot.org | </summary>
-        [Description("ArduPilot - Plane/Copter/Rover/Sub/Tracker, http://ardupilot.org")]
-        ARDUPILOTMEGA=3, 
-        ///<summary> OpenPilot, http://openpilot.org | </summary>
-        [Description("OpenPilot, http://openpilot.org")]
-        OPENPILOT=4, 
-        ///<summary> Generic autopilot only supporting simple waypoints | </summary>
-        [Description("Generic autopilot only supporting simple waypoints")]
-        GENERIC_WAYPOINTS_ONLY=5, 
-        ///<summary> Generic autopilot supporting waypoints and other simple navigation commands | </summary>
-        [Description("Generic autopilot supporting waypoints and other simple navigation commands")]
-        GENERIC_WAYPOINTS_AND_SIMPLE_NAVIGATION_ONLY=6, 
-        ///<summary> Generic autopilot supporting the full mission command set | </summary>
-        [Description("Generic autopilot supporting the full mission command set")]
-        GENERIC_MISSION_FULL=7, 
-        ///<summary> No valid autopilot, e.g. a GCS or other MAVLink component | </summary>
-        [Description("No valid autopilot, e.g. a GCS or other MAVLink component")]
-        INVALID=8, 
-        ///<summary> PPZ UAV - http://nongnu.org/paparazzi | </summary>
-        [Description("PPZ UAV - http://nongnu.org/paparazzi")]
-        PPZ=9, 
-        ///<summary> UAV Dev Board | </summary>
-        [Description("UAV Dev Board")]
-        UDB=10, 
-        ///<summary> FlexiPilot | </summary>
-        [Description("FlexiPilot")]
-        FP=11, 
-        ///<summary> PX4 Autopilot - http://px4.io/ | </summary>
-        [Description("PX4 Autopilot - http://px4.io/")]
-        PX4=12, 
-        ///<summary> SMACCMPilot - http://smaccmpilot.org | </summary>
-        [Description("SMACCMPilot - http://smaccmpilot.org")]
-        SMACCMPILOT=13, 
-        ///<summary> AutoQuad -- http://autoquad.org | </summary>
-        [Description("AutoQuad -- http://autoquad.org")]
-        AUTOQUAD=14, 
-        ///<summary> Armazila -- http://armazila.com | </summary>
-        [Description("Armazila -- http://armazila.com")]
-        ARMAZILA=15, 
-        ///<summary> Aerob -- http://aerob.ru | </summary>
-        [Description("Aerob -- http://aerob.ru")]
-        AEROB=16, 
-        ///<summary> ASLUAV autopilot -- http://www.asl.ethz.ch | </summary>
-        [Description("ASLUAV autopilot -- http://www.asl.ethz.ch")]
-        ASLUAV=17, 
-        ///<summary> SmartAP Autopilot - http://sky-drones.com | </summary>
-        [Description("SmartAP Autopilot - http://sky-drones.com")]
-        SMARTAP=18, 
-        ///<summary> AirRails - http://uaventure.com | </summary>
-        [Description("AirRails - http://uaventure.com")]
-        AIRRAILS=19, 
-        
-    };
-    
-    ///<summary> MAVLINK system type. All components in a system should report this type in their HEARTBEAT. </summary>
-    public enum MAV_TYPE: byte
-    {
-        ///<summary> Generic micro air vehicle. | </summary>
-        [Description("Generic micro air vehicle.")]
-        GENERIC=0, 
-        ///<summary> Fixed wing aircraft. | </summary>
-        [Description("Fixed wing aircraft.")]
-        FIXED_WING=1, 
-        ///<summary> Quadrotor | </summary>
-        [Description("Quadrotor")]
-        QUADROTOR=2, 
-        ///<summary> Coaxial helicopter | </summary>
-        [Description("Coaxial helicopter")]
-        COAXIAL=3, 
-        ///<summary> Normal helicopter with tail rotor. | </summary>
-        [Description("Normal helicopter with tail rotor.")]
-        HELICOPTER=4, 
-        ///<summary> Ground installation | </summary>
-        [Description("Ground installation")]
-        ANTENNA_TRACKER=5, 
-        ///<summary> Operator control unit / ground control station | </summary>
-        [Description("Operator control unit / ground control station")]
-        GCS=6, 
-        ///<summary> Airship, controlled | </summary>
-        [Description("Airship, controlled")]
-        AIRSHIP=7, 
-        ///<summary> Free balloon, uncontrolled | </summary>
-        [Description("Free balloon, uncontrolled")]
-        FREE_BALLOON=8, 
-        ///<summary> Rocket | </summary>
-        [Description("Rocket")]
-        ROCKET=9, 
-        ///<summary> Ground rover | </summary>
-        [Description("Ground rover")]
-        GROUND_ROVER=10, 
-        ///<summary> Surface vessel, boat, ship | </summary>
-        [Description("Surface vessel, boat, ship")]
-        SURFACE_BOAT=11, 
-        ///<summary> Submarine | </summary>
-        [Description("Submarine")]
-        SUBMARINE=12, 
-        ///<summary> Hexarotor | </summary>
-        [Description("Hexarotor")]
-        HEXAROTOR=13, 
-        ///<summary> Octorotor | </summary>
-        [Description("Octorotor")]
-        OCTOROTOR=14, 
-        ///<summary> Tricopter | </summary>
-        [Description("Tricopter")]
-        TRICOPTER=15, 
-        ///<summary> Flapping wing | </summary>
-        [Description("Flapping wing")]
-        FLAPPING_WING=16, 
-        ///<summary> Kite | </summary>
-        [Description("Kite")]
-        KITE=17, 
-        ///<summary> Onboard companion controller | </summary>
-        [Description("Onboard companion controller")]
-        ONBOARD_CONTROLLER=18, 
-        ///<summary> Two-rotor VTOL using control surfaces in vertical operation in addition. Tailsitter. | </summary>
-        [Description("Two-rotor VTOL using control surfaces in vertical operation in addition. Tailsitter.")]
-        VTOL_DUOROTOR=19, 
-        ///<summary> Quad-rotor VTOL using a V-shaped quad config in vertical operation. Tailsitter. | </summary>
-        [Description("Quad-rotor VTOL using a V-shaped quad config in vertical operation. Tailsitter.")]
-        VTOL_QUADROTOR=20, 
-        ///<summary> Tiltrotor VTOL | </summary>
-        [Description("Tiltrotor VTOL")]
-        VTOL_TILTROTOR=21, 
-        ///<summary> VTOL reserved 2 | </summary>
-        [Description("VTOL reserved 2")]
-        VTOL_RESERVED2=22, 
-        ///<summary> VTOL reserved 3 | </summary>
-        [Description("VTOL reserved 3")]
-        VTOL_RESERVED3=23, 
-        ///<summary> VTOL reserved 4 | </summary>
-        [Description("VTOL reserved 4")]
-        VTOL_RESERVED4=24, 
-        ///<summary> VTOL reserved 5 | </summary>
-        [Description("VTOL reserved 5")]
-        VTOL_RESERVED5=25, 
-        ///<summary> Gimbal (standalone) | </summary>
-        [Description("Gimbal (standalone)")]
-        GIMBAL=26, 
-        ///<summary> ADSB system (standalone) | </summary>
-        [Description("ADSB system (standalone)")]
-        ADSB=27, 
-        ///<summary> Steerable, nonrigid airfoil | </summary>
-        [Description("Steerable, nonrigid airfoil")]
-        PARAFOIL=28, 
-        ///<summary> Dodecarotor | </summary>
-        [Description("Dodecarotor")]
-        DODECAROTOR=29, 
-        ///<summary> Camera (standalone) | </summary>
-        [Description("Camera (standalone)")]
-        CAMERA=30, 
-        ///<summary> Charging station | </summary>
-        [Description("Charging station")]
-        CHARGING_STATION=31, 
-        ///<summary> FLARM collision avoidance system (standalone) | </summary>
-        [Description("FLARM collision avoidance system (standalone)")]
-        FLARM=32, 
-        
-    };
     
     ///<summary> These values define the type of firmware release.  These values indicate the first version or release of this type.  For example the first alpha release would be 64, the second would be 65. </summary>
     public enum FIRMWARE_VERSION_TYPE: int /*default*/
@@ -675,66 +589,6 @@ public partial class MAVLink
         
     };
     
-    ///<summary> These flags encode the MAV mode. </summary>
-    public enum MAV_MODE_FLAG: byte
-    {
-        ///<summary> 0b00000001 Reserved for future use. | </summary>
-        [Description("0b00000001 Reserved for future use.")]
-        CUSTOM_MODE_ENABLED=1, 
-        ///<summary> 0b00000010 system has a test mode enabled. This flag is intended for temporary system tests and should not be used for stable implementations. | </summary>
-        [Description("0b00000010 system has a test mode enabled. This flag is intended for temporary system tests and should not be used for stable implementations.")]
-        TEST_ENABLED=2, 
-        ///<summary> 0b00000100 autonomous mode enabled, system finds its own goal positions. Guided flag can be set or not, depends on the actual implementation. | </summary>
-        [Description("0b00000100 autonomous mode enabled, system finds its own goal positions. Guided flag can be set or not, depends on the actual implementation.")]
-        AUTO_ENABLED=4, 
-        ///<summary> 0b00001000 guided mode enabled, system flies waypoints / mission items. | </summary>
-        [Description("0b00001000 guided mode enabled, system flies waypoints / mission items.")]
-        GUIDED_ENABLED=8, 
-        ///<summary> 0b00010000 system stabilizes electronically its attitude (and optionally position). It needs however further control inputs to move around. | </summary>
-        [Description("0b00010000 system stabilizes electronically its attitude (and optionally position). It needs however further control inputs to move around.")]
-        STABILIZE_ENABLED=16, 
-        ///<summary> 0b00100000 hardware in the loop simulation. All motors / actuators are blocked, but internal software is full operational. | </summary>
-        [Description("0b00100000 hardware in the loop simulation. All motors / actuators are blocked, but internal software is full operational.")]
-        HIL_ENABLED=32, 
-        ///<summary> 0b01000000 remote control input is enabled. | </summary>
-        [Description("0b01000000 remote control input is enabled.")]
-        MANUAL_INPUT_ENABLED=64, 
-        ///<summary> 0b10000000 MAV safety set to armed. Motors are enabled / running / can start. Ready to fly. Additional note: this flag is to be ignore when sent in the command MAV_CMD_DO_SET_MODE and MAV_CMD_COMPONENT_ARM_DISARM shall be used instead. The flag can still be used to report the armed state. | </summary>
-        [Description("0b10000000 MAV safety set to armed. Motors are enabled / running / can start. Ready to fly. Additional note: this flag is to be ignore when sent in the command MAV_CMD_DO_SET_MODE and MAV_CMD_COMPONENT_ARM_DISARM shall be used instead. The flag can still be used to report the armed state.")]
-        SAFETY_ARMED=128, 
-        
-    };
-    
-    ///<summary> These values encode the bit positions of the decode position. These values can be used to read the value of a flag bit by combining the base_mode variable with AND with the flag position value. The result will be either 0 or 1, depending on if the flag is set or not. </summary>
-    public enum MAV_MODE_FLAG_DECODE_POSITION: int /*default*/
-    {
-        ///<summary> Eighth bit: 00000001 | </summary>
-        [Description("Eighth bit: 00000001")]
-        CUSTOM_MODE=1, 
-        ///<summary> Seventh bit: 00000010 | </summary>
-        [Description("Seventh bit: 00000010")]
-        TEST=2, 
-        ///<summary> Sixth bit:   00000100 | </summary>
-        [Description("Sixth bit:   00000100")]
-        AUTO=4, 
-        ///<summary> Fifth bit:  00001000 | </summary>
-        [Description("Fifth bit:  00001000")]
-        GUIDED=8, 
-        ///<summary> Fourth bit: 00010000 | </summary>
-        [Description("Fourth bit: 00010000")]
-        STABILIZE=16, 
-        ///<summary> Third bit:  00100000 | </summary>
-        [Description("Third bit:  00100000")]
-        HIL=32, 
-        ///<summary> Second bit: 01000000 | </summary>
-        [Description("Second bit: 01000000")]
-        MANUAL=64, 
-        ///<summary> First bit:  10000000 | </summary>
-        [Description("First bit:  10000000")]
-        SAFETY=128, 
-        
-    };
-    
     ///<summary> Actions that may be specified in MAV_CMD_OVERRIDE_GOTO to override mission execution. </summary>
     public enum MAV_GOTO: int /*default*/
     {
@@ -789,168 +643,6 @@ public partial class MAVLink
         ///<summary> System is allowed to be active, under autonomous control and navigation (the trajectory is decided onboard and not pre-programmed by waypoints) | </summary>
         [Description("System is allowed to be active, under autonomous control and navigation (the trajectory is decided onboard and not pre-programmed by waypoints)")]
         AUTO_ARMED=220, 
-        
-    };
-    
-    ///<summary>  </summary>
-    public enum MAV_STATE: byte
-    {
-        ///<summary> Uninitialized system, state is unknown. | </summary>
-        [Description("Uninitialized system, state is unknown.")]
-        UNINIT=0, 
-        ///<summary> System is booting up. | </summary>
-        [Description("System is booting up.")]
-        BOOT=1, 
-        ///<summary> System is calibrating and not flight-ready. | </summary>
-        [Description("System is calibrating and not flight-ready.")]
-        CALIBRATING=2, 
-        ///<summary> System is grounded and on standby. It can be launched any time. | </summary>
-        [Description("System is grounded and on standby. It can be launched any time.")]
-        STANDBY=3, 
-        ///<summary> System is active and might be already airborne. Motors are engaged. | </summary>
-        [Description("System is active and might be already airborne. Motors are engaged.")]
-        ACTIVE=4, 
-        ///<summary> System is in a non-normal flight mode. It can however still navigate. | </summary>
-        [Description("System is in a non-normal flight mode. It can however still navigate.")]
-        CRITICAL=5, 
-        ///<summary> System is in a non-normal flight mode. It lost control over parts or over the whole airframe. It is in mayday and going down. | </summary>
-        [Description("System is in a non-normal flight mode. It lost control over parts or over the whole airframe. It is in mayday and going down.")]
-        EMERGENCY=6, 
-        ///<summary> System just initialized its power-down sequence, will shut down now. | </summary>
-        [Description("System just initialized its power-down sequence, will shut down now.")]
-        POWEROFF=7, 
-        ///<summary> System is terminating itself. | </summary>
-        [Description("System is terminating itself.")]
-        FLIGHT_TERMINATION=8, 
-        
-    };
-    
-    ///<summary> Component ids (values) for the different types and instances of onboard hardware/software that might make up a MAVLink system (autopilot, cameras, servos, GPS systems, avoidance systems etc.).       Components must use the appropriate ID in their source address when sending messages. Components can also use IDs to determine if they are the intended recipient of an incoming message. The MAV_COMP_ID_ALL value is used to indicate messages that must be processed by all components.       When creating new entries, components that can have multiple instances (e.g. cameras, servos etc.) should be allocated sequential values. An appropriate number of values should be left free after these components to allow the number of instances to be expanded. </summary>
-    public enum MAV_COMPONENT: byte
-    {
-        ///<summary> Used to broadcast messages to all components of the receiving system. Components should attempt to process messages with this component ID and forward to components on any other interfaces. | </summary>
-        [Description("Used to broadcast messages to all components of the receiving system. Components should attempt to process messages with this component ID and forward to components on any other interfaces.")]
-        MAV_COMP_ID_ALL=0, 
-        ///<summary> System flight controller component ('autopilot'). Only one autopilot is expected in a particular system. | </summary>
-        [Description("System flight controller component ('autopilot'). Only one autopilot is expected in a particular system.")]
-        MAV_COMP_ID_AUTOPILOT1=1, 
-        ///<summary> Camera #1. | </summary>
-        [Description("Camera #1.")]
-        MAV_COMP_ID_CAMERA=100, 
-        ///<summary> Camera #2. | </summary>
-        [Description("Camera #2.")]
-        MAV_COMP_ID_CAMERA2=101, 
-        ///<summary> Camera #3. | </summary>
-        [Description("Camera #3.")]
-        MAV_COMP_ID_CAMERA3=102, 
-        ///<summary> Camera #4. | </summary>
-        [Description("Camera #4.")]
-        MAV_COMP_ID_CAMERA4=103, 
-        ///<summary> Camera #5. | </summary>
-        [Description("Camera #5.")]
-        MAV_COMP_ID_CAMERA5=104, 
-        ///<summary> Camera #6. | </summary>
-        [Description("Camera #6.")]
-        MAV_COMP_ID_CAMERA6=105, 
-        ///<summary> Servo #1. | </summary>
-        [Description("Servo #1.")]
-        MAV_COMP_ID_SERVO1=140, 
-        ///<summary> Servo #2. | </summary>
-        [Description("Servo #2.")]
-        MAV_COMP_ID_SERVO2=141, 
-        ///<summary> Servo #3. | </summary>
-        [Description("Servo #3.")]
-        MAV_COMP_ID_SERVO3=142, 
-        ///<summary> Servo #4. | </summary>
-        [Description("Servo #4.")]
-        MAV_COMP_ID_SERVO4=143, 
-        ///<summary> Servo #5. | </summary>
-        [Description("Servo #5.")]
-        MAV_COMP_ID_SERVO5=144, 
-        ///<summary> Servo #6. | </summary>
-        [Description("Servo #6.")]
-        MAV_COMP_ID_SERVO6=145, 
-        ///<summary> Servo #7. | </summary>
-        [Description("Servo #7.")]
-        MAV_COMP_ID_SERVO7=146, 
-        ///<summary> Servo #8. | </summary>
-        [Description("Servo #8.")]
-        MAV_COMP_ID_SERVO8=147, 
-        ///<summary> Servo #9. | </summary>
-        [Description("Servo #9.")]
-        MAV_COMP_ID_SERVO9=148, 
-        ///<summary> Servo #10. | </summary>
-        [Description("Servo #10.")]
-        MAV_COMP_ID_SERVO10=149, 
-        ///<summary> Servo #11. | </summary>
-        [Description("Servo #11.")]
-        MAV_COMP_ID_SERVO11=150, 
-        ///<summary> Servo #12. | </summary>
-        [Description("Servo #12.")]
-        MAV_COMP_ID_SERVO12=151, 
-        ///<summary> Servo #13. | </summary>
-        [Description("Servo #13.")]
-        MAV_COMP_ID_SERVO13=152, 
-        ///<summary> Servo #14. | </summary>
-        [Description("Servo #14.")]
-        MAV_COMP_ID_SERVO14=153, 
-        ///<summary> Gimbal component. | </summary>
-        [Description("Gimbal component.")]
-        MAV_COMP_ID_GIMBAL=154, 
-        ///<summary> Logging component. | </summary>
-        [Description("Logging component.")]
-        MAV_COMP_ID_LOG=155, 
-        ///<summary> Automatic Dependent Surveillance-Broadcast (ADS-B) component. | </summary>
-        [Description("Automatic Dependent Surveillance-Broadcast (ADS-B) component.")]
-        MAV_COMP_ID_ADSB=156, 
-        ///<summary> On Screen Display (OSD) devices for video links. | </summary>
-        [Description("On Screen Display (OSD) devices for video links.")]
-        MAV_COMP_ID_OSD=157, 
-        ///<summary> Generic autopilot peripheral component ID. Meant for devices that do not implement the parameter microservice. | </summary>
-        [Description("Generic autopilot peripheral component ID. Meant for devices that do not implement the parameter microservice.")]
-        MAV_COMP_ID_PERIPHERAL=158, 
-        ///<summary> Gimbal ID for QX1. | </summary>
-        [Description("Gimbal ID for QX1.")]
-        MAV_COMP_ID_QX1_GIMBAL=159, 
-        ///<summary> FLARM collision alert component. | </summary>
-        [Description("FLARM collision alert component.")]
-        MAV_COMP_ID_FLARM=160, 
-        ///<summary> Component that can generate/supply a mission flight plan (e.g. GCS or developer API). | </summary>
-        [Description("Component that can generate/supply a mission flight plan (e.g. GCS or developer API).")]
-        MAV_COMP_ID_MISSIONPLANNER=190, 
-        ///<summary> Component that finds an optimal path between points based on a certain constraint (e.g. minimum snap, shortest path, cost, etc.). | </summary>
-        [Description("Component that finds an optimal path between points based on a certain constraint (e.g. minimum snap, shortest path, cost, etc.).")]
-        MAV_COMP_ID_PATHPLANNER=195, 
-        ///<summary> Component that plans a collision free path between two points. | </summary>
-        [Description("Component that plans a collision free path between two points.")]
-        MAV_COMP_ID_OBSTACLE_AVOIDANCE=196, 
-        ///<summary> Component that provides position estimates using VIO techniques. | </summary>
-        [Description("Component that provides position estimates using VIO techniques.")]
-        MAV_COMP_ID_VISUAL_INERTIAL_ODOMETRY=197, 
-        ///<summary> Inertial Measurement Unit (IMU) #1. | </summary>
-        [Description("Inertial Measurement Unit (IMU) #1.")]
-        MAV_COMP_ID_IMU=200, 
-        ///<summary> Inertial Measurement Unit (IMU) #2. | </summary>
-        [Description("Inertial Measurement Unit (IMU) #2.")]
-        MAV_COMP_ID_IMU_2=201, 
-        ///<summary> Inertial Measurement Unit (IMU) #3. | </summary>
-        [Description("Inertial Measurement Unit (IMU) #3.")]
-        MAV_COMP_ID_IMU_3=202, 
-        ///<summary> GPS #1. | </summary>
-        [Description("GPS #1.")]
-        MAV_COMP_ID_GPS=220, 
-        ///<summary> GPS #2. | </summary>
-        [Description("GPS #2.")]
-        MAV_COMP_ID_GPS2=221, 
-        ///<summary> Component to bridge MAVLink to UDP (i.e. from a UART). | </summary>
-        [Description("Component to bridge MAVLink to UDP (i.e. from a UART).")]
-        MAV_COMP_ID_UDP_BRIDGE=240, 
-        ///<summary> Component to bridge to UART (i.e. from UDP). | </summary>
-        [Description("Component to bridge to UART (i.e. from UDP).")]
-        MAV_COMP_ID_UART_BRIDGE=241, 
-        ///<summary> Component for handling system messages (e.g. to ARM, takeoff, etc.). | </summary>
-        [Description("Component for handling system messages (e.g. to ARM, takeoff, etc.).")]
-        MAV_COMP_ID_SYSTEM_CONTROL=250, 
         
     };
     
@@ -1041,122 +733,158 @@ public partial class MAVLink
         ///<summary> 0x8000000 Satellite Communication  | </summary>
         [Description("0x8000000 Satellite Communication ")]
         SATCOM=134217728, 
+        ///<summary> 0x10000000 pre-arm check status. Always healthy when armed | </summary>
+        [Description("0x10000000 pre-arm check status. Always healthy when armed")]
+        MAV_SYS_STATUS_PREARM_CHECK=268435456, 
+        ///<summary> 0x20000000 Avoidance/collision prevention | </summary>
+        [Description("0x20000000 Avoidance/collision prevention")]
+        MAV_SYS_STATUS_OBSTACLE_AVOIDANCE=536870912, 
+        ///<summary> 0x40000000 propulsion (actuator, esc, motor or propellor) | </summary>
+        [Description("0x40000000 propulsion (actuator, esc, motor or propellor)")]
+        PROPULSION=1073741824, 
+        ///<summary> 0x80000000 Extended bit-field are used for further sensor status bits (needs to be set in onboard_control_sensors_present only) | </summary>
+        [Description("0x80000000 Extended bit-field are used for further sensor status bits (needs to be set in onboard_control_sensors_present only)")]
+        MAV_SYS_STATUS_EXTENSION_USED=2147483648, 
         
     };
     
-    ///<summary>  </summary>
+    ///<summary> These encode the sensors whose status is sent as part of the SYS_STATUS message in the extended fields. </summary>
+    public enum MAV_SYS_STATUS_SENSOR_EXTENDED: uint
+    {
+        ///<summary> 0x01 Recovery system (parachute, balloon, retracts etc) | </summary>
+        [Description("0x01 Recovery system (parachute, balloon, retracts etc)")]
+        MAV_SYS_STATUS_RECOVERY_SYSTEM=1, 
+        
+    };
+    
+    ///<summary> Coordinate frames used by MAVLink. Not all frames are supported by all commands, messages, or vehicles.              Global frames use the following naming conventions:       - 'GLOBAL': Global coordinate frame with WGS84 latitude/longitude and altitude positive over mean sea level (MSL) by default.          The following modifiers may be used with 'GLOBAL':         - 'RELATIVE_ALT': Altitude is relative to the vehicle home position rather than MSL.         - 'TERRAIN_ALT': Altitude is relative to ground level rather than MSL.         - 'INT': Latitude/longitude (in degrees) are scaled by multiplying by 1E7.        Local frames use the following naming conventions:       - 'LOCAL': Origin of local frame is fixed relative to earth. Unless otherwise specified this origin is the origin of the vehicle position-estimator ('EKF').       - 'BODY': Origin of local frame travels with the vehicle. NOTE, 'BODY' does NOT indicate alignment of frame axis with vehicle attitude.       - 'OFFSET': Deprecated synonym for 'BODY' (origin travels with the vehicle). Not to be used for new frames.        Some deprecated frames do not follow these conventions (e.g. MAV_FRAME_BODY_NED and MAV_FRAME_BODY_OFFSET_NED).   </summary>
     public enum MAV_FRAME: byte
     {
         ///<summary> Global (WGS84) coordinate frame + MSL altitude. First value / x: latitude, second value / y: longitude, third value / z: positive altitude over mean sea level (MSL). | </summary>
         [Description("Global (WGS84) coordinate frame + MSL altitude. First value / x: latitude, second value / y: longitude, third value / z: positive altitude over mean sea level (MSL).")]
         GLOBAL=0, 
-        ///<summary> Local coordinate frame, Z-down (x: north, y: east, z: down). | </summary>
-        [Description("Local coordinate frame, Z-down (x: north, y: east, z: down).")]
+        ///<summary> NED local tangent frame (x: North, y: East, z: Down) with origin fixed relative to earth. | </summary>
+        [Description("NED local tangent frame (x: North, y: East, z: Down) with origin fixed relative to earth.")]
         LOCAL_NED=1, 
         ///<summary> NOT a coordinate frame, indicates a mission command. | </summary>
         [Description("NOT a coordinate frame, indicates a mission command.")]
         MISSION=2, 
-        ///<summary> Global (WGS84) coordinate frame + altitude relative to the home position. First value / x: latitude, second value / y: longitude, third value / z: positive altitude with 0 being at the altitude of the home location. | </summary>
-        [Description("Global (WGS84) coordinate frame + altitude relative to the home position. First value / x: latitude, second value / y: longitude, third value / z: positive altitude with 0 being at the altitude of the home location.")]
+        ///<summary>            Global (WGS84) coordinate frame + altitude relative to the home position.           First value / x: latitude, second value / y: longitude, third value / z: positive altitude with 0 being at the altitude of the home position.          | </summary>
+        [Description("           Global (WGS84) coordinate frame + altitude relative to the home position.           First value / x: latitude, second value / y: longitude, third value / z: positive altitude with 0 being at the altitude of the home position.         ")]
         GLOBAL_RELATIVE_ALT=3, 
-        ///<summary> Local coordinate frame, Z-up (x: east, y: north, z: up). | </summary>
-        [Description("Local coordinate frame, Z-up (x: east, y: north, z: up).")]
+        ///<summary> ENU local tangent frame (x: East, y: North, z: Up) with origin fixed relative to earth. | </summary>
+        [Description("ENU local tangent frame (x: East, y: North, z: Up) with origin fixed relative to earth.")]
         LOCAL_ENU=4, 
-        ///<summary> Global (WGS84) coordinate frame (scaled) + MSL altitude. First value / x: latitude in degrees*1.0e-7, second value / y: longitude in degrees*1.0e-7, third value / z: positive altitude over mean sea level (MSL). | </summary>
-        [Description("Global (WGS84) coordinate frame (scaled) + MSL altitude. First value / x: latitude in degrees*1.0e-7, second value / y: longitude in degrees*1.0e-7, third value / z: positive altitude over mean sea level (MSL).")]
+        ///<summary> Global (WGS84) coordinate frame (scaled) + MSL altitude. First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude over mean sea level (MSL). | </summary>
+        [Description("Global (WGS84) coordinate frame (scaled) + MSL altitude. First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude over mean sea level (MSL).")]
         GLOBAL_INT=5, 
-        ///<summary> Global (WGS84) coordinate frame (scaled) + altitude relative to the home position. First value / x: latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value / z: positive altitude with 0 being at the altitude of the home location. | </summary>
-        [Description("Global (WGS84) coordinate frame (scaled) + altitude relative to the home position. First value / x: latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value / z: positive altitude with 0 being at the altitude of the home location.")]
+        ///<summary>            Global (WGS84) coordinate frame (scaled) + altitude relative to the home position.           First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude with 0 being at the altitude of the home position.          | </summary>
+        [Description("           Global (WGS84) coordinate frame (scaled) + altitude relative to the home position.           First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude with 0 being at the altitude of the home position.         ")]
         GLOBAL_RELATIVE_ALT_INT=6, 
-        ///<summary> Offset to the current local frame. Anything expressed in this frame should be added to the current local frame position. | </summary>
-        [Description("Offset to the current local frame. Anything expressed in this frame should be added to the current local frame position.")]
+        ///<summary> NED local tangent frame (x: North, y: East, z: Down) with origin that travels with the vehicle. | </summary>
+        [Description("NED local tangent frame (x: North, y: East, z: Down) with origin that travels with the vehicle.")]
         LOCAL_OFFSET_NED=7, 
-        ///<summary> Setpoint in body NED frame. This makes sense if all position control is externalized - e.g. useful to command 2 m/s^2 acceleration to the right. | </summary>
-        [Description("Setpoint in body NED frame. This makes sense if all position control is externalized - e.g. useful to command 2 m/s^2 acceleration to the right.")]
+        ///<summary> Same as MAV_FRAME_LOCAL_NED when used to represent position values. Same as MAV_FRAME_BODY_FRD when used with velocity/acceleration values. | </summary>
+        [Description("Same as MAV_FRAME_LOCAL_NED when used to represent position values. Same as MAV_FRAME_BODY_FRD when used with velocity/acceleration values.")]
         BODY_NED=8, 
-        ///<summary> Offset in body NED frame. This makes sense if adding setpoints to the current flight path, to avoid an obstacle - e.g. useful to command 2 m/s^2 acceleration to the east. | </summary>
-        [Description("Offset in body NED frame. This makes sense if adding setpoints to the current flight path, to avoid an obstacle - e.g. useful to command 2 m/s^2 acceleration to the east.")]
+        ///<summary> This is the same as MAV_FRAME_BODY_FRD. | </summary>
+        [Description("This is the same as MAV_FRAME_BODY_FRD.")]
         BODY_OFFSET_NED=9, 
         ///<summary> Global (WGS84) coordinate frame with AGL altitude (at the waypoint coordinate). First value / x: latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude in meters with 0 being at ground level in terrain model. | </summary>
         [Description("Global (WGS84) coordinate frame with AGL altitude (at the waypoint coordinate). First value / x: latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude in meters with 0 being at ground level in terrain model.")]
         GLOBAL_TERRAIN_ALT=10, 
-        ///<summary> Global (WGS84) coordinate frame (scaled) with AGL altitude (at the waypoint coordinate). First value / x: latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value / z: positive altitude in meters with 0 being at ground level in terrain model. | </summary>
-        [Description("Global (WGS84) coordinate frame (scaled) with AGL altitude (at the waypoint coordinate). First value / x: latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value / z: positive altitude in meters with 0 being at ground level in terrain model.")]
+        ///<summary> Global (WGS84) coordinate frame (scaled) with AGL altitude (at the waypoint coordinate). First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude in meters with 0 being at ground level in terrain model. | </summary>
+        [Description("Global (WGS84) coordinate frame (scaled) with AGL altitude (at the waypoint coordinate). First value / x: latitude in degrees*1E7, second value / y: longitude in degrees*1E7, third value / z: positive altitude in meters with 0 being at ground level in terrain model.")]
         GLOBAL_TERRAIN_ALT_INT=11, 
-        ///<summary> Body fixed frame of reference, Z-down (x: forward, y: right, z: down). | </summary>
-        [Description("Body fixed frame of reference, Z-down (x: forward, y: right, z: down).")]
+        ///<summary> FRD local tangent frame (x: Forward, y: Right, z: Down) with origin that travels with vehicle. The forward axis is aligned to the front of the vehicle in the horizontal plane. | </summary>
+        [Description("FRD local tangent frame (x: Forward, y: Right, z: Down) with origin that travels with vehicle. The forward axis is aligned to the front of the vehicle in the horizontal plane.")]
         BODY_FRD=12, 
-        ///<summary> Body fixed frame of reference, Z-up (x: forward, y: left, z: up). | </summary>
-        [Description("Body fixed frame of reference, Z-up (x: forward, y: left, z: up).")]
-        BODY_FLU=13, 
-        ///<summary> Odometry local coordinate frame of data given by a motion capture system, Z-down (x: north, y: east, z: down). | </summary>
-        [Description("Odometry local coordinate frame of data given by a motion capture system, Z-down (x: north, y: east, z: down).")]
-        MOCAP_NED=14, 
-        ///<summary> Odometry local coordinate frame of data given by a motion capture system, Z-up (x: east, y: north, z: up). | </summary>
-        [Description("Odometry local coordinate frame of data given by a motion capture system, Z-up (x: east, y: north, z: up).")]
-        MOCAP_ENU=15, 
-        ///<summary> Odometry local coordinate frame of data given by a vision estimation system, Z-down (x: north, y: east, z: down). | </summary>
-        [Description("Odometry local coordinate frame of data given by a vision estimation system, Z-down (x: north, y: east, z: down).")]
-        VISION_NED=16, 
-        ///<summary> Odometry local coordinate frame of data given by a vision estimation system, Z-up (x: east, y: north, z: up). | </summary>
-        [Description("Odometry local coordinate frame of data given by a vision estimation system, Z-up (x: east, y: north, z: up).")]
-        VISION_ENU=17, 
-        ///<summary> Odometry local coordinate frame of data given by an estimator running onboard the vehicle, Z-down (x: north, y: east, z: down). | </summary>
-        [Description("Odometry local coordinate frame of data given by an estimator running onboard the vehicle, Z-down (x: north, y: east, z: down).")]
-        ESTIM_NED=18, 
-        ///<summary> Odometry local coordinate frame of data given by an estimator running onboard the vehicle, Z-up (x: east, y: noth, z: up). | </summary>
-        [Description("Odometry local coordinate frame of data given by an estimator running onboard the vehicle, Z-up (x: east, y: noth, z: up).")]
-        ESTIM_ENU=19, 
+        ///<summary> MAV_FRAME_BODY_FLU - Body fixed frame of reference, Z-up (x: Forward, y: Left, z: Up). | </summary>
+        [Description("MAV_FRAME_BODY_FLU - Body fixed frame of reference, Z-up (x: Forward, y: Left, z: Up).")]
+        RESERVED_13=13, 
+        ///<summary> MAV_FRAME_MOCAP_NED - Odometry local coordinate frame of data given by a motion capture system, Z-down (x: North, y: East, z: Down). | </summary>
+        [Description("MAV_FRAME_MOCAP_NED - Odometry local coordinate frame of data given by a motion capture system, Z-down (x: North, y: East, z: Down).")]
+        RESERVED_14=14, 
+        ///<summary> MAV_FRAME_MOCAP_ENU - Odometry local coordinate frame of data given by a motion capture system, Z-up (x: East, y: North, z: Up). | </summary>
+        [Description("MAV_FRAME_MOCAP_ENU - Odometry local coordinate frame of data given by a motion capture system, Z-up (x: East, y: North, z: Up).")]
+        RESERVED_15=15, 
+        ///<summary> MAV_FRAME_VISION_NED - Odometry local coordinate frame of data given by a vision estimation system, Z-down (x: North, y: East, z: Down). | </summary>
+        [Description("MAV_FRAME_VISION_NED - Odometry local coordinate frame of data given by a vision estimation system, Z-down (x: North, y: East, z: Down).")]
+        RESERVED_16=16, 
+        ///<summary> MAV_FRAME_VISION_ENU - Odometry local coordinate frame of data given by a vision estimation system, Z-up (x: East, y: North, z: Up). | </summary>
+        [Description("MAV_FRAME_VISION_ENU - Odometry local coordinate frame of data given by a vision estimation system, Z-up (x: East, y: North, z: Up).")]
+        RESERVED_17=17, 
+        ///<summary> MAV_FRAME_ESTIM_NED - Odometry local coordinate frame of data given by an estimator running onboard the vehicle, Z-down (x: North, y: East, z: Down). | </summary>
+        [Description("MAV_FRAME_ESTIM_NED - Odometry local coordinate frame of data given by an estimator running onboard the vehicle, Z-down (x: North, y: East, z: Down).")]
+        RESERVED_18=18, 
+        ///<summary> MAV_FRAME_ESTIM_ENU - Odometry local coordinate frame of data given by an estimator running onboard the vehicle, Z-up (x: East, y: North, z: Up). | </summary>
+        [Description("MAV_FRAME_ESTIM_ENU - Odometry local coordinate frame of data given by an estimator running onboard the vehicle, Z-up (x: East, y: North, z: Up).")]
+        RESERVED_19=19, 
+        ///<summary> FRD local tangent frame (x: Forward, y: Right, z: Down) with origin fixed relative to earth. The forward axis is aligned to the front of the vehicle in the horizontal plane. | </summary>
+        [Description("FRD local tangent frame (x: Forward, y: Right, z: Down) with origin fixed relative to earth. The forward axis is aligned to the front of the vehicle in the horizontal plane.")]
+        LOCAL_FRD=20, 
+        ///<summary> FLU local tangent frame (x: Forward, y: Left, z: Up) with origin fixed relative to earth. The forward axis is aligned to the front of the vehicle in the horizontal plane. | </summary>
+        [Description("FLU local tangent frame (x: Forward, y: Left, z: Up) with origin fixed relative to earth. The forward axis is aligned to the front of the vehicle in the horizontal plane.")]
+        LOCAL_FLU=21, 
         
     };
     
     ///<summary>  </summary>
-    public enum MAVLINK_DATA_STREAM_TYPE: byte
+    public enum DATA_STREAM_MSGYPE: byte
     {
         ///<summary>  | </summary>
         [Description("")]
-        MAVLINK_DATA_STREAM_IMG_JPEG=1, 
+        MAVLINK_DATA_STREAM_IMG_JPEG=0, 
         ///<summary>  | </summary>
         [Description("")]
-        MAVLINK_DATA_STREAM_IMG_BMP=2, 
+        MAVLINK_DATA_STREAM_IMG_BMP=1, 
         ///<summary>  | </summary>
         [Description("")]
-        MAVLINK_DATA_STREAM_IMG_RAW8U=3, 
+        MAVLINK_DATA_STREAM_IMG_RAW8U=2, 
         ///<summary>  | </summary>
         [Description("")]
-        MAVLINK_DATA_STREAM_IMG_RAW32U=4, 
+        MAVLINK_DATA_STREAM_IMG_RAW32U=3, 
         ///<summary>  | </summary>
         [Description("")]
-        MAVLINK_DATA_STREAM_IMG_PGM=5, 
+        MAVLINK_DATA_STREAM_IMG_PGM=4, 
         ///<summary>  | </summary>
         [Description("")]
-        MAVLINK_DATA_STREAM_IMG_PNG=6, 
+        MAVLINK_DATA_STREAM_IMG_PNG=5, 
         
     };
     
-    ///<summary>  </summary>
+    ///<summary> Actions following geofence breach. </summary>
     public enum FENCE_ACTION: int /*default*/
     {
-        ///<summary> Disable fenced mode | </summary>
-        [Description("Disable fenced mode")]
+        ///<summary> Disable fenced mode. If used in a plan this would mean the next fence is disabled. | </summary>
+        [Description("Disable fenced mode. If used in a plan this would mean the next fence is disabled.")]
         NONE=0, 
-        ///<summary> Switched to guided mode to return point (fence point 0) | </summary>
-        [Description("Switched to guided mode to return point (fence point 0)")]
+        ///<summary> Fly to geofence MAV_CMD_NAV_FENCE_RETURN_POINT in GUIDED mode. Note: This action is only supported by ArduPlane, and may not be supported in all versions. | </summary>
+        [Description("Fly to geofence MAV_CMD_NAV_FENCE_RETURN_POINT in GUIDED mode. Note: This action is only supported by ArduPlane, and may not be supported in all versions.")]
         GUIDED=1, 
         ///<summary> Report fence breach, but don't take action | </summary>
         [Description("Report fence breach, but don't take action")]
         REPORT=2, 
-        ///<summary> Switched to guided mode to return point (fence point 0) with manual throttle control | </summary>
-        [Description("Switched to guided mode to return point (fence point 0) with manual throttle control")]
+        ///<summary> Fly to geofence MAV_CMD_NAV_FENCE_RETURN_POINT with manual throttle control in GUIDED mode. Note: This action is only supported by ArduPlane, and may not be supported in all versions. | </summary>
+        [Description("Fly to geofence MAV_CMD_NAV_FENCE_RETURN_POINT with manual throttle control in GUIDED mode. Note: This action is only supported by ArduPlane, and may not be supported in all versions.")]
         GUIDED_THR_PASS=3, 
-        ///<summary> Switch to RTL (return to launch) mode and head for the return point. | </summary>
-        [Description("Switch to RTL (return to launch) mode and head for the return point.")]
+        ///<summary> Return/RTL mode. | </summary>
+        [Description("Return/RTL mode.")]
         RTL=4, 
+        ///<summary> Hold at current location. | </summary>
+        [Description("Hold at current location.")]
+        HOLD=5, 
+        ///<summary> Termination failsafe. Motors are shut down (some flight stacks may trigger other failsafe actions). | </summary>
+        [Description("Termination failsafe. Motors are shut down (some flight stacks may trigger other failsafe actions).")]
+        TERMINATE=6, 
+        ///<summary> Land at current location. | </summary>
+        [Description("Land at current location.")]
+        LAND=7, 
         
     };
     
     ///<summary>  </summary>
-    public enum FENCE_BREACH: int /*default*/
+    public enum FENCE_BREACH: byte
     {
         ///<summary> No last fence breach | </summary>
         [Description("No last fence breach")]
@@ -1173,7 +901,22 @@ public partial class MAVLink
         
     };
     
-    ///<summary> Enumeration of possible mount operation modes </summary>
+    ///<summary> Actions being taken to mitigate/prevent fence breach </summary>
+    public enum FENCE_MITIGATE: byte
+    {
+        ///<summary> Unknown | </summary>
+        [Description("Unknown")]
+        UNKNOWN=0, 
+        ///<summary> No actions being taken | </summary>
+        [Description("No actions being taken")]
+        NONE=1, 
+        ///<summary> Velocity limiting active to prevent breach | </summary>
+        [Description("Velocity limiting active to prevent breach")]
+        VEL_LIMIT=2, 
+        
+    };
+    
+    ///<summary> Enumeration of possible mount operation modes. This message is used by obsolete/deprecated gimbal messages. </summary>
     public enum MAV_MOUNT_MODE: int /*default*/
     {
         ///<summary> Load and keep safe position (Roll,Pitch,Yaw) from permant memory and stop stabilization | </summary>
@@ -1191,6 +934,227 @@ public partial class MAVLink
         ///<summary> Load neutral position and start to point to Lat,Lon,Alt | </summary>
         [Description("Load neutral position and start to point to Lat,Lon,Alt")]
         GPS_POINT=4, 
+        ///<summary> Gimbal tracks system with specified system ID | </summary>
+        [Description("Gimbal tracks system with specified system ID")]
+        SYSID_TARGET=5, 
+        ///<summary> Gimbal tracks home position | </summary>
+        [Description("Gimbal tracks home position")]
+        HOME_LOCATION=6, 
+        
+    };
+    
+    ///<summary> Gimbal device (low level) capability flags (bitmap) </summary>
+    [Flags]
+	public enum GIMBAL_DEVICE_CAP_FLAGS: ushort
+    {
+        ///<summary> Gimbal device supports a retracted position | </summary>
+        [Description("Gimbal device supports a retracted position")]
+        HAS_RETRACT=1, 
+        ///<summary> Gimbal device supports a horizontal, forward looking position, stabilized | </summary>
+        [Description("Gimbal device supports a horizontal, forward looking position, stabilized")]
+        HAS_NEUTRAL=2, 
+        ///<summary> Gimbal device supports rotating around roll axis. | </summary>
+        [Description("Gimbal device supports rotating around roll axis.")]
+        HAS_ROLL_AXIS=4, 
+        ///<summary> Gimbal device supports to follow a roll angle relative to the vehicle | </summary>
+        [Description("Gimbal device supports to follow a roll angle relative to the vehicle")]
+        HAS_ROLL_FOLLOW=8, 
+        ///<summary> Gimbal device supports locking to an roll angle (generally that's the default with roll stabilized) | </summary>
+        [Description("Gimbal device supports locking to an roll angle (generally that's the default with roll stabilized)")]
+        HAS_ROLL_LOCK=16, 
+        ///<summary> Gimbal device supports rotating around pitch axis. | </summary>
+        [Description("Gimbal device supports rotating around pitch axis.")]
+        HAS_PITCH_AXIS=32, 
+        ///<summary> Gimbal device supports to follow a pitch angle relative to the vehicle | </summary>
+        [Description("Gimbal device supports to follow a pitch angle relative to the vehicle")]
+        HAS_PITCH_FOLLOW=64, 
+        ///<summary> Gimbal device supports locking to an pitch angle (generally that's the default with pitch stabilized) | </summary>
+        [Description("Gimbal device supports locking to an pitch angle (generally that's the default with pitch stabilized)")]
+        HAS_PITCH_LOCK=128, 
+        ///<summary> Gimbal device supports rotating around yaw axis. | </summary>
+        [Description("Gimbal device supports rotating around yaw axis.")]
+        HAS_YAW_AXIS=256, 
+        ///<summary> Gimbal device supports to follow a yaw angle relative to the vehicle (generally that's the default) | </summary>
+        [Description("Gimbal device supports to follow a yaw angle relative to the vehicle (generally that's the default)")]
+        HAS_YAW_FOLLOW=512, 
+        ///<summary> Gimbal device supports locking to an absolute heading (often this is an option available) | </summary>
+        [Description("Gimbal device supports locking to an absolute heading (often this is an option available)")]
+        HAS_YAW_LOCK=1024, 
+        ///<summary> Gimbal device supports yawing/panning infinetely (e.g. using slip disk). | </summary>
+        [Description("Gimbal device supports yawing/panning infinetely (e.g. using slip disk).")]
+        SUPPORTS_INFINITE_YAW=2048, 
+        
+    };
+    
+    ///<summary> Gimbal manager high level capability flags (bitmap). The first 16 bits are identical to the GIMBAL_DEVICE_CAP_FLAGS. However, the gimbal manager does not need to copy the flags from the gimbal but can also enhance the capabilities and thus add flags. </summary>
+    [Flags]
+	public enum GIMBAL_MANAGER_CAP_FLAGS: uint
+    {
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_RETRACT. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_RETRACT.")]
+        HAS_RETRACT=1, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_NEUTRAL. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_NEUTRAL.")]
+        HAS_NEUTRAL=2, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_ROLL_AXIS. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_ROLL_AXIS.")]
+        HAS_ROLL_AXIS=4, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_ROLL_FOLLOW. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_ROLL_FOLLOW.")]
+        HAS_ROLL_FOLLOW=8, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_ROLL_LOCK. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_ROLL_LOCK.")]
+        HAS_ROLL_LOCK=16, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_PITCH_AXIS. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_PITCH_AXIS.")]
+        HAS_PITCH_AXIS=32, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_PITCH_FOLLOW. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_PITCH_FOLLOW.")]
+        HAS_PITCH_FOLLOW=64, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_PITCH_LOCK. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_PITCH_LOCK.")]
+        HAS_PITCH_LOCK=128, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_YAW_AXIS. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_YAW_AXIS.")]
+        HAS_YAW_AXIS=256, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_YAW_FOLLOW. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_YAW_FOLLOW.")]
+        HAS_YAW_FOLLOW=512, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_YAW_LOCK. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_HAS_YAW_LOCK.")]
+        HAS_YAW_LOCK=1024, 
+        ///<summary> Based on GIMBAL_DEVICE_CAP_FLAGS_SUPPORTS_INFINITE_YAW. | </summary>
+        [Description("Based on GIMBAL_DEVICE_CAP_FLAGS_SUPPORTS_INFINITE_YAW.")]
+        SUPPORTS_INFINITE_YAW=2048, 
+        ///<summary> Gimbal manager supports to point to a local position. | </summary>
+        [Description("Gimbal manager supports to point to a local position.")]
+        CAN_POINT_LOCATION_LOCAL=65536, 
+        ///<summary> Gimbal manager supports to point to a global latitude, longitude, altitude position. | </summary>
+        [Description("Gimbal manager supports to point to a global latitude, longitude, altitude position.")]
+        CAN_POINT_LOCATION_GLOBAL=131072, 
+        
+    };
+    
+    ///<summary> Flags for gimbal device (lower level) operation. </summary>
+    [Flags]
+	public enum GIMBAL_DEVICE_FLAGS: ushort
+    {
+        ///<summary> Set to retracted safe position (no stabilization), takes presedence over all other flags. | </summary>
+        [Description("Set to retracted safe position (no stabilization), takes presedence over all other flags.")]
+        RETRACT=1, 
+        ///<summary> Set to neutral/default position, taking precedence over all other flags except RETRACT. Neutral is commonly forward-facing and horizontal (pitch=yaw=0) but may be any orientation. | </summary>
+        [Description("Set to neutral/default position, taking precedence over all other flags except RETRACT. Neutral is commonly forward-facing and horizontal (pitch=yaw=0) but may be any orientation.")]
+        NEUTRAL=2, 
+        ///<summary> Lock roll angle to absolute angle relative to horizon (not relative to drone). This is generally the default with a stabilizing gimbal. | </summary>
+        [Description("Lock roll angle to absolute angle relative to horizon (not relative to drone). This is generally the default with a stabilizing gimbal.")]
+        ROLL_LOCK=4, 
+        ///<summary> Lock pitch angle to absolute angle relative to horizon (not relative to drone). This is generally the default. | </summary>
+        [Description("Lock pitch angle to absolute angle relative to horizon (not relative to drone). This is generally the default.")]
+        PITCH_LOCK=8, 
+        ///<summary> Lock yaw angle to absolute angle relative to North (not relative to drone). If this flag is set, the quaternion is in the Earth frame with the x-axis pointing North (yaw absolute). If this flag is not set, the quaternion frame is in the Earth frame rotated so that the x-axis is pointing forward (yaw relative to vehicle). | </summary>
+        [Description("Lock yaw angle to absolute angle relative to North (not relative to drone). If this flag is set, the quaternion is in the Earth frame with the x-axis pointing North (yaw absolute). If this flag is not set, the quaternion frame is in the Earth frame rotated so that the x-axis is pointing forward (yaw relative to vehicle).")]
+        YAW_LOCK=16, 
+        
+    };
+    
+    ///<summary> Flags for high level gimbal manager operation The first 16 bits are identical to the GIMBAL_DEVICE_FLAGS. </summary>
+    [Flags]
+	public enum GIMBAL_MANAGER_FLAGS: uint
+    {
+        ///<summary> Based on GIMBAL_DEVICE_FLAGS_RETRACT | </summary>
+        [Description("Based on GIMBAL_DEVICE_FLAGS_RETRACT")]
+        RETRACT=1, 
+        ///<summary> Based on GIMBAL_DEVICE_FLAGS_NEUTRAL | </summary>
+        [Description("Based on GIMBAL_DEVICE_FLAGS_NEUTRAL")]
+        NEUTRAL=2, 
+        ///<summary> Based on GIMBAL_DEVICE_FLAGS_ROLL_LOCK | </summary>
+        [Description("Based on GIMBAL_DEVICE_FLAGS_ROLL_LOCK")]
+        ROLL_LOCK=4, 
+        ///<summary> Based on GIMBAL_DEVICE_FLAGS_PITCH_LOCK | </summary>
+        [Description("Based on GIMBAL_DEVICE_FLAGS_PITCH_LOCK")]
+        PITCH_LOCK=8, 
+        ///<summary> Based on GIMBAL_DEVICE_FLAGS_YAW_LOCK | </summary>
+        [Description("Based on GIMBAL_DEVICE_FLAGS_YAW_LOCK")]
+        YAW_LOCK=16, 
+        
+    };
+    
+    ///<summary> Gimbal device (low level) error flags (bitmap, 0 means no error) </summary>
+    [Flags]
+	public enum GIMBAL_DEVICE_ERROR_FLAGS: uint
+    {
+        ///<summary> Gimbal device is limited by hardware roll limit. | </summary>
+        [Description("Gimbal device is limited by hardware roll limit.")]
+        AT_ROLL_LIMIT=1, 
+        ///<summary> Gimbal device is limited by hardware pitch limit. | </summary>
+        [Description("Gimbal device is limited by hardware pitch limit.")]
+        AT_PITCH_LIMIT=2, 
+        ///<summary> Gimbal device is limited by hardware yaw limit. | </summary>
+        [Description("Gimbal device is limited by hardware yaw limit.")]
+        AT_YAW_LIMIT=4, 
+        ///<summary> There is an error with the gimbal encoders. | </summary>
+        [Description("There is an error with the gimbal encoders.")]
+        ENCODER_ERROR=8, 
+        ///<summary> There is an error with the gimbal power source. | </summary>
+        [Description("There is an error with the gimbal power source.")]
+        POWER_ERROR=16, 
+        ///<summary> There is an error with the gimbal motor's. | </summary>
+        [Description("There is an error with the gimbal motor's.")]
+        MOTOR_ERROR=32, 
+        ///<summary> There is an error with the gimbal's software. | </summary>
+        [Description("There is an error with the gimbal's software.")]
+        SOFTWARE_ERROR=64, 
+        ///<summary> There is an error with the gimbal's communication. | </summary>
+        [Description("There is an error with the gimbal's communication.")]
+        COMMS_ERROR=128, 
+        ///<summary> Gimbal is currently calibrating. | </summary>
+        [Description("Gimbal is currently calibrating.")]
+        CALIBRATION_RUNNING=256, 
+        
+    };
+    
+    ///<summary> Gripper actions. </summary>
+    public enum GRIPPER_ACTIONS: int /*default*/
+    {
+        ///<summary> Gripper release cargo. | </summary>
+        [Description("Gripper release cargo.")]
+        GRIPPER_ACTION_RELEASE=0, 
+        ///<summary> Gripper grab onto cargo. | </summary>
+        [Description("Gripper grab onto cargo.")]
+        GRIPPER_ACTION_GRAB=1, 
+        
+    };
+    
+    ///<summary> Winch actions. </summary>
+    public enum WINCH_ACTIONS: int /*default*/
+    {
+        ///<summary> Allow motor to freewheel. | </summary>
+        [Description("Allow motor to freewheel.")]
+        WINCH_RELAXED=0, 
+        ///<summary> Wind or unwind specified length of line, optionally using specified rate. | </summary>
+        [Description("Wind or unwind specified length of line, optionally using specified rate.")]
+        WINCH_RELATIVE_LENGTH_CONTROL=1, 
+        ///<summary> Wind or unwind line at specified rate. | </summary>
+        [Description("Wind or unwind line at specified rate.")]
+        WINCH_RATE_CONTROL=2, 
+        ///<summary> Perform the locking sequence to relieve motor while in the fully retracted position. Only action and instance command parameters are used, others are ignored. | </summary>
+        [Description("Perform the locking sequence to relieve motor while in the fully retracted position. Only action and instance command parameters are used, others are ignored.")]
+        WINCH_LOCK=3, 
+        ///<summary> Sequence of drop, slow down, touch down, reel up, lock. Only action and instance command parameters are used, others are ignored. | </summary>
+        [Description("Sequence of drop, slow down, touch down, reel up, lock. Only action and instance command parameters are used, others are ignored.")]
+        WINCH_DELIVER=4, 
+        ///<summary> Engage motor and hold current position. Only action and instance command parameters are used, others are ignored. | </summary>
+        [Description("Engage motor and hold current position. Only action and instance command parameters are used, others are ignored.")]
+        WINCH_HOLD=5, 
+        ///<summary> Return the reel to the fully retracted position. Only action and instance command parameters are used, others are ignored. | </summary>
+        [Description("Return the reel to the fully retracted position. Only action and instance command parameters are used, others are ignored.")]
+        WINCH_RETRACT=6, 
+        ///<summary> Load the reel with line. The winch will calculate the total loaded length and stop when the tension exceeds a threshold. Only action and instance command parameters are used, others are ignored. | </summary>
+        [Description("Load the reel with line. The winch will calculate the total loaded length and stop when the tension exceeds a threshold. Only action and instance command parameters are used, others are ignored.")]
+        WINCH_LOAD_LINE=7, 
+        ///<summary> Spool out the entire length of the line. Only action and instance command parameters are used, others are ignored. | </summary>
+        [Description("Spool out the entire length of the line. Only action and instance command parameters are used, others are ignored.")]
+        WINCH_ABANDON_LINE=8, 
         
     };
     
@@ -1233,6 +1197,61 @@ public partial class MAVLink
         
     };
     
+    ///<summary> Indicates the ESC connection type. </summary>
+    public enum ESC_CONNECTION_TYPE: byte
+    {
+        ///<summary> Traditional PPM ESC. | </summary>
+        [Description("Traditional PPM ESC.")]
+        PPM=0, 
+        ///<summary> Serial Bus connected ESC. | </summary>
+        [Description("Serial Bus connected ESC.")]
+        SERIAL=1, 
+        ///<summary> One Shot PPM ESC. | </summary>
+        [Description("One Shot PPM ESC.")]
+        ONESHOT=2, 
+        ///<summary> I2C ESC. | </summary>
+        [Description("I2C ESC.")]
+        I2C=3, 
+        ///<summary> CAN-Bus ESC. | </summary>
+        [Description("CAN-Bus ESC.")]
+        CAN=4, 
+        ///<summary> DShot ESC. | </summary>
+        [Description("DShot ESC.")]
+        DSHOT=5, 
+        
+    };
+    
+    ///<summary> Flags to report ESC failures. </summary>
+    [Flags]
+	public enum ESC_FAILURE_FLAGS: int /*default*/
+    {
+        ///<summary> No ESC failure. | </summary>
+        [Description("No ESC failure.")]
+        ESC_FAILURE_NONE=0, 
+        ///<summary> Over current failure. | </summary>
+        [Description("Over current failure.")]
+        ESC_FAILURE_OVER_CURRENT=1, 
+        ///<summary> Over voltage failure. | </summary>
+        [Description("Over voltage failure.")]
+        ESC_FAILURE_OVER_VOLTAGE=2, 
+        ///<summary> Over temperature failure. | </summary>
+        [Description("Over temperature failure.")]
+        ESC_FAILURE_OVER_TEMPERATURE=4, 
+        ///<summary> Over RPM failure. | </summary>
+        [Description("Over RPM failure.")]
+        ESC_FAILURE_OVER_RPM=8, 
+        ///<summary> Inconsistent command failure i.e. out of bounds. | </summary>
+        [Description("Inconsistent command failure i.e. out of bounds.")]
+        ESC_FAILURE_INCONSISTENT_CMD=16, 
+        ///<summary> Motor stuck failure. | </summary>
+        [Description("Motor stuck failure.")]
+        ESC_FAILURE_MOTOR_STUCK=32, 
+        ///<summary> Generic ESC failure. | </summary>
+        [Description("Generic ESC failure.")]
+        ESC_FAILURE_GENERIC=64, 
+        
+    };
+    
     ///<summary> Flags to indicate the status of camera storage. </summary>
     public enum STORAGE_STATUS: byte
     {
@@ -1251,29 +1270,371 @@ public partial class MAVLink
         
     };
     
-    ///<summary> Commands to be executed by the MAV. They can be executed on user request, or as part of a mission script. If the action is used in a mission, the parameter mapping to the waypoint/mission message is as follows: Param 1, Param 2, Param 3, Param 4, X: Param 5, Y:Param 6, Z:Param 7. This command list is similar what ARINC 424 is for commercial aircraft: A data format how to interpret waypoint/mission data. See https://mavlink.io/en/guide/xml_schema.html#MAV_CMD for information about the structure of the MAV_CMD entries </summary>
+    ///<summary> Flags to indicate the type of storage. </summary>
+    public enum STORAGE_TYPE: byte
+    {
+        ///<summary> Storage type is not known. | </summary>
+        [Description("Storage type is not known.")]
+        UNKNOWN=0, 
+        ///<summary> Storage type is USB device. | </summary>
+        [Description("Storage type is USB device.")]
+        USB_STICK=1, 
+        ///<summary> Storage type is SD card. | </summary>
+        [Description("Storage type is SD card.")]
+        SD=2, 
+        ///<summary> Storage type is microSD card. | </summary>
+        [Description("Storage type is microSD card.")]
+        MICROSD=3, 
+        ///<summary> Storage type is CFast. | </summary>
+        [Description("Storage type is CFast.")]
+        CF=4, 
+        ///<summary> Storage type is CFexpress. | </summary>
+        [Description("Storage type is CFexpress.")]
+        CFE=5, 
+        ///<summary> Storage type is XQD. | </summary>
+        [Description("Storage type is XQD.")]
+        XQD=6, 
+        ///<summary> Storage type is HD mass storage type. | </summary>
+        [Description("Storage type is HD mass storage type.")]
+        HD=7, 
+        ///<summary> Storage type is other, not listed type. | </summary>
+        [Description("Storage type is other, not listed type.")]
+        OTHER=254, 
+        
+    };
+    
+    ///<summary> Flags to indicate usage for a particular storage (see STORAGE_INFORMATION.storage_usage and MAV_CMD_SET_STORAGE_USAGE). </summary>
+    public enum STORAGE_USAGE_FLAG: byte
+    {
+        ///<summary> Always set to 1 (indicates STORAGE_INFORMATION.storage_usage is supported). | </summary>
+        [Description("Always set to 1 (indicates STORAGE_INFORMATION.storage_usage is supported).")]
+        SET=1, 
+        ///<summary> Storage for saving photos. | </summary>
+        [Description("Storage for saving photos.")]
+        PHOTO=2, 
+        ///<summary> Storage for saving videos. | </summary>
+        [Description("Storage for saving videos.")]
+        VIDEO=4, 
+        ///<summary> Storage for saving logs. | </summary>
+        [Description("Storage for saving logs.")]
+        LOGS=8, 
+        
+    };
+    
+    ///<summary> Yaw behaviour during orbit flight. </summary>
+    public enum ORBIT_YAW_BEHAVIOUR: int /*default*/
+    {
+        ///<summary> Vehicle front points to the center (default). | </summary>
+        [Description("Vehicle front points to the center (default).")]
+        HOLD_FRONT_TO_CIRCLE_CENTER=0, 
+        ///<summary> Vehicle front holds heading when message received. | </summary>
+        [Description("Vehicle front holds heading when message received.")]
+        HOLD_INITIAL_HEADING=1, 
+        ///<summary> Yaw uncontrolled. | </summary>
+        [Description("Yaw uncontrolled.")]
+        UNCONTROLLED=2, 
+        ///<summary> Vehicle front follows flight path (tangential to circle). | </summary>
+        [Description("Vehicle front follows flight path (tangential to circle).")]
+        HOLD_FRONT_TANGENT_TO_CIRCLE=3, 
+        ///<summary> Yaw controlled by RC input. | </summary>
+        [Description("Yaw controlled by RC input.")]
+        RC_CONTROLLED=4, 
+        
+    };
+    
+    ///<summary> Possible responses from a WIFI_CONFIG_AP message. </summary>
+    public enum WIFI_CONFIG_AP_RESPONSE: sbyte
+    {
+        ///<summary> Undefined response. Likely an indicative of a system that doesn't support this request. | </summary>
+        [Description("Undefined response. Likely an indicative of a system that doesn't support this request.")]
+        UNDEFINED=0, 
+        ///<summary> Changes accepted. | </summary>
+        [Description("Changes accepted.")]
+        ACCEPTED=1, 
+        ///<summary> Changes rejected. | </summary>
+        [Description("Changes rejected.")]
+        REJECTED=2, 
+        ///<summary> Invalid Mode. | </summary>
+        [Description("Invalid Mode.")]
+        MODE_ERROR=3, 
+        ///<summary> Invalid SSID. | </summary>
+        [Description("Invalid SSID.")]
+        SSID_ERROR=4, 
+        ///<summary> Invalid Password. | </summary>
+        [Description("Invalid Password.")]
+        PASSWORD_ERROR=5, 
+        
+    };
+    
+    ///<summary> Possible responses from a CELLULAR_CONFIG message. </summary>
+    public enum CELLULAR_CONFIG_RESPONSE: byte
+    {
+        ///<summary> Changes accepted. | </summary>
+        [Description("Changes accepted.")]
+        ACCEPTED=0, 
+        ///<summary> Invalid APN. | </summary>
+        [Description("Invalid APN.")]
+        APN_ERROR=1, 
+        ///<summary> Invalid PIN. | </summary>
+        [Description("Invalid PIN.")]
+        PIN_ERROR=2, 
+        ///<summary> Changes rejected. | </summary>
+        [Description("Changes rejected.")]
+        REJECTED=3, 
+        ///<summary> PUK is required to unblock SIM card. | </summary>
+        [Description("PUK is required to unblock SIM card.")]
+        CELLULAR_CONFIG_BLOCKED_PUK_REQUIRED=4, 
+        
+    };
+    
+    ///<summary> WiFi Mode. </summary>
+    public enum WIFI_CONFIG_AP_MODE: sbyte
+    {
+        ///<summary> WiFi mode is undefined. | </summary>
+        [Description("WiFi mode is undefined.")]
+        UNDEFINED=0, 
+        ///<summary> WiFi configured as an access point. | </summary>
+        [Description("WiFi configured as an access point.")]
+        AP=1, 
+        ///<summary> WiFi configured as a station connected to an existing local WiFi network. | </summary>
+        [Description("WiFi configured as a station connected to an existing local WiFi network.")]
+        STATION=2, 
+        ///<summary> WiFi disabled. | </summary>
+        [Description("WiFi disabled.")]
+        DISABLED=3, 
+        
+    };
+    
+    ///<summary> Supported component metadata types. These are used in the 'general' metadata file returned by COMPONENT_METADATA to provide information about supported metadata types. The types are not used directly in MAVLink messages. </summary>
+    public enum COMP_METADATA_TYPE: int /*default*/
+    {
+        ///<summary> General information about the component. General metadata includes information about other metadata types supported by the component. Files of this type must be supported, and must be downloadable from vehicle using a MAVLink FTP URI. | </summary>
+        [Description("General information about the component. General metadata includes information about other metadata types supported by the component. Files of this type must be supported, and must be downloadable from vehicle using a MAVLink FTP URI.")]
+        GENERAL=0, 
+        ///<summary> Parameter meta data. | </summary>
+        [Description("Parameter meta data.")]
+        PARAMETER=1, 
+        ///<summary> Meta data that specifies which commands and command parameters the vehicle supports. (WIP) | </summary>
+        [Description("Meta data that specifies which commands and command parameters the vehicle supports. (WIP)")]
+        COMMANDS=2, 
+        ///<summary> Meta data that specifies external non-MAVLink peripherals. | </summary>
+        [Description("Meta data that specifies external non-MAVLink peripherals.")]
+        PERIPHERALS=3, 
+        ///<summary> Meta data for the events interface. | </summary>
+        [Description("Meta data for the events interface.")]
+        EVENTS=4, 
+        ///<summary> Meta data for actuator configuration (motors, servos and vehicle geometry) and testing. | </summary>
+        [Description("Meta data for actuator configuration (motors, servos and vehicle geometry) and testing.")]
+        ACTUATORS=5, 
+        
+    };
+    
+    ///<summary> Actuator configuration, used to change a setting on an actuator. Component information metadata can be used to know which outputs support which commands. </summary>
+    public enum ACTUATOR_CONFIGURATION: int /*default*/
+    {
+        ///<summary> Do nothing. | </summary>
+        [Description("Do nothing.")]
+        NONE=0, 
+        ///<summary> Command the actuator to beep now. | </summary>
+        [Description("Command the actuator to beep now.")]
+        BEEP=1, 
+        ///<summary> Permanently set the actuator (ESC) to 3D mode (reversible thrust). | </summary>
+        [Description("Permanently set the actuator (ESC) to 3D mode (reversible thrust).")]
+        _3D_MODE_ON=2, 
+        ///<summary> Permanently set the actuator (ESC) to non 3D mode (non-reversible thrust). | </summary>
+        [Description("Permanently set the actuator (ESC) to non 3D mode (non-reversible thrust).")]
+        _3D_MODE_OFF=3, 
+        ///<summary> Permanently set the actuator (ESC) to spin direction 1 (which can be clockwise or counter-clockwise). | </summary>
+        [Description("Permanently set the actuator (ESC) to spin direction 1 (which can be clockwise or counter-clockwise).")]
+        SPIN_DIRECTION1=4, 
+        ///<summary> Permanently set the actuator (ESC) to spin direction 2 (opposite of direction 1). | </summary>
+        [Description("Permanently set the actuator (ESC) to spin direction 2 (opposite of direction 1).")]
+        SPIN_DIRECTION2=5, 
+        
+    };
+    
+    ///<summary> Actuator output function. Values greater or equal to 1000 are autopilot-specific. </summary>
+    public enum ACTUATOR_OUTPUT_FUNCTION: int /*default*/
+    {
+        ///<summary> No function (disabled). | </summary>
+        [Description("No function (disabled).")]
+        NONE=0, 
+        ///<summary> Motor 1 | </summary>
+        [Description("Motor 1")]
+        MOTOR1=1, 
+        ///<summary> Motor 2 | </summary>
+        [Description("Motor 2")]
+        MOTOR2=2, 
+        ///<summary> Motor 3 | </summary>
+        [Description("Motor 3")]
+        MOTOR3=3, 
+        ///<summary> Motor 4 | </summary>
+        [Description("Motor 4")]
+        MOTOR4=4, 
+        ///<summary> Motor 5 | </summary>
+        [Description("Motor 5")]
+        MOTOR5=5, 
+        ///<summary> Motor 6 | </summary>
+        [Description("Motor 6")]
+        MOTOR6=6, 
+        ///<summary> Motor 7 | </summary>
+        [Description("Motor 7")]
+        MOTOR7=7, 
+        ///<summary> Motor 8 | </summary>
+        [Description("Motor 8")]
+        MOTOR8=8, 
+        ///<summary> Motor 9 | </summary>
+        [Description("Motor 9")]
+        MOTOR9=9, 
+        ///<summary> Motor 10 | </summary>
+        [Description("Motor 10")]
+        MOTOR10=10, 
+        ///<summary> Motor 11 | </summary>
+        [Description("Motor 11")]
+        MOTOR11=11, 
+        ///<summary> Motor 12 | </summary>
+        [Description("Motor 12")]
+        MOTOR12=12, 
+        ///<summary> Motor 13 | </summary>
+        [Description("Motor 13")]
+        MOTOR13=13, 
+        ///<summary> Motor 14 | </summary>
+        [Description("Motor 14")]
+        MOTOR14=14, 
+        ///<summary> Motor 15 | </summary>
+        [Description("Motor 15")]
+        MOTOR15=15, 
+        ///<summary> Motor 16 | </summary>
+        [Description("Motor 16")]
+        MOTOR16=16, 
+        ///<summary> Servo 1 | </summary>
+        [Description("Servo 1")]
+        SERVO1=33, 
+        ///<summary> Servo 2 | </summary>
+        [Description("Servo 2")]
+        SERVO2=34, 
+        ///<summary> Servo 3 | </summary>
+        [Description("Servo 3")]
+        SERVO3=35, 
+        ///<summary> Servo 4 | </summary>
+        [Description("Servo 4")]
+        SERVO4=36, 
+        ///<summary> Servo 5 | </summary>
+        [Description("Servo 5")]
+        SERVO5=37, 
+        ///<summary> Servo 6 | </summary>
+        [Description("Servo 6")]
+        SERVO6=38, 
+        ///<summary> Servo 7 | </summary>
+        [Description("Servo 7")]
+        SERVO7=39, 
+        ///<summary> Servo 8 | </summary>
+        [Description("Servo 8")]
+        SERVO8=40, 
+        ///<summary> Servo 9 | </summary>
+        [Description("Servo 9")]
+        SERVO9=41, 
+        ///<summary> Servo 10 | </summary>
+        [Description("Servo 10")]
+        SERVO10=42, 
+        ///<summary> Servo 11 | </summary>
+        [Description("Servo 11")]
+        SERVO11=43, 
+        ///<summary> Servo 12 | </summary>
+        [Description("Servo 12")]
+        SERVO12=44, 
+        ///<summary> Servo 13 | </summary>
+        [Description("Servo 13")]
+        SERVO13=45, 
+        ///<summary> Servo 14 | </summary>
+        [Description("Servo 14")]
+        SERVO14=46, 
+        ///<summary> Servo 15 | </summary>
+        [Description("Servo 15")]
+        SERVO15=47, 
+        ///<summary> Servo 16 | </summary>
+        [Description("Servo 16")]
+        SERVO16=48, 
+        
+    };
+    
+    ///<summary> Enable axes that will be tuned via autotuning. Used in MAV_CMD_DO_AUTOTUNE_ENABLE. </summary>
+    public enum AUTOTUNE_AXIS: int /*default*/
+    {
+        ///<summary> Flight stack tunes axis according to its default settings. | </summary>
+        [Description("Flight stack tunes axis according to its default settings.")]
+        DEFAULT=0, 
+        ///<summary> Autotune roll axis. | </summary>
+        [Description("Autotune roll axis.")]
+        ROLL=1, 
+        ///<summary> Autotune pitch axis. | </summary>
+        [Description("Autotune pitch axis.")]
+        PITCH=2, 
+        ///<summary> Autotune yaw axis. | </summary>
+        [Description("Autotune yaw axis.")]
+        YAW=4, 
+        
+    };
+    
+    ///<summary>          Actions for reading/writing parameters between persistent and volatile storage when using MAV_CMD_PREFLIGHT_STORAGE.         (Commonly parameters are loaded from persistent storage (flash/EEPROM) into volatile storage (RAM) on startup and written back when they are changed.)        </summary>
+    public enum PREFLIGHT_STORAGE_PARAMETER_ACTION: int /*default*/
+    {
+        ///<summary> Read all parameters from persistent storage. Replaces values in volatile storage. | </summary>
+        [Description("Read all parameters from persistent storage. Replaces values in volatile storage.")]
+        PARAM_READ_PERSISTENT=0, 
+        ///<summary> Write all parameter values to persistent storage (flash/EEPROM) | </summary>
+        [Description("Write all parameter values to persistent storage (flash/EEPROM)")]
+        PARAM_WRITE_PERSISTENT=1, 
+        ///<summary> Reset all user configurable parameters to their default value (including airframe selection, sensor calibration data, safety settings, and so on). Does not reset values that contain operation counters and vehicle computed statistics. | </summary>
+        [Description("Reset all user configurable parameters to their default value (including airframe selection, sensor calibration data, safety settings, and so on). Does not reset values that contain operation counters and vehicle computed statistics.")]
+        PARAM_RESET_CONFIG_DEFAULT=2, 
+        ///<summary> Reset only sensor calibration parameters to factory defaults (or firmware default if not available) | </summary>
+        [Description("Reset only sensor calibration parameters to factory defaults (or firmware default if not available)")]
+        PARAM_RESET_SENSOR_DEFAULT=3, 
+        ///<summary> Reset all parameters, including operation counters, to default values | </summary>
+        [Description("Reset all parameters, including operation counters, to default values")]
+        PARAM_RESET_ALL_DEFAULT=4, 
+        
+    };
+    
+    ///<summary>          Actions for reading and writing plan information (mission, rally points, geofence) between persistent and volatile storage when using MAV_CMD_PREFLIGHT_STORAGE.         (Commonly missions are loaded from persistent storage (flash/EEPROM) into volatile storage (RAM) on startup and written back when they are changed.)        </summary>
+    public enum PREFLIGHT_STORAGE_MISSION_ACTION: int /*default*/
+    {
+        ///<summary> Read current mission data from persistent storage | </summary>
+        [Description("Read current mission data from persistent storage")]
+        MISSION_READ_PERSISTENT=0, 
+        ///<summary> Write current mission data to persistent storage | </summary>
+        [Description("Write current mission data to persistent storage")]
+        MISSION_WRITE_PERSISTENT=1, 
+        ///<summary> Erase all mission data stored on the vehicle (both persistent and volatile storage) | </summary>
+        [Description("Erase all mission data stored on the vehicle (both persistent and volatile storage)")]
+        MISSION_RESET_DEFAULT=2, 
+        
+    };
+    
+    ///<summary> Commands to be executed by the MAV. They can be executed on user request, or as part of a mission script. If the action is used in a mission, the parameter mapping to the waypoint/mission message is as follows: Param 1, Param 2, Param 3, Param 4, X: Param 5, Y:Param 6, Z:Param 7. This command list is similar what ARINC 424 is for commercial aircraft: A data format how to interpret waypoint/mission data. NaN and INT32_MAX may be used in float/integer params (respectively) to indicate optional/default values (e.g. to use the component's current yaw or latitude rather than a specific value). See https://mavlink.io/en/guide/xml_schema.html#MAV_CMD for information about the structure of the MAV_CMD entries </summary>
     public enum MAV_CMD: ushort
     {
-        ///<summary> Navigate to waypoint. |Hold time. (ignored by fixed wing, time to stay at waypoint for rotary wing)| Acceptance radius (if the sphere with this radius is hit, the waypoint counts as reached)| 0 to pass through the WP, if > 0 radius to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.| Desired yaw angle at waypoint (rotary wing). NaN for unchanged.| Latitude| Longitude| Altitude|  </summary>
+        ///<summary> Navigate to waypoint. |Hold time. (ignored by fixed wing, time to stay at waypoint for rotary wing)| Acceptance radius (if the sphere with this radius is hit, the waypoint counts as reached)| 0 to pass through the WP, if > 0 radius to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.| Desired yaw angle at waypoint (rotary wing). NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude| Longitude| Altitude|  </summary>
         [Description("Navigate to waypoint.")]
         WAYPOINT=16, 
-        ///<summary> Loiter around this waypoint an unlimited amount of time |Empty| Empty| Radius around waypoint. If positive loiter clockwise, else counter-clockwise| Desired yaw angle. NaN for unchanged.| Latitude| Longitude| Altitude|  </summary>
+        ///<summary> Loiter around this waypoint an unlimited amount of time |Empty| Empty| Loiter radius around waypoint for forward-only moving vehicles (not multicopters). If positive loiter clockwise, else counter-clockwise| Desired yaw angle. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude| Longitude| Altitude|  </summary>
         [Description("Loiter around this waypoint an unlimited amount of time")]
         LOITER_UNLIM=17, 
-        ///<summary> Loiter around this waypoint for X turns |Number of turns.| Empty| Radius around waypoint. If positive loiter clockwise, else counter-clockwise| Forward moving aircraft this sets exit xtrack location: 0 for center of loiter wp, 1 for exit location. Else, this is desired yaw angle. NaN for unchanged.| Latitude| Longitude| Altitude|  </summary>
+        ///<summary> Loiter around this waypoint for X turns |Number of turns.| Leave loiter circle only once heading towards the next waypoint (0 = False)| Loiter radius around waypoint for forward-only moving vehicles (not multicopters). If positive loiter clockwise, else counter-clockwise| Loiter circle exit location and/or path to next waypoint ('xtrack') for forward-only moving vehicles (not multicopters). 0 for the vehicle to converge towards the center xtrack when it leaves the loiter (the line between the centers of the current and next waypoint), 1 to converge to the direct line between the location that the vehicle exits the loiter radius and the next waypoint. Otherwise the angle (in degrees) between the tangent of the loiter circle and the center xtrack at which the vehicle must leave the loiter (and converge to the center xtrack). NaN to use the current system default xtrack behaviour.| Latitude| Longitude| Altitude|  </summary>
         [Description("Loiter around this waypoint for X turns")]
         LOITER_TURNS=18, 
-        ///<summary> Loiter around this waypoint for X seconds |Loiter time.| Empty| Radius around waypoint. If positive loiter clockwise, else counter-clockwise.| Forward moving aircraft this sets exit xtrack location: 0 for center of loiter wp, 1 for exit location. Else, this is desired yaw angle.  NaN for unchanged.| Latitude| Longitude| Altitude|  </summary>
-        [Description("Loiter around this waypoint for X seconds")]
+        ///<summary> Loiter at the specified latitude, longitude and altitude for a certain amount of time. Multicopter vehicles stop at the point (within a vehicle-specific acceptance radius). Forward-only moving vehicles (e.g. fixed-wing) circle the point with the specified radius/direction. If the Heading Required parameter (2) is non-zero forward moving aircraft will only leave the loiter circle once heading towards the next waypoint. |Loiter time (only starts once Lat, Lon and Alt is reached).| Leave loiter circle only once heading towards the next waypoint (0 = False)| Loiter radius around waypoint for forward-only moving vehicles (not multicopters). If positive loiter clockwise, else counter-clockwise.| Loiter circle exit location and/or path to next waypoint ('xtrack') for forward-only moving vehicles (not multicopters). 0 for the vehicle to converge towards the center xtrack when it leaves the loiter (the line between the centers of the current and next waypoint), 1 to converge to the direct line between the location that the vehicle exits the loiter radius and the next waypoint. Otherwise the angle (in degrees) between the tangent of the loiter circle and the center xtrack at which the vehicle must leave the loiter (and converge to the center xtrack). NaN to use the current system default xtrack behaviour.| Latitude| Longitude| Altitude|  </summary>
+        [Description("Loiter at the specified latitude, longitude and altitude for a certain amount of time. Multicopter vehicles stop at the point (within a vehicle-specific acceptance radius). Forward-only moving vehicles (e.g. fixed-wing) circle the point with the specified radius/direction. If the Heading Required parameter (2) is non-zero forward moving aircraft will only leave the loiter circle once heading towards the next waypoint.")]
         LOITER_TIME=19, 
         ///<summary> Return to launch location |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Return to launch location")]
         RETURN_TO_LAUNCH=20, 
-        ///<summary> Land at location. |Minimum target altitude if landing is aborted (0 = undefined/use system default).| Precision land mode.| Empty.| Desired yaw angle. NaN for unchanged.| Latitude.| Longitude.| Landing altitude (ground level in current frame).|  </summary>
+        ///<summary> Land at location. |Minimum target altitude if landing is aborted (0 = undefined/use system default).| Precision land mode.| Empty.| Desired yaw angle. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude.| Longitude.| Landing altitude (ground level in current frame).|  </summary>
         [Description("Land at location.")]
         LAND=21, 
-        ///<summary> Takeoff from ground / hand |Minimum pitch (if airspeed sensor present), desired pitch without sensor| Empty| Empty| Yaw angle (if magnetometer present), ignored without magnetometer. NaN for unchanged.| Latitude| Longitude| Altitude|  </summary>
-        [Description("Takeoff from ground / hand")]
+        ///<summary> Takeoff from ground / hand. Vehicles that support multiple takeoff modes (e.g. VTOL quadplane) should take off using the currently configured mode. |Minimum pitch (if airspeed sensor present), desired pitch without sensor| Empty| Empty| Yaw angle (if magnetometer present), ignored without magnetometer. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude| Longitude| Altitude|  </summary>
+        [Description("Takeoff from ground / hand. Vehicles that support multiple takeoff modes (e.g. VTOL quadplane) should take off using the currently configured mode.")]
         TAKEOFF=22, 
         ///<summary> Land at local position (local frame only) |Landing target number (if available)| Maximum accepted offset from desired landing position - computed magnitude from spherical coordinates: d = sqrt(x^2 + y^2 + z^2), which gives the maximum accepted distance between the desired landing position and the position where the vehicle is about to land| Landing descend rate| Desired yaw angle| Y-axis position| X-axis position| Z-axis / ground level position|  </summary>
         [Description("Land at local position (local frame only)")]
@@ -1287,20 +1648,20 @@ public partial class MAVLink
         ///<summary> Continue on the current course and climb/descend to specified altitude.  When the altitude is reached continue to the next command (i.e., don't proceed to the next command until the desired altitude is reached. |Climb or Descend (0 = Neutral, command completes when within 5m of this command's altitude, 1 = Climbing, command completes when at or above this command's altitude, 2 = Descending, command completes when at or below this command's altitude.| Empty| Empty| Empty| Empty| Empty| Desired altitude|  </summary>
         [Description("Continue on the current course and climb/descend to specified altitude.  When the altitude is reached continue to the next command (i.e., don't proceed to the next command until the desired altitude is reached.")]
         CONTINUE_AND_CHANGE_ALT=30, 
-        ///<summary> Begin loiter at the specified Latitude and Longitude.  If Lat=Lon=0, then loiter at the current position.  Don't consider the navigation command complete (don't leave loiter) until the altitude has been reached.  Additionally, if the Heading Required parameter is non-zero the  aircraft will not leave the loiter until heading toward the next waypoint. |Heading Required (0 = False)| Radius. If positive loiter clockwise, negative counter-clockwise, 0 means no change to standard loiter.| Empty| Forward moving aircraft this sets exit xtrack location: 0 for center of loiter wp, 1 for exit location| Latitude| Longitude| Altitude|  </summary>
-        [Description("Begin loiter at the specified Latitude and Longitude.  If Lat=Lon=0, then loiter at the current position.  Don't consider the navigation command complete (don't leave loiter) until the altitude has been reached.  Additionally, if the Heading Required parameter is non-zero the  aircraft will not leave the loiter until heading toward the next waypoint.")]
+        ///<summary> Begin loiter at the specified Latitude and Longitude.  If Lat=Lon=0, then loiter at the current position.  Don't consider the navigation command complete (don't leave loiter) until the altitude has been reached. Additionally, if the Heading Required parameter is non-zero the aircraft will not leave the loiter until heading toward the next waypoint. |Leave loiter circle only once heading towards the next waypoint (0 = False)| Loiter radius around waypoint for forward-only moving vehicles (not multicopters). If positive loiter clockwise, negative counter-clockwise, 0 means no change to standard loiter.| Empty| Loiter circle exit location and/or path to next waypoint ('xtrack') for forward-only moving vehicles (not multicopters). 0 for the vehicle to converge towards the center xtrack when it leaves the loiter (the line between the centers of the current and next waypoint), 1 to converge to the direct line between the location that the vehicle exits the loiter radius and the next waypoint. Otherwise the angle (in degrees) between the tangent of the loiter circle and the center xtrack at which the vehicle must leave the loiter (and converge to the center xtrack). NaN to use the current system default xtrack behaviour.| Latitude| Longitude| Altitude|  </summary>
+        [Description("Begin loiter at the specified Latitude and Longitude.  If Lat=Lon=0, then loiter at the current position.  Don't consider the navigation command complete (don't leave loiter) until the altitude has been reached. Additionally, if the Heading Required parameter is non-zero the aircraft will not leave the loiter until heading toward the next waypoint.")]
         LOITER_TO_ALT=31, 
-        ///<summary> Being following a target |System ID (of the FOLLOW_TARGET beacon). Send 0 to disable follow-me and return to the default position hold mode.| RESERVED| RESERVED| Altitude mode: 0: Keep current altitude, 1: keep altitude difference to target, 2: go to a fixed altitude above home.| Altitude above home. (used if mode=2)| RESERVED| Time to land in which the MAV should go to the default position hold mode after a message RX timeout.|  </summary>
-        [Description("Being following a target")]
+        ///<summary> Begin following a target |System ID (of the FOLLOW_TARGET beacon). Send 0 to disable follow-me and return to the default position hold mode.| Reserved| Reserved| Altitude mode: 0: Keep current altitude, 1: keep altitude difference to target, 2: go to a fixed altitude above home.| Altitude above home. (used if mode=2)| Reserved| Time to land in which the MAV should go to the default position hold mode after a message RX timeout.|  </summary>
+        [Description("Begin following a target")]
         DO_FOLLOW=32, 
         ///<summary> Reposition the MAV after a follow target command has been sent |Camera q1 (where 0 is on the ray from the camera to the tracking device)| Camera q2| Camera q3| Camera q4| altitude offset from target| X offset from target| Y offset from target|  </summary>
         [Description("Reposition the MAV after a follow target command has been sent")]
         DO_FOLLOW_REPOSITION=33, 
-        ///<summary> Start orbiting on the circumference of a circle defined by the parameters. Setting any value NaN results in using defaults. |Radius of the circle. positive: Orbit clockwise. negative: Orbit counter-clockwise.| Tangential Velocity. NaN: Vehicle configuration default.| Yaw behavior of the vehicle. 0: vehicle front points to the center (default). 1: Hold last heading. 2: Leave yaw uncontrolled.| Reserved (e.g. for dynamic center beacon options)| Center point latitude (if no MAV_FRAME specified) / X coordinate according to MAV_FRAME. NaN: Use current vehicle position or current center if already orbiting.| Center point longitude (if no MAV_FRAME specified) / Y coordinate according to MAV_FRAME. NaN: Use current vehicle position or current center if already orbiting.| Center point altitude (MSL) (if no MAV_FRAME specified) / Z coordinate according to MAV_FRAME. NaN: Use current vehicle position or current center if already orbiting.|  </summary>
-        [Description("Start orbiting on the circumference of a circle defined by the parameters. Setting any value NaN results in using defaults.")]
+        ///<summary> Start orbiting on the circumference of a circle defined by the parameters. Setting values to NaN/INT32_MAX (as appropriate) results in using defaults. |Radius of the circle. Positive: orbit clockwise. Negative: orbit counter-clockwise. NaN: Use vehicle default radius, or current radius if already orbiting.| Tangential Velocity. NaN: Use vehicle default velocity, or current velocity if already orbiting.| Yaw behavior of the vehicle.| Orbit around the centre point for this many radians (i.e. for a three-quarter orbit set 270*Pi/180). 0: Orbit forever. NaN: Use vehicle default, or current value if already orbiting.| Center point latitude (if no MAV_FRAME specified) / X coordinate according to MAV_FRAME. INT32_MAX (or NaN if sent in COMMAND_LONG): Use current vehicle position, or current center if already orbiting.| Center point longitude (if no MAV_FRAME specified) / Y coordinate according to MAV_FRAME. INT32_MAX (or NaN if sent in COMMAND_LONG): Use current vehicle position, or current center if already orbiting.| Center point altitude (MSL) (if no MAV_FRAME specified) / Z coordinate according to MAV_FRAME. NaN: Use current vehicle altitude.|  </summary>
+        [Description("Start orbiting on the circumference of a circle defined by the parameters. Setting values to NaN/INT32_MAX (as appropriate) results in using defaults.")]
         DO_ORBIT=34, 
-        ///<summary> Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of interest mode.| Waypoint index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  </summary>
-        [Description("Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras.")]
+        ///<summary> Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of interest mode.| Waypoint index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  </summary>
+        [Description("Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras.")]
         ROI=80, 
         ///<summary> Control autonomous path planning on the MAV. |0: Disable local obstacle avoidance / local path planning (without resetting map), 1: Enable local path planning, 2: Enable and reset local path planning| 0: Disable full path planning (without resetting map), 1: Enable, 2: Enable and reset map/occupancy grid, 3: Enable and reset planned route, but not occupancy grid| Empty| Yaw angle at goal| Latitude/X of goal| Longitude/Y of goal| Altitude/Z of goal|  </summary>
         [Description("Control autonomous path planning on the MAV.")]
@@ -1308,16 +1669,16 @@ public partial class MAVLink
         ///<summary> Navigate to waypoint using a spline path. |Hold time. (ignored by fixed wing, time to stay at waypoint for rotary wing)| Empty| Empty| Empty| Latitude/X of goal| Longitude/Y of goal| Altitude/Z of goal|  </summary>
         [Description("Navigate to waypoint using a spline path.")]
         SPLINE_WAYPOINT=82, 
-        ///<summary> Takeoff from ground using VTOL mode, and transition to forward flight with specified heading. |Empty| Front transition heading.| Empty| Yaw angle. NaN for unchanged.| Latitude| Longitude| Altitude|  </summary>
-        [Description("Takeoff from ground using VTOL mode, and transition to forward flight with specified heading.")]
+        ///<summary> Takeoff from ground using VTOL mode, and transition to forward flight with specified heading. The command should be ignored by vehicles that dont support both VTOL and fixed-wing flight (multicopters, boats,etc.). |Empty| Front transition heading.| Empty| Yaw angle. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude| Longitude| Altitude|  </summary>
+        [Description("Takeoff from ground using VTOL mode, and transition to forward flight with specified heading. The command should be ignored by vehicles that dont support both VTOL and fixed-wing flight (multicopters, boats,etc.).")]
         VTOL_TAKEOFF=84, 
-        ///<summary> Land using VTOL mode |Empty| Empty| Approach altitude (with the same reference as the Altitude field). NaN if unspecified.| Yaw angle. NaN for unchanged.| Latitude| Longitude| Altitude (ground level)|  </summary>
+        ///<summary> Land using VTOL mode |Landing behaviour.| Empty| Approach altitude (with the same reference as the Altitude field). NaN if unspecified.| Yaw angle. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).| Latitude| Longitude| Altitude (ground level) relative to the current coordinate frame. NaN to use system default landing altitude (ignore value).|  </summary>
         [Description("Land using VTOL mode")]
         VTOL_LAND=85, 
         ///<summary> hand control over to an external controller |On / Off (> 0.5f on)| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("hand control over to an external controller")]
         GUIDED_ENABLE=92, 
-        ///<summary> Delay the next navigation command a number of seconds or until a specified time |Delay (-1 to enable time-of-day fields)| hour (24h format, UTC, -1 to ignore)| minute (24h format, UTC, -1 to ignore)| second (24h format, UTC)| Empty| Empty| Empty|  </summary>
+        ///<summary> Delay the next navigation command a number of seconds or until a specified time |Delay (-1 to enable time-of-day fields)| hour (24h format, UTC, -1 to ignore)| minute (24h format, UTC, -1 to ignore)| second (24h format, UTC, -1 to ignore)| Empty| Empty| Empty|  </summary>
         [Description("Delay the next navigation command a number of seconds or until a specified time")]
         DELAY=93, 
         ///<summary> Descend and place payload. Vehicle moves to specified location, descends until it detects a hanging payload has reached the ground, and then releases the payload. If ground is not detected before the reaching the maximum descent value (param1), the command will complete without releasing the payload. |Maximum distance to descend.| Empty| Empty| Empty| Latitude| Longitude| Altitude|  </summary>
@@ -1329,8 +1690,8 @@ public partial class MAVLink
         ///<summary> Delay mission state machine. |Delay| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Delay mission state machine.")]
         CONDITION_DELAY=112, 
-        ///<summary> Ascend/descend at rate.  Delay mission state machine until desired altitude reached. |Descent / Ascend rate.| Empty| Empty| Empty| Empty| Empty| Finish Altitude|  </summary>
-        [Description("Ascend/descend at rate.  Delay mission state machine until desired altitude reached.")]
+        ///<summary> Ascend/descend to target altitude at specified rate. Delay mission state machine until desired altitude reached. |Descent / Ascend rate.| Empty| Empty| Empty| Empty| Empty| Target Altitude|  </summary>
+        [Description("Ascend/descend to target altitude at specified rate. Delay mission state machine until desired altitude reached.")]
         CONDITION_CHANGE_ALT=113, 
         ///<summary> Delay mission state machine until within desired distance of next NAV point. |Distance.| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Delay mission state machine until within desired distance of next NAV point.")]
@@ -1347,11 +1708,11 @@ public partial class MAVLink
         ///<summary> Jump to the desired command in the mission list.  Repeat this action only the specified number of times |Sequence number| Repeat count| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Jump to the desired command in the mission list.  Repeat this action only the specified number of times")]
         DO_JUMP=177, 
-        ///<summary> Change speed and/or throttle set points. |Speed type (0=Airspeed, 1=Ground Speed, 2=Climb Speed, 3=Descent Speed)| Speed (-1 indicates no change)| Throttle (-1 indicates no change)| 0: absolute, 1: relative| Empty| Empty| Empty|  </summary>
+        ///<summary> Change speed and/or throttle set points. |Speed type (0=Airspeed, 1=Ground Speed, 2=Climb Speed, 3=Descent Speed)| Speed (-1 indicates no change)| Throttle (-1 indicates no change)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Change speed and/or throttle set points.")]
         DO_CHANGE_SPEED=178, 
-        ///<summary> Changes the home location either to the current location or a specified location. |Use current (1=use current location, 0=use specified location)| Empty| Empty| Empty| Latitude| Longitude| Altitude|  </summary>
-        [Description("Changes the home location either to the current location or a specified location.")]
+        ///<summary>            Sets the home position to either to the current position or a specified position.           The home position is the default position that the system will return to and land on.           The position is set automatically by the system during the takeoff (and may also be set using this command).           Note: the current home position may be emitted in a HOME_POSITION message on request (using MAV_CMD_REQUEST_MESSAGE with param1=242).                |Use current (1=use current location, 0=use specified location)| Empty| Empty| Yaw angle. NaN to use default heading| Latitude| Longitude| Altitude|  </summary>
+        [Description("           Sets the home position to either to the current position or a specified position.           The home position is the default position that the system will return to and land on.           The position is set automatically by the system during the takeoff (and may also be set using this command).           Note: the current home position may be emitted in a HOME_POSITION message on request (using MAV_CMD_REQUEST_MESSAGE with param1=242).               ")]
         DO_SET_HOME=179, 
         ///<summary> Set a system parameter.  Caution!  Use of this command requires knowledge of the numeric enumeration value of the parameter. |Parameter number| Parameter value| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Set a system parameter.  Caution!  Use of this command requires knowledge of the numeric enumeration value of the parameter.")]
@@ -1368,12 +1729,15 @@ public partial class MAVLink
         ///<summary> Cycle a between its nominal setting and a desired PWM for a desired number of cycles with a desired period. |Servo instance number.| Pulse Width Modulation.| Cycle count.| Cycle time.| Empty| Empty| Empty|  </summary>
         [Description("Cycle a between its nominal setting and a desired PWM for a desired number of cycles with a desired period.")]
         DO_REPEAT_SERVO=184, 
-        ///<summary> Terminate flight immediately |Flight termination activated if > 0.5| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
-        [Description("Terminate flight immediately")]
+        ///<summary> Terminate flight immediately.           Flight termination immediately and irreversably terminates the current flight, returning the vehicle to ground.           The vehicle will ignore RC or other input until it has been power-cycled.           Termination may trigger safety measures, including: disabling motors and deployment of parachute on multicopters, and setting flight surfaces to initiate a landing pattern on fixed-wing).           On multicopters without a parachute it may trigger a crash landing.           Support for this command can be tested using the protocol bit: MAV_PROTOCOL_CAPABILITY_FLIGHT_TERMINATION.           Support for this command can also be tested by sending the command with param1=0 (< 0.5); the ACK should be either MAV_RESULT_FAILED or MAV_RESULT_UNSUPPORTED.          |Flight termination activated if > 0.5. Otherwise not activated and ACK with MAV_RESULT_FAILED.| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
+        [Description("Terminate flight immediately.           Flight termination immediately and irreversably terminates the current flight, returning the vehicle to ground.           The vehicle will ignore RC or other input until it has been power-cycled.           Termination may trigger safety measures, including: disabling motors and deployment of parachute on multicopters, and setting flight surfaces to initiate a landing pattern on fixed-wing).           On multicopters without a parachute it may trigger a crash landing.           Support for this command can be tested using the protocol bit: MAV_PROTOCOL_CAPABILITY_FLIGHT_TERMINATION.           Support for this command can also be tested by sending the command with param1=0 (< 0.5); the ACK should be either MAV_RESULT_FAILED or MAV_RESULT_UNSUPPORTED.         ")]
         DO_FLIGHTTERMINATION=185, 
         ///<summary> Change altitude set point. |Altitude.| Frame of new altitude.| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Change altitude set point.")]
         DO_CHANGE_ALTITUDE=186, 
+        ///<summary> Sets actuators (e.g. servos) to a desired value. The actuator numbers are mapped to specific outputs (e.g. on any MAIN or AUX PWM or UAVCAN) using a flight-stack specific mechanism (i.e. a parameter). |Actuator 1 value, scaled from [-1 to 1]. NaN to ignore.| Actuator 2 value, scaled from [-1 to 1]. NaN to ignore.| Actuator 3 value, scaled from [-1 to 1]. NaN to ignore.| Actuator 4 value, scaled from [-1 to 1]. NaN to ignore.| Actuator 5 value, scaled from [-1 to 1]. NaN to ignore.| Actuator 6 value, scaled from [-1 to 1]. NaN to ignore.| Index of actuator set (i.e if set to 1, Actuator 1 becomes Actuator 7)|  </summary>
+        [Description("Sets actuators (e.g. servos) to a desired value. The actuator numbers are mapped to specific outputs (e.g. on any MAIN or AUX PWM or UAVCAN) using a flight-stack specific mechanism (i.e. a parameter).")]
+        DO_SET_ACTUATOR=187, 
         ///<summary> Mission command to perform a landing. This is used as a marker in a mission to tell the autopilot where a sequence of mission items that represents a landing starts. It may also be sent via a COMMAND_LONG to trigger a landing, in which case the nearest (geographically) landing sequence in the mission will be used. The Latitude/Longitude is optional, and may be set to 0 if not needed. If specified then it will be used to help find the closest landing sequence. |Empty| Empty| Empty| Empty| Latitude| Longitude| Empty|  </summary>
         [Description("Mission command to perform a landing. This is used as a marker in a mission to tell the autopilot where a sequence of mission items that represents a landing starts. It may also be sent via a COMMAND_LONG to trigger a landing, in which case the nearest (geographically) landing sequence in the mission will be used. The Latitude/Longitude is optional, and may be set to 0 if not needed. If specified then it will be used to help find the closest landing sequence.")]
         DO_LAND_START=189, 
@@ -1383,7 +1747,7 @@ public partial class MAVLink
         ///<summary> Mission command to safely abort an autonomous landing. |Altitude| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Mission command to safely abort an autonomous landing.")]
         DO_GO_AROUND=191, 
-        ///<summary> Reposition the vehicle to a specific WGS84 global position. |Ground speed, less than 0 (-1) for default| Bitmask of option flags.| Reserved| Yaw heading, NaN for unchanged. For planes indicates loiter direction (0: clockwise, 1: counter clockwise)| Latitude (deg * 1E7)| Longitude (deg * 1E7)| Altitude (meters)|  </summary>
+        ///<summary> Reposition the vehicle to a specific WGS84 global position. |Ground speed, less than 0 (-1) for default| Bitmask of option flags.| Loiter radius for planes. Positive values only, direction is controlled by Yaw value. A value of zero or NaN is ignored. | Yaw heading. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.). For planes indicates loiter direction (0: clockwise, 1: counter clockwise)| Latitude| Longitude| Altitude|  </summary>
         [Description("Reposition the vehicle to a specific WGS84 global position.")]
         DO_REPOSITION=192, 
         ///<summary> If in a GPS controlled position mode, hold the current position or continue. |0: Pause current mission or reposition command, hold current position. 1: Continue mission. A VTOL capable vehicle should enter hover mode (multicopter and VTOL planes). A plane should loiter with the default loiter radius.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
@@ -1392,20 +1756,23 @@ public partial class MAVLink
         ///<summary> Set moving direction to forward or reverse. |Direction (0=Forward, 1=Reverse)| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Set moving direction to forward or reverse.")]
         DO_SET_REVERSE=194, 
-        ///<summary> Sets the region of interest (ROI) to a location. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Empty| Empty| Empty| Empty| Latitude| Longitude| Altitude|  </summary>
-        [Description("Sets the region of interest (ROI) to a location. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras.")]
+        ///<summary> Sets the region of interest (ROI) to a location. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. This command can be sent to a gimbal manager but not to a gimbal device. A gimbal is not to react to this message. |Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).| Empty| Empty| Empty| Latitude of ROI location| Longitude of ROI location| Altitude of ROI location|  </summary>
+        [Description("Sets the region of interest (ROI) to a location. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. This command can be sent to a gimbal manager but not to a gimbal device. A gimbal is not to react to this message.")]
         DO_SET_ROI_LOCATION=195, 
-        ///<summary> Sets the region of interest (ROI) to be toward next waypoint, with optional pitch/roll/yaw offset. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Empty| Empty| Empty| Empty| pitch offset from next waypoint| roll offset from next waypoint| yaw offset from next waypoint|  </summary>
-        [Description("Sets the region of interest (ROI) to be toward next waypoint, with optional pitch/roll/yaw offset. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras.")]
+        ///<summary> Sets the region of interest (ROI) to be toward next waypoint, with optional pitch/roll/yaw offset. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. This command can be sent to a gimbal manager but not to a gimbal device. A gimbal device is not to react to this message. |Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).| Empty| Empty| Empty| Pitch offset from next waypoint, positive pitching up| Roll offset from next waypoint, positive rolling to the right| Yaw offset from next waypoint, positive yawing to the right|  </summary>
+        [Description("Sets the region of interest (ROI) to be toward next waypoint, with optional pitch/roll/yaw offset. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. This command can be sent to a gimbal manager but not to a gimbal device. A gimbal device is not to react to this message.")]
         DO_SET_ROI_WPNEXT_OFFSET=196, 
-        ///<summary> Cancels any previous ROI command returning the vehicle/sensors to default flight characteristics. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
-        [Description("Cancels any previous ROI command returning the vehicle/sensors to default flight characteristics. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras.")]
+        ///<summary> Cancels any previous ROI command returning the vehicle/sensors to default flight characteristics. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. This command can be sent to a gimbal manager but not to a gimbal device. A gimbal device is not to react to this message. After this command the gimbal manager should go back to manual input if available, and otherwise assume a neutral position. |Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
+        [Description("Cancels any previous ROI command returning the vehicle/sensors to default flight characteristics. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. This command can be sent to a gimbal manager but not to a gimbal device. A gimbal device is not to react to this message. After this command the gimbal manager should go back to manual input if available, and otherwise assume a neutral position.")]
         DO_SET_ROI_NONE=197, 
+        ///<summary> Mount tracks system with specified system ID. Determination of target vehicle position may be done with GLOBAL_POSITION_INT or any other means. This command can be sent to a gimbal manager but not to a gimbal device. A gimbal device is not to react to this message. |System ID| Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Mount tracks system with specified system ID. Determination of target vehicle position may be done with GLOBAL_POSITION_INT or any other means. This command can be sent to a gimbal manager but not to a gimbal device. A gimbal device is not to react to this message.")]
+        DO_SET_ROI_SYSID=198, 
         ///<summary> Control onboard camera system. |Camera ID (-1 for all)| Transmission: 0: disabled, 1: enabled compressed, 2: enabled raw| Transmission mode: 0: video stream, >0: single images every n seconds| Recording: 0: disabled, 1: enabled compressed, 2: enabled raw| Empty| Empty| Empty|  </summary>
         [Description("Control onboard camera system.")]
         DO_CONTROL_VIDEO=200, 
-        ///<summary> Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of interest mode.| Waypoint index/ target ID (depends on param 1).| Region of interest index. (allows a vehicle to manage multiple ROI's)| Empty| MAV_ROI_WPNEXT: pitch offset from next waypoint, MAV_ROI_LOCATION: latitude| MAV_ROI_WPNEXT: roll offset from next waypoint, MAV_ROI_LOCATION: longitude| MAV_ROI_WPNEXT: yaw offset from next waypoint, MAV_ROI_LOCATION: altitude|  </summary>
-        [Description("Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras.")]
+        ///<summary> Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of interest mode.| Waypoint index/ target ID (depends on param 1).| Region of interest index. (allows a vehicle to manage multiple ROI's)| Empty| MAV_ROI_WPNEXT: pitch offset from next waypoint, MAV_ROI_LOCATION: latitude| MAV_ROI_WPNEXT: roll offset from next waypoint, MAV_ROI_LOCATION: longitude| MAV_ROI_WPNEXT: yaw offset from next waypoint, MAV_ROI_LOCATION: altitude|  </summary>
+        [Description("Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicle's control system to control the vehicle attitude and the attitude of various sensors such as cameras.")]
         DO_SET_ROI=201, 
         ///<summary> Configure digital camera. This is a fallback message for systems that have not yet implemented PARAM_EXT_XXX messages and camera definition files (see https://mavlink.io/en/services/camera_def.html ). |Modes: P, TV, AV, M, Etc.| Shutter speed: Divisor number for one second.| Aperture: F stop number.| ISO number e.g. 80, 100, 200, Etc.| Exposure type enumerator.| Command Identity.| Main engine cut-off time before camera trigger. (0 means no cut-off)|  </summary>
         [Description("Configure digital camera. This is a fallback message for systems that have not yet implemented PARAM_EXT_XXX messages and camera definition files (see https://mavlink.io/en/services/camera_def.html ).")]
@@ -1416,7 +1783,7 @@ public partial class MAVLink
         ///<summary> Mission command to configure a camera or antenna mount |Mount operation mode| stabilize roll? (1 = yes, 0 = no)| stabilize pitch? (1 = yes, 0 = no)| stabilize yaw? (1 = yes, 0 = no)| roll input (0 = angle body frame, 1 = angular rate, 2 = angle absolute frame)| pitch input (0 = angle body frame, 1 = angular rate, 2 = angle absolute frame)| yaw input (0 = angle body frame, 1 = angular rate, 2 = angle absolute frame)|  </summary>
         [Description("Mission command to configure a camera or antenna mount")]
         DO_MOUNT_CONFIGURE=204, 
-        ///<summary> Mission command to control a camera or antenna mount |pitch depending on mount mode (degrees or degrees/second depending on pitch input).| roll depending on mount mode (degrees or degrees/second depending on roll input).| yaw depending on mount mode (degrees or degrees/second depending on yaw input).| altitude depending on mount mode.| latitude in degrees * 1E7, set if appropriate mount mode.| longitude in degrees * 1E7, set if appropriate mount mode.| Mount mode.|  </summary>
+        ///<summary> Mission command to control a camera or antenna mount |pitch depending on mount mode (degrees or degrees/second depending on pitch input).| roll depending on mount mode (degrees or degrees/second depending on roll input).| yaw depending on mount mode (degrees or degrees/second depending on yaw input).| altitude depending on mount mode.| latitude, set if appropriate mount mode.| longitude, set if appropriate mount mode.| Mount mode.|  </summary>
         [Description("Mission command to control a camera or antenna mount")]
         DO_MOUNT_CONTROL=205, 
         ///<summary> Mission command to set camera trigger distance for this flight. The camera is triggered each time this distance is exceeded. This command can also be used to set the shutter integration time for the camera. |Camera trigger distance. 0 to stop triggering.| Camera shutter integration time. -1 or 0 to ignore| Trigger camera once immediately. (0 = no trigger, 1 = trigger)| Empty| Empty| Empty| Empty|  </summary>
@@ -1425,15 +1792,21 @@ public partial class MAVLink
         ///<summary> Mission command to enable the geofence |enable? (0=disable, 1=enable, 2=disable_floor_only)| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Mission command to enable the geofence")]
         DO_FENCE_ENABLE=207, 
-        ///<summary> Mission command to trigger a parachute |action| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
-        [Description("Mission command to trigger a parachute")]
+        ///<summary> Mission item/command to release a parachute or enable/disable auto release. |Action| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
+        [Description("Mission item/command to release a parachute or enable/disable auto release.")]
         DO_PARACHUTE=208, 
-        ///<summary> Mission command to perform motor test. |Motor instance number. (from 1 to max number of motors on the vehicle)| Throttle type.| Throttle.| Timeout.| Motor count. (number of motors to test to test in sequence, waiting for the timeout above between them; 0=1 motor, 1=1 motor, 2=2 motors...)| Motor test order.| Empty|  </summary>
-        [Description("Mission command to perform motor test.")]
+        ///<summary> Command to perform motor test. |Motor instance number (from 1 to max number of motors on the vehicle).| Throttle type (whether the Throttle Value in param3 is a percentage, PWM value, etc.)| Throttle value.| Timeout between tests that are run in sequence.| Motor count. Number of motors to test in sequence: 0/1=one motor, 2= two motors, etc. The Timeout (param4) is used between tests.| Motor test order.| Empty|  </summary>
+        [Description("Command to perform motor test.")]
         DO_MOTOR_TEST=209, 
         ///<summary> Change to/from inverted flight. |Inverted flight. (0=normal, 1=inverted)| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         [Description("Change to/from inverted flight.")]
         DO_INVERTED_FLIGHT=210, 
+        ///<summary> Mission command to operate a gripper. |Gripper instance number.| Gripper action to perform.| Empty| Empty| Empty| Empty| Empty|  </summary>
+        [Description("Mission command to operate a gripper.")]
+        DO_GRIPPER=211, 
+        ///<summary> Enable/disable autotune. |Enable (1: enable, 0:disable).| Specify which axis are autotuned. 0 indicates autopilot default settings.| Empty.| Empty.| Empty.| Empty.| Empty.|  </summary>
+        [Description("Enable/disable autotune.")]
+        DO_AUTOTUNE_ENABLE=212, 
         ///<summary> Sets a desired vehicle turn angle and speed change. |Yaw angle to adjust steering by.| Speed.| Final angle. (0=absolute, 1=relative)| Empty| Empty| Empty| Empty|  </summary>
         [Description("Sets a desired vehicle turn angle and speed change.")]
         SET_YAW_SPEED=213, 
@@ -1464,44 +1837,62 @@ public partial class MAVLink
         ///<summary> Set sensor offsets. This command will be only accepted if in pre-flight mode. |Sensor to adjust the offsets for: 0: gyros, 1: accelerometer, 2: magnetometer, 3: barometer, 4: optical flow, 5: second magnetometer, 6: third magnetometer| X axis offset (or generic dimension 1), in the sensor's raw units| Y axis offset (or generic dimension 2), in the sensor's raw units| Z axis offset (or generic dimension 3), in the sensor's raw units| Generic dimension 4, in the sensor's raw units| Generic dimension 5, in the sensor's raw units| Generic dimension 6, in the sensor's raw units|  </summary>
         [Description("Set sensor offsets. This command will be only accepted if in pre-flight mode.")]
         PREFLIGHT_SET_SENSOR_OFFSETS=242, 
-        ///<summary> Trigger UAVCAN config. This command will be only accepted if in pre-flight mode. |1: Trigger actuator ID assignment and direction mapping.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
-        [Description("Trigger UAVCAN config. This command will be only accepted if in pre-flight mode.")]
+        ///<summary> Trigger UAVCAN configuration (actuator ID assignment and direction mapping). Note that this maps to the legacy UAVCAN v0 function UAVCAN_ENUMERATE, which is intended to be executed just once during initial vehicle configuration (it is not a normal pre-flight command and has been poorly named). |1: Trigger actuator ID assignment and direction mapping. 0: Cancel command.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
+        [Description("Trigger UAVCAN configuration (actuator ID assignment and direction mapping). Note that this maps to the legacy UAVCAN v0 function UAVCAN_ENUMERATE, which is intended to be executed just once during initial vehicle configuration (it is not a normal pre-flight command and has been poorly named).")]
         PREFLIGHT_UAVCAN=243, 
-        ///<summary> Request storage of different parameter values and logs. This command will be only accepted if in pre-flight mode. |Parameter storage: 0: READ FROM FLASH/EEPROM, 1: WRITE CURRENT TO FLASH/EEPROM, 2: Reset to defaults| Mission storage: 0: READ FROM FLASH/EEPROM, 1: WRITE CURRENT TO FLASH/EEPROM, 2: Reset to defaults| Onboard logging: 0: Ignore, 1: Start default rate logging, -1: Stop logging, > 1: logging rate (e.g. set to 1000 for 1000 Hz logging)| Reserved| Empty| Empty| Empty|  </summary>
+        ///<summary> Request storage of different parameter values and logs. This command will be only accepted if in pre-flight mode. |Action to perform on the persistent parameter storage| Action to perform on the persistent mission storage| Onboard logging: 0: Ignore, 1: Start default rate logging, -1: Stop logging, > 1: logging rate (e.g. set to 1000 for 1000 Hz logging)| Reserved| Empty| Empty| Empty|  </summary>
         [Description("Request storage of different parameter values and logs. This command will be only accepted if in pre-flight mode.")]
         PREFLIGHT_STORAGE=245, 
-        ///<summary> Request the reboot or shutdown of system components. |0: Do nothing for autopilot, 1: Reboot autopilot, 2: Shutdown autopilot, 3: Reboot autopilot and keep it in the bootloader until upgraded.| 0: Do nothing for onboard computer, 1: Reboot onboard computer, 2: Shutdown onboard computer, 3: Reboot onboard computer and keep it in the bootloader until upgraded.| WIP: 0: Do nothing for camera, 1: Reboot onboard camera, 2: Shutdown onboard camera, 3: Reboot onboard camera and keep it in the bootloader until upgraded| WIP: 0: Do nothing for mount (e.g. gimbal), 1: Reboot mount, 2: Shutdown mount, 3: Reboot mount and keep it in the bootloader until upgraded| Reserved, send 0| Reserved, send 0| WIP: ID (e.g. camera ID -1 for all IDs)|  </summary>
+        ///<summary> Request the reboot or shutdown of system components. |0: Do nothing for autopilot, 1: Reboot autopilot, 2: Shutdown autopilot, 3: Reboot autopilot and keep it in the bootloader until upgraded.| 0: Do nothing for onboard computer, 1: Reboot onboard computer, 2: Shutdown onboard computer, 3: Reboot onboard computer and keep it in the bootloader until upgraded.| 0: Do nothing for component, 1: Reboot component, 2: Shutdown component, 3: Reboot component and keep it in the bootloader until upgraded| MAVLink Component ID targeted in param3 (0 for all components).| Reserved (set to 0)| Reserved (set to 0)| WIP: ID (e.g. camera ID -1 for all IDs)|  </summary>
         [Description("Request the reboot or shutdown of system components.")]
         PREFLIGHT_REBOOT_SHUTDOWN=246, 
-        ///<summary> Override current mission with command to pause mission, pause mission and move to position, continue/resume mission. When param 1 indicates that the mission is paused (MAV_GOTO_DO_HOLD), param 2 defines whether it holds in place or moves to another position. |MAV_GOTO_DO_HOLD: pause mission and either hold or move to specified position (depending on param2), MAV_GOTO_DO_CONTINUE: resume mission.| MAV_GOTO_HOLD_AT_CURRENT_POSITION: hold at current position, MAV_GOTO_HOLD_AT_SPECIFIED_POSITION: hold at specified position.| Coordinate frame of hold point.| Desired yaw angle.| Latitude / X position.| Longitude / Y position.| Altitude / Z position.|  </summary>
+        ///<summary> Override current mission with command to pause mission, pause mission and move to position, continue/resume mission. When param 1 indicates that the mission is paused (MAV_GOTO_DO_HOLD), param 2 defines whether it holds in place or moves to another position. |MAV_GOTO_DO_HOLD: pause mission and either hold or move to specified position (depending on param2), MAV_GOTO_DO_CONTINUE: resume mission.| MAV_GOTO_HOLD_AT_CURRENT_POSITION: hold at current position, MAV_GOTO_HOLD_AT_SPECIFIED_POSITION: hold at specified position.| Coordinate frame of hold point.| Desired yaw angle.| Latitude/X position.| Longitude/Y position.| Altitude/Z position.|  </summary>
         [Description("Override current mission with command to pause mission, pause mission and move to position, continue/resume mission. When param 1 indicates that the mission is paused (MAV_GOTO_DO_HOLD), param 2 defines whether it holds in place or moves to another position.")]
         OVERRIDE_GOTO=252, 
+        ///<summary> Mission command to set a Camera Auto Mount Pivoting Oblique Survey (Replaces CAM_TRIGG_DIST for this purpose). The camera is triggered each time this distance is exceeded, then the mount moves to the next position. Params 4~6 set-up the angle limits and number of positions for oblique survey, where mount-enabled vehicles automatically roll the camera between shots to emulate an oblique camera setup (providing an increased HFOV). This command can also be used to set the shutter integration time for the camera. |Camera trigger distance. 0 to stop triggering.| Camera shutter integration time. 0 to ignore| The minimum interval in which the camera is capable of taking subsequent pictures repeatedly. 0 to ignore.| Total number of roll positions at which the camera will capture photos (images captures spread evenly across the limits defined by param5).| Angle limits that the camera can be rolled to left and right of center.| Fixed pitch angle that the camera will hold in oblique mode if the mount is actuated in the pitch axis.| Empty|  </summary>
+        [Description("Mission command to set a Camera Auto Mount Pivoting Oblique Survey (Replaces CAM_TRIGG_DIST for this purpose). The camera is triggered each time this distance is exceeded, then the mount moves to the next position. Params 4~6 set-up the angle limits and number of positions for oblique survey, where mount-enabled vehicles automatically roll the camera between shots to emulate an oblique camera setup (providing an increased HFOV). This command can also be used to set the shutter integration time for the camera.")]
+        OBLIQUE_SURVEY=260, 
         ///<summary> start running a mission |first_item: the first mission item to run| last_item:  the last mission item to run (after this item is run, the mission ends)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("start running a mission")]
         MISSION_START=300, 
-        ///<summary> Arms / Disarms a component |0: disarm, 1: arm| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Actuator testing command. This is similar to MAV_CMD_DO_MOTOR_TEST but operates on the level of output functions, i.e. it is possible to test Motor1 independent from which output it is configured on. Autopilots typically refuse this command while armed. |Output value: 1 means maximum positive output, 0 to center servos or minimum motor thrust (expected to spin), -1 for maximum negative (if not supported by the motors, i.e. motor is not reversible, smaller than 0 maps to NaN). And NaN maps to disarmed (stop the motors).| Timeout after which the test command expires and the output is restored to the previous value. A timeout has to be set for safety reasons. A timeout of 0 means to restore the previous value immediately.| Reserved (default:0)| Reserved (default:0)| Actuator Output function| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Actuator testing command. This is similar to MAV_CMD_DO_MOTOR_TEST but operates on the level of output functions, i.e. it is possible to test Motor1 independent from which output it is configured on. Autopilots typically refuse this command while armed.")]
+        ACTUATOR_TEST=310, 
+        ///<summary> Actuator configuration command. |Actuator configuration action| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Actuator Output function| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Actuator configuration command.")]
+        CONFIGURE_ACTUATOR=311, 
+        ///<summary> Arms / Disarms a component |0: disarm, 1: arm| 0: arm-disarm unless prevented by safety checks (i.e. when landed), 21196: force arming/disarming (e.g. allow arming to override preflight checks and disarming in flight)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Arms / Disarms a component")]
         COMPONENT_ARM_DISARM=400, 
-        ///<summary> Request the home position from the vehicle. |Reserved| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
-        [Description("Request the home position from the vehicle.")]
+        ///<summary> Instructs a target system to run pre-arm checks.           This allows preflight checks to be run on demand, which may be useful on systems that normally run them at low rate, or which do not trigger checks when the armable state might have changed.           This command should return MAV_RESULT_ACCEPTED if it will run the checks.           The results of the checks are usually then reported in SYS_STATUS messages (this is system-specific).           The command should return MAV_RESULT_TEMPORARILY_REJECTED if the system is already armed.          |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Instructs a target system to run pre-arm checks.           This allows preflight checks to be run on demand, which may be useful on systems that normally run them at low rate, or which do not trigger checks when the armable state might have changed.           This command should return MAV_RESULT_ACCEPTED if it will run the checks.           The results of the checks are usually then reported in SYS_STATUS messages (this is system-specific).           The command should return MAV_RESULT_TEMPORARILY_REJECTED if the system is already armed.         ")]
+        RUN_PREARM_CHECKS=401, 
+        ///<summary> Turns illuminators ON/OFF. An illuminator is a light source that is used for lighting up dark areas external to the sytstem: e.g. a torch or searchlight (as opposed to a light source for illuminating the system itself, e.g. an indicator light). |0: Illuminators OFF, 1: Illuminators ON| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Turns illuminators ON/OFF. An illuminator is a light source that is used for lighting up dark areas external to the sytstem: e.g. a torch or searchlight (as opposed to a light source for illuminating the system itself, e.g. an indicator light).")]
+        ILLUMINATOR_ON_OFF=405, 
+        ///<summary> Request the home position from the vehicle. 	  The vehicle will ACK the command and then emit the HOME_POSITION message. |Reserved| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
+        [Description("Request the home position from the vehicle. 	  The vehicle will ACK the command and then emit the HOME_POSITION message.")]
         GET_HOME_POSITION=410, 
+        ///<summary> Inject artificial failure for testing purposes. Note that autopilots should implement an additional protection before accepting this command such as a specific param setting. |The unit which is affected by the failure.| The type how the failure manifests itself.| Instance affected by failure (0 to signal all).| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Inject artificial failure for testing purposes. Note that autopilots should implement an additional protection before accepting this command such as a specific param setting.")]
+        INJECT_FAILURE=420, 
         ///<summary> Starts receiver pairing. |0:Spektrum.| RC type.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Starts receiver pairing.")]
         START_RX_PAIR=500, 
-        ///<summary> Request the interval between messages for a particular MAVLink message ID |The MAVLink message ID| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Request the interval between messages for a particular MAVLink message ID")]
+        ///<summary>            Request the interval between messages for a particular MAVLink message ID.           The receiver should ACK the command and then emit its response in a MESSAGE_INTERVAL message.          |The MAVLink message ID| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("           Request the interval between messages for a particular MAVLink message ID.           The receiver should ACK the command and then emit its response in a MESSAGE_INTERVAL message.         ")]
         GET_MESSAGE_INTERVAL=510, 
-        ///<summary> Set the interval between messages for a particular MAVLink message ID. This interface replaces REQUEST_DATA_STREAM |The MAVLink message ID| The interval between two messages. Set to -1 to disable and 0 to request default rate.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Set the interval between messages for a particular MAVLink message ID. This interface replaces REQUEST_DATA_STREAM")]
+        ///<summary> Set the interval between messages for a particular MAVLink message ID. This interface replaces REQUEST_DATA_STREAM. |The MAVLink message ID| The interval between two messages. Set to -1 to disable and 0 to request default rate.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Target address of message stream (if message has target address fields). 0: Flight-stack default (recommended), 1: address of requestor, 2: broadcast.|  </summary>
+        [Description("Set the interval between messages for a particular MAVLink message ID. This interface replaces REQUEST_DATA_STREAM.")]
         SET_MESSAGE_INTERVAL=511, 
-        ///<summary> Request the target system(s) emit a single instance of a specified message (i.e. a 'one-shot' version of MAV_CMD_SET_MESSAGE_INTERVAL). |The MAVLink message ID of the requested message.| Index id (if appropriate). The use of this parameter (if any), must be defined in the requested message.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Request the target system(s) emit a single instance of a specified message (i.e. a 'one-shot' version of MAV_CMD_SET_MESSAGE_INTERVAL). |The MAVLink message ID of the requested message.| Use for index ID, if required. Otherwise, the use of this parameter (if any) must be defined in the requested message. By default assumed not used (0).| The use of this parameter (if any), must be defined in the requested message. By default assumed not used (0).| The use of this parameter (if any), must be defined in the requested message. By default assumed not used (0).| The use of this parameter (if any), must be defined in the requested message. By default assumed not used (0).| The use of this parameter (if any), must be defined in the requested message. By default assumed not used (0).| Target address for requested message (if message has target address fields). 0: Flight-stack default, 1: address of requestor, 2: broadcast.|  </summary>
         [Description("Request the target system(s) emit a single instance of a specified message (i.e. a 'one-shot' version of MAV_CMD_SET_MESSAGE_INTERVAL).")]
         REQUEST_MESSAGE=512, 
-        ///<summary> Request MAVLink protocol version compatibility |1: Request supported protocol versions by all nodes on the network| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Request MAVLink protocol version compatibility")]
+        ///<summary> Request MAVLink protocol version compatibility. All receivers should ACK the command and then emit their capabilities in an PROTOCOL_VERSION message |1: Request supported protocol versions by all nodes on the network| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Request MAVLink protocol version compatibility. All receivers should ACK the command and then emit their capabilities in an PROTOCOL_VERSION message")]
         REQUEST_PROTOCOL_VERSION=519, 
-        ///<summary> Request autopilot capabilities |1: Request autopilot version| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Request autopilot capabilities")]
+        ///<summary> Request autopilot capabilities. The receiver should ACK the command and then emit its capabilities in an AUTOPILOT_VERSION message |1: Request autopilot version| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Request autopilot capabilities. The receiver should ACK the command and then emit its capabilities in an AUTOPILOT_VERSION message")]
         REQUEST_AUTOPILOT_CAPABILITIES=520, 
         ///<summary> Request camera information (CAMERA_INFORMATION). |0: No action 1: Request camera capabilities| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Request camera information (CAMERA_INFORMATION).")]
@@ -1512,7 +1903,7 @@ public partial class MAVLink
         ///<summary> Request storage information (STORAGE_INFORMATION). Use the command's target_component to target a specific component's storage. |Storage ID (0 for all, 1 for first, 2 for second, etc.)| 0: No Action 1: Request storage information| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Request storage information (STORAGE_INFORMATION). Use the command's target_component to target a specific component's storage.")]
         REQUEST_STORAGE_INFORMATION=525, 
-        ///<summary> Format a storage medium. Once format is complete, a STORAGE_INFORMATION message is sent. Use the command's target_component to target a specific component's storage. |Storage ID (1 for first, 2 for second, etc.)| 0: No action 1: Format storage| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Format a storage medium. Once format is complete, a STORAGE_INFORMATION message is sent. Use the command's target_component to target a specific component's storage. |Storage ID (1 for first, 2 for second, etc.)| Format storage (and reset image log). 0: No action 1: Format storage| Reset Image Log (without formatting storage medium). This will reset CAMERA_CAPTURE_STATUS.image_count and CAMERA_IMAGE_CAPTURED.image_index. 0: No action 1: Reset Image Log| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Format a storage medium. Once format is complete, a STORAGE_INFORMATION message is sent. Use the command's target_component to target a specific component's storage.")]
         STORAGE_FORMAT=526, 
         ///<summary> Request camera capture status (CAMERA_CAPTURE_STATUS) |0: No Action 1: Request camera capture status| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
@@ -1524,49 +1915,67 @@ public partial class MAVLink
         ///<summary> Reset all camera settings to Factory Default |0: No Action 1: Reset all settings| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Reset all camera settings to Factory Default")]
         RESET_CAMERA_SETTINGS=529, 
-        ///<summary> Set camera running mode. Use NaN for reserved values. GCS will send a MAV_CMD_REQUEST_VIDEO_STREAM_STATUS command after a mode change if the camera supports video streaming. |Reserved (Set to 0)| Camera mode| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Set camera running mode. Use NaN for reserved values. GCS will send a MAV_CMD_REQUEST_VIDEO_STREAM_STATUS command after a mode change if the camera supports video streaming. |Reserved (Set to 0)| Camera mode| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:0)| Reserved (default:0)| Reserved (default:NaN)|  </summary>
         [Description("Set camera running mode. Use NaN for reserved values. GCS will send a MAV_CMD_REQUEST_VIDEO_STREAM_STATUS command after a mode change if the camera supports video streaming.")]
         SET_CAMERA_MODE=530, 
-        ///<summary> Set camera zoom. Camera must respond with a CAMERA_SETTINGS message (on success). Use NaN for reserved values. |Zoom type| Zoom value. The range of valid values depend on the zoom type.| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Set camera zoom. Camera must respond with a CAMERA_SETTINGS message (on success). Use NaN for reserved values.")]
+        ///<summary> Set camera zoom. Camera must respond with a CAMERA_SETTINGS message (on success). |Zoom type| Zoom value. The range of valid values depend on the zoom type.| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:0)| Reserved (default:0)| Reserved (default:NaN)|  </summary>
+        [Description("Set camera zoom. Camera must respond with a CAMERA_SETTINGS message (on success).")]
         SET_CAMERA_ZOOM=531, 
-        ///<summary> Set camera focus. Camera must respond with a CAMERA_SETTINGS message (on success). Use NaN for reserved values. |Focus type| Focus value| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Set camera focus. Camera must respond with a CAMERA_SETTINGS message (on success). Use NaN for reserved values.")]
+        ///<summary> Set camera focus. Camera must respond with a CAMERA_SETTINGS message (on success). |Focus type| Focus value| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:0)| Reserved (default:0)| Reserved (default:NaN)|  </summary>
+        [Description("Set camera focus. Camera must respond with a CAMERA_SETTINGS message (on success).")]
         SET_CAMERA_FOCUS=532, 
+        ///<summary> Set that a particular storage is the preferred location for saving photos, videos, and/or other media (e.g. to set that an SD card is used for storing videos).           There can only be one preferred save location for each particular media type: setting a media usage flag will clear/reset that same flag if set on any other storage.           If no flag is set the system should use its default storage.           A target system can choose to always use default storage, in which case it should ACK the command with MAV_RESULT_UNSUPPORTED.           A target system can choose to not allow a particular storage to be set as preferred storage, in which case it should ACK the command with MAV_RESULT_DENIED. |Storage ID (1 for first, 2 for second, etc.)| Usage flags| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Set that a particular storage is the preferred location for saving photos, videos, and/or other media (e.g. to set that an SD card is used for storing videos).           There can only be one preferred save location for each particular media type: setting a media usage flag will clear/reset that same flag if set on any other storage.           If no flag is set the system should use its default storage.           A target system can choose to always use default storage, in which case it should ACK the command with MAV_RESULT_UNSUPPORTED.           A target system can choose to not allow a particular storage to be set as preferred storage, in which case it should ACK the command with MAV_RESULT_DENIED.")]
+        SET_STORAGE_USAGE=533, 
         ///<summary> Tagged jump target. Can be jumped to with MAV_CMD_DO_JUMP_TAG. |Tag.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Tagged jump target. Can be jumped to with MAV_CMD_DO_JUMP_TAG.")]
         JUMP_TAG=600, 
         ///<summary> Jump to the matching tag in the mission list. Repeat this action for the specified number of times. A mission should contain a single matching tag for each jump. If this is not the case then a jump to a missing tag should complete the mission, and a jump where there are multiple matching tags should always select the one with the lowest mission sequence number. |Target tag to jump to.| Repeat count.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Jump to the matching tag in the mission list. Repeat this action for the specified number of times. A mission should contain a single matching tag for each jump. If this is not the case then a jump to a missing tag should complete the mission, and a jump where there are multiple matching tags should always select the one with the lowest mission sequence number.")]
         DO_JUMP_TAG=601, 
-        ///<summary> Start image capture sequence. Sends CAMERA_IMAGE_CAPTURED after each capture. Use NaN for reserved values. |Reserved (Set to 0)| Desired elapsed time between two consecutive pictures (in seconds). Minimum values depend on hardware (typically greater than 2 seconds).| Total number of images to capture. 0 to capture forever/until MAV_CMD_IMAGE_STOP_CAPTURE.| Capture sequence number starting from 1. This is only valid for single-capture (param3 == 1). Increment the capture ID for each capture command to prevent double captures when a command is re-transmitted. Use 0 to ignore it.| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> High level setpoint to be sent to a gimbal manager to set a gimbal attitude. It is possible to set combinations of the values below. E.g. an angle as well as a desired angular rate can be used to get to this angle at a certain angular rate, or an angular rate only will result in continuous turning. NaN is to be used to signal unset. Note: a gimbal is never to react to this command but only the gimbal manager. |Pitch angle (positive to pitch up, relative to vehicle for FOLLOW mode, relative to world horizon for LOCK mode).| Yaw angle (positive to yaw to the right, relative to vehicle for FOLLOW mode, absolute to North for LOCK mode).| Pitch rate (positive to pitch up).| Yaw rate (positive to yaw to the right).| Gimbal manager flags to use.| Reserved (default:0)| Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).|  </summary>
+        [Description("High level setpoint to be sent to a gimbal manager to set a gimbal attitude. It is possible to set combinations of the values below. E.g. an angle as well as a desired angular rate can be used to get to this angle at a certain angular rate, or an angular rate only will result in continuous turning. NaN is to be used to signal unset. Note: a gimbal is never to react to this command but only the gimbal manager.")]
+        DO_GIMBAL_MANAGER_PITCHYAW=1000, 
+        ///<summary> Gimbal configuration to set which sysid/compid is in primary and secondary control. |Sysid for primary control (0: no one in control, -1: leave unchanged, -2: set itself in control (for missions where the own sysid is still unknown), -3: remove control if currently in control).| Compid for primary control (0: no one in control, -1: leave unchanged, -2: set itself in control (for missions where the own sysid is still unknown), -3: remove control if currently in control).| Sysid for secondary control (0: no one in control, -1: leave unchanged, -2: set itself in control (for missions where the own sysid is still unknown), -3: remove control if currently in control).| Compid for secondary control (0: no one in control, -1: leave unchanged, -2: set itself in control (for missions where the own sysid is still unknown), -3: remove control if currently in control).| Reserved (default:0)| Reserved (default:0)| Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).|  </summary>
+        [Description("Gimbal configuration to set which sysid/compid is in primary and secondary control.")]
+        DO_GIMBAL_MANAGER_CONFIGURE=1001, 
+        ///<summary> Start image capture sequence. Sends CAMERA_IMAGE_CAPTURED after each capture. Use NaN for reserved values. |Reserved (Set to 0)| Desired elapsed time between two consecutive pictures (in seconds). Minimum values depend on hardware (typically greater than 2 seconds).| Total number of images to capture. 0 to capture forever/until MAV_CMD_IMAGE_STOP_CAPTURE.| Capture sequence number starting from 1. This is only valid for single-capture (param3 == 1), otherwise set to 0. Increment the capture ID for each capture command to prevent double captures when a command is re-transmitted.| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)|  </summary>
         [Description("Start image capture sequence. Sends CAMERA_IMAGE_CAPTURED after each capture. Use NaN for reserved values.")]
         IMAGE_START_CAPTURE=2000, 
-        ///<summary> Stop image capture sequence Use NaN for reserved values. |Reserved (Set to 0)| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Stop image capture sequence Use NaN for reserved values. |Reserved (Set to 0)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:0)| Reserved (default:0)| Reserved (default:NaN)|  </summary>
         [Description("Stop image capture sequence Use NaN for reserved values.")]
         IMAGE_STOP_CAPTURE=2001, 
-        ///<summary> Re-request a CAMERA_IMAGE_CAPTURE message. Use NaN for reserved values. |Sequence number for missing CAMERA_IMAGE_CAPTURE message| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Re-request a CAMERA_IMAGE_CAPTURE message. Use NaN for reserved values.")]
+        ///<summary> Re-request a CAMERA_IMAGE_CAPTURED message. |Sequence number for missing CAMERA_IMAGE_CAPTURED message| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:0)| Reserved (default:0)| Reserved (default:NaN)|  </summary>
+        [Description("Re-request a CAMERA_IMAGE_CAPTURED message.")]
         REQUEST_CAMERA_IMAGE_CAPTURE=2002, 
         ///<summary> Enable or disable on-board camera triggering system. |Trigger enable/disable (0 for disable, 1 for start), -1 to ignore| 1 to reset the trigger sequence, -1 or 0 to ignore| 1 to pause triggering, but without switching the camera off or retracting it. -1 to ignore| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Enable or disable on-board camera triggering system.")]
         DO_TRIGGER_CONTROL=2003, 
-        ///<summary> Starts video capture (recording). Use NaN for reserved values. |Video Stream ID (0 for all streams)| Frequency CAMERA_CAPTURE_STATUS messages should be sent while recording (0 for no messages, otherwise frequency)| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Starts video capture (recording). Use NaN for reserved values.")]
+        ///<summary> If the camera supports point visual tracking (CAMERA_CAP_FLAGS_HAS_TRACKING_POINT is set), this command allows to initiate the tracking. |Point to track x value (normalized 0..1, 0 is left, 1 is right).| Point to track y value (normalized 0..1, 0 is top, 1 is bottom).| Point radius (normalized 0..1, 0 is image left, 1 is image right).| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("If the camera supports point visual tracking (CAMERA_CAP_FLAGS_HAS_TRACKING_POINT is set), this command allows to initiate the tracking.")]
+        CAMERA_TRACK_POINT=2004, 
+        ///<summary> If the camera supports rectangle visual tracking (CAMERA_CAP_FLAGS_HAS_TRACKING_RECTANGLE is set), this command allows to initiate the tracking. |Top left corner of rectangle x value (normalized 0..1, 0 is left, 1 is right).| Top left corner of rectangle y value (normalized 0..1, 0 is top, 1 is bottom).| Bottom right corner of rectangle x value (normalized 0..1, 0 is left, 1 is right).| Bottom right corner of rectangle y value (normalized 0..1, 0 is top, 1 is bottom).| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("If the camera supports rectangle visual tracking (CAMERA_CAP_FLAGS_HAS_TRACKING_RECTANGLE is set), this command allows to initiate the tracking.")]
+        CAMERA_TRACK_RECTANGLE=2005, 
+        ///<summary> Stops ongoing tracking. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        [Description("Stops ongoing tracking.")]
+        CAMERA_STOP_TRACKING=2010, 
+        ///<summary> Starts video capture (recording). |Video Stream ID (0 for all streams)| Frequency CAMERA_CAPTURE_STATUS messages should be sent while recording (0 for no messages, otherwise frequency)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)|  </summary>
+        [Description("Starts video capture (recording).")]
         VIDEO_START_CAPTURE=2500, 
-        ///<summary> Stop the current video capture (recording). Use NaN for reserved values. |Video Stream ID (0 for all streams)| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
-        [Description("Stop the current video capture (recording). Use NaN for reserved values.")]
+        ///<summary> Stop the current video capture (recording). |Video Stream ID (0 for all streams)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)|  </summary>
+        [Description("Stop the current video capture (recording).")]
         VIDEO_STOP_CAPTURE=2501, 
-        ///<summary> Start video streaming |Video Stream ID (0 for all streams, 1 for first, 2 for second, etc.)| Reserved| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Start video streaming |Video Stream ID (0 for all streams, 1 for first, 2 for second, etc.)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Start video streaming")]
         VIDEO_START_STREAMING=2502, 
-        ///<summary> Stop the given video stream |Video Stream ID (0 for all streams, 1 for first, 2 for second, etc.)| Reserved| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Stop the given video stream |Video Stream ID (0 for all streams, 1 for first, 2 for second, etc.)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Stop the given video stream")]
         VIDEO_STOP_STREAMING=2503, 
-        ///<summary> Request video stream information (VIDEO_STREAM_INFORMATION) |Video Stream ID (0 for all streams, 1 for first, 2 for second, etc.)| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Request video stream information (VIDEO_STREAM_INFORMATION) |Video Stream ID (0 for all streams, 1 for first, 2 for second, etc.)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Request video stream information (VIDEO_STREAM_INFORMATION)")]
         REQUEST_VIDEO_STREAM_INFORMATION=2504, 
-        ///<summary> Request video stream status (VIDEO_STREAM_STATUS) |Video Stream ID (0 for all streams, 1 for first, 2 for second, etc.)| Reserved (all remaining params)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Request video stream status (VIDEO_STREAM_STATUS) |Video Stream ID (0 for all streams, 1 for first, 2 for second, etc.)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Request video stream status (VIDEO_STREAM_STATUS)")]
         REQUEST_VIDEO_STREAM_STATUS=2505, 
         ///<summary> Request to start streaming logging data over MAVLink (see also LOGGING_DATA message) |Format: 0: ULog| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)|  </summary>
@@ -1575,7 +1984,7 @@ public partial class MAVLink
         ///<summary> Request to stop streaming log data over MAVLink |Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)|  </summary>
         [Description("Request to stop streaming log data over MAVLink")]
         LOGGING_STOP=2511, 
-        ///<summary>  |Landing gear ID (default: 0, -1 for all)| Landing gear position (Down: 0, Up: 1, NaN for no change)| Reserved, set to NaN| Reserved, set to NaN| Reserved, set to NaN| Reserved, set to NaN| Reserved, set to NaN|  </summary>
+        ///<summary>  |Landing gear ID (default: 0, -1 for all)| Landing gear position (Down: 0, Up: 1, NaN for no change)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)| Reserved (default:NaN)|  </summary>
         [Description("")]
         AIRFRAME_CONFIGURATION=2520, 
         ///<summary> Request to start/stop transmitting over the high latency telemetry |Control transmission over high latency telemetry (0: stop, 1: start)| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
@@ -1584,7 +1993,7 @@ public partial class MAVLink
         ///<summary> Create a panorama at the current position |Viewing angle horizontal of the panorama (+- 0.5 the total angle)| Viewing angle vertical of panorama.| Speed of the horizontal rotation.| Speed of the vertical rotation.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Create a panorama at the current position")]
         PANORAMA_CREATE=2800, 
-        ///<summary> Request VTOL transition |The target VTOL state. Only MAV_VTOL_STATE_MC and MAV_VTOL_STATE_FW can be used.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
+        ///<summary> Request VTOL transition |The target VTOL state. For normal transitions, only MAV_VTOL_STATE_MC and MAV_VTOL_STATE_FW can be used.| Force immediate transition to the specified MAV_VTOL_STATE. 1: Force immediate, 0: normal transition. Can be used, for example, to trigger an emergency 'Quadchute'. Caution: Can be dangerous/damage vehicle, depending on autopilot implementation of this command.| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Request VTOL transition")]
         DO_VTOL_TRANSITION=3000, 
         ///<summary> Request authorization to arm the vehicle to a external entity, the arm authorizer is responsible to request all data that is needs from the vehicle before authorize or deny the request. If approved the progress of command_ack message should be set with period of time that this authorization is valid in seconds or in case it was denied it should be set with one of the reasons in ARM_AUTH_DENIED_REASON.          |Vehicle system id, this way ground station can request arm authorization on behalf of any vehicle| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
@@ -1593,22 +2002,22 @@ public partial class MAVLink
         ///<summary> This command sets the submode to standard guided when vehicle is in guided mode. The vehicle holds position and altitude and the user can input the desired velocities along all three axes.                    |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("This command sets the submode to standard guided when vehicle is in guided mode. The vehicle holds position and altitude and the user can input the desired velocities along all three axes.                   ")]
         SET_GUIDED_SUBMODE_STANDARD=4000, 
-        ///<summary> This command sets submode circle when vehicle is in guided mode. Vehicle flies along a circle facing the center of the circle. The user can input the velocity along the circle and change the radius. If no input is given the vehicle will hold position.                    |Radius of desired circle in CIRCLE_MODE| User defined| User defined| User defined| Unscaled target latitude of center of circle in CIRCLE_MODE| Unscaled target longitude of center of circle in CIRCLE_MODE| Reserved (default:0)|  </summary>
+        ///<summary> This command sets submode circle when vehicle is in guided mode. Vehicle flies along a circle facing the center of the circle. The user can input the velocity along the circle and change the radius. If no input is given the vehicle will hold position.                    |Radius of desired circle in CIRCLE_MODE| User defined| User defined| User defined| Target latitude of center of circle in CIRCLE_MODE| Target longitude of center of circle in CIRCLE_MODE| Reserved (default:0)|  </summary>
         [Description("This command sets submode circle when vehicle is in guided mode. Vehicle flies along a circle facing the center of the circle. The user can input the velocity along the circle and change the radius. If no input is given the vehicle will hold position.                   ")]
         SET_GUIDED_SUBMODE_CIRCLE=4001, 
         ///<summary> Delay mission state machine until gate has been reached. |Geometry: 0: orthogonal to path between previous and next waypoint.| Altitude: 0: ignore altitude| Empty| Empty| Latitude| Longitude| Altitude|  </summary>
         [Description("Delay mission state machine until gate has been reached.")]
         CONDITION_GATE=4501, 
-        ///<summary> Fence return point. There can only be one fence return point.          |Reserved| Reserved| Reserved| Reserved| Latitude| Longitude| Altitude|  </summary>
-        [Description("Fence return point. There can only be one fence return point.         ")]
+        ///<summary> Fence return point (there can only be one such point in a geofence definition). If rally points are supported they should be used instead. |Reserved| Reserved| Reserved| Reserved| Latitude| Longitude| Altitude|  </summary>
+        [Description("Fence return point (there can only be one such point in a geofence definition). If rally points are supported they should be used instead.")]
         FENCE_RETURN_POINT=5000, 
-        ///<summary> Fence vertex for an inclusion polygon (the polygon must not be self-intersecting). The vehicle must stay within this area. Minimum of 3 vertices required.          |Polygon vertex count| Reserved| Reserved| Reserved| Latitude| Longitude| Reserved|  </summary>
+        ///<summary> Fence vertex for an inclusion polygon (the polygon must not be self-intersecting). The vehicle must stay within this area. Minimum of 3 vertices required.          |Polygon vertex count| Vehicle must be inside ALL inclusion zones in a single group, vehicle must be inside at least one group, must be the same for all points in each polygon| Reserved| Reserved| Latitude| Longitude| Reserved|  </summary>
         [Description("Fence vertex for an inclusion polygon (the polygon must not be self-intersecting). The vehicle must stay within this area. Minimum of 3 vertices required.         ")]
         FENCE_POLYGON_VERTEX_INCLUSION=5001, 
         ///<summary> Fence vertex for an exclusion polygon (the polygon must not be self-intersecting). The vehicle must stay outside this area. Minimum of 3 vertices required.          |Polygon vertex count| Reserved| Reserved| Reserved| Latitude| Longitude| Reserved|  </summary>
         [Description("Fence vertex for an exclusion polygon (the polygon must not be self-intersecting). The vehicle must stay outside this area. Minimum of 3 vertices required.         ")]
         FENCE_POLYGON_VERTEX_EXCLUSION=5002, 
-        ///<summary> Circular fence area. The vehicle must stay inside this area.          |Radius.| Reserved| Reserved| Reserved| Latitude| Longitude| Reserved|  </summary>
+        ///<summary> Circular fence area. The vehicle must stay inside this area.          |Radius.| Vehicle must be inside ALL inclusion zones in a single group, vehicle must be inside at least one group| Reserved| Reserved| Latitude| Longitude| Reserved|  </summary>
         [Description("Circular fence area. The vehicle must stay inside this area.         ")]
         FENCE_CIRCLE_INCLUSION=5003, 
         ///<summary> Circular fence area. The vehicle must stay outside this area.          |Radius.| Reserved| Reserved| Reserved| Latitude| Longitude| Reserved|  </summary>
@@ -1620,40 +2029,43 @@ public partial class MAVLink
         ///<summary> Commands the vehicle to respond with a sequence of messages UAVCAN_NODE_INFO, one message per every UAVCAN node that is online. Note that some of the response messages can be lost, which the receiver can detect easily by checking whether every received UAVCAN_NODE_STATUS has a matching message UAVCAN_NODE_INFO received earlier; if not, this command should be sent again in order to request re-transmission of the node information messages. |Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)|  </summary>
         [Description("Commands the vehicle to respond with a sequence of messages UAVCAN_NODE_INFO, one message per every UAVCAN node that is online. Note that some of the response messages can be lost, which the receiver can detect easily by checking whether every received UAVCAN_NODE_STATUS has a matching message UAVCAN_NODE_INFO received earlier; if not, this command should be sent again in order to request re-transmission of the node information messages.")]
         UAVCAN_GET_NODE_INFO=5200, 
-        ///<summary> Deploy payload on a Lat / Lon / Alt position. This includes the navigation to reach the required release position and velocity. |Operation mode. 0: prepare single payload deploy (overwriting previous requests), but do not execute it. 1: execute payload deploy immediately (rejecting further deploy commands during execution, but allowing abort). 2: add payload deploy to existing deployment list.| Desired approach vector in compass heading. A negative value indicates the system can define the approach vector at will.| Desired ground speed at release time. This can be overridden by the airframe in case it needs to meet minimum airspeed. A negative value indicates the system can define the ground speed at will.| Minimum altitude clearance to the release position. A negative value indicates the system can define the clearance at will.| Latitude unscaled for MISSION_ITEM or in 1e7 degrees for MISSION_ITEM_INT| Longitude unscaled for MISSION_ITEM or in 1e7 degrees for MISSION_ITEM_INT| Altitude (MSL), in meters|  </summary>
+        ///<summary> Trigger the start of an ADSB-out IDENT. This should only be used when requested to do so by an Air Traffic Controller in controlled airspace. This starts the IDENT which is then typically held for 18 seconds by the hardware per the Mode A, C, and S transponder spec. |Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)| Reserved (set to 0)|  </summary>
+        [Description("Trigger the start of an ADSB-out IDENT. This should only be used when requested to do so by an Air Traffic Controller in controlled airspace. This starts the IDENT which is then typically held for 18 seconds by the hardware per the Mode A, C, and S transponder spec.")]
+        DO_ADSB_OUT_IDENT=10001, 
+        ///<summary> Deploy payload on a Lat / Lon / Alt position. This includes the navigation to reach the required release position and velocity. |Operation mode. 0: prepare single payload deploy (overwriting previous requests), but do not execute it. 1: execute payload deploy immediately (rejecting further deploy commands during execution, but allowing abort). 2: add payload deploy to existing deployment list.| Desired approach vector in compass heading. A negative value indicates the system can define the approach vector at will.| Desired ground speed at release time. This can be overridden by the airframe in case it needs to meet minimum airspeed. A negative value indicates the system can define the ground speed at will.| Minimum altitude clearance to the release position. A negative value indicates the system can define the clearance at will.| Latitude. Note, if used in MISSION_ITEM (deprecated) the units are degrees (unscaled)| Longitude. Note, if used in MISSION_ITEM (deprecated) the units are degrees (unscaled)| Altitude (MSL)|  </summary>
         [Description("Deploy payload on a Lat / Lon / Alt position. This includes the navigation to reach the required release position and velocity.")]
         PAYLOAD_PREPARE_DEPLOY=30001, 
         ///<summary> Control the payload deployment. |Operation mode. 0: Abort deployment, continue normal mission. 1: switch to payload deployment mode. 100: delete first payload deployment request. 101: delete all payload deployment requests.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
         [Description("Control the payload deployment.")]
         PAYLOAD_CONTROL_DEPLOY=30002, 
-        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined waypoint item. Ground Station will show the Vehicle as flying through this item.")]
         WAYPOINT_USER_1=31000, 
-        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined waypoint item. Ground Station will show the Vehicle as flying through this item.")]
         WAYPOINT_USER_2=31001, 
-        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined waypoint item. Ground Station will show the Vehicle as flying through this item.")]
         WAYPOINT_USER_3=31002, 
-        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined waypoint item. Ground Station will show the Vehicle as flying through this item.")]
         WAYPOINT_USER_4=31003, 
-        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined waypoint item. Ground Station will show the Vehicle as flying through this item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined waypoint item. Ground Station will show the Vehicle as flying through this item.")]
         WAYPOINT_USER_5=31004, 
-        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item.")]
         SPATIAL_USER_1=31005, 
-        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item.")]
         SPATIAL_USER_2=31006, 
-        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item.")]
         SPATIAL_USER_3=31007, 
-        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item.")]
         SPATIAL_USER_4=31008, 
-        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL), in meters|  </summary>
+        ///<summary> User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item. |User defined| User defined| User defined| User defined| Latitude unscaled| Longitude unscaled| Altitude (MSL)|  </summary>
         [Description("User defined spatial item. Ground Station will not show the Vehicle as flying through this item. Example: ROI item.")]
         SPATIAL_USER_5=31009, 
         ///<summary> User defined command. Ground Station will not show the Vehicle as flying through this item. Example: MAV_CMD_DO_SET_PARAMETER item. |User defined| User defined| User defined| User defined| User defined| User defined| User defined|  </summary>
@@ -1671,6 +2083,15 @@ public partial class MAVLink
         ///<summary> User defined command. Ground Station will not show the Vehicle as flying through this item. Example: MAV_CMD_DO_SET_PARAMETER item. |User defined| User defined| User defined| User defined| User defined| User defined| User defined|  </summary>
         [Description("User defined command. Ground Station will not show the Vehicle as flying through this item. Example: MAV_CMD_DO_SET_PARAMETER item.")]
         USER_5=31014, 
+        ///<summary> Request forwarding of CAN packets from the given CAN bus to this component. CAN Frames are sent using CAN_FRAME and CANFD_FRAME messages |Bus number (0 to disable forwarding, 1 for first bus, 2 for 2nd bus, 3 for 3rd bus).| Empty.| Empty.| Empty.| Empty.| Empty.| Empty.|  </summary>
+        [Description("Request forwarding of CAN packets from the given CAN bus to this component. CAN Frames are sent using CAN_FRAME and CANFD_FRAME messages")]
+        CAN_FORWARD=32000, 
+        ///<summary> Magnetometer calibration based on provided known yaw. This allows for fast calibration using WMM field tables in the vehicle, given only the known yaw of the vehicle. If Latitude and longitude are both zero then use the current vehicle location. |Yaw of vehicle in earth frame.| CompassMask, 0 for all.| Latitude.| Longitude.| Empty.| Empty.| Empty.|  </summary>
+        [Description("Magnetometer calibration based on provided known yaw. This allows for fast calibration using WMM field tables in the vehicle, given only the known yaw of the vehicle. If Latitude and longitude are both zero then use the current vehicle location.")]
+        FIXED_MAG_CAL_YAW=42006, 
+        ///<summary> Command to operate winch. |Winch instance number.| Action to perform.| Length of line to release (negative to wind).| Release rate (negative to wind).| Empty.| Empty.| Empty.|  </summary>
+        [Description("Command to operate winch.")]
+        DO_WINCH=42600, 
         
     };
     
@@ -1692,8 +2113,8 @@ public partial class MAVLink
         ///<summary> Enable ATTITUDE_CONTROLLER_OUTPUT, POSITION_CONTROLLER_OUTPUT, NAV_CONTROLLER_OUTPUT. | </summary>
         [Description("Enable ATTITUDE_CONTROLLER_OUTPUT, POSITION_CONTROLLER_OUTPUT, NAV_CONTROLLER_OUTPUT.")]
         RAW_CONTROLLER=4, 
-        ///<summary> Enable LOCAL_POSITION, GLOBAL_POSITION/GLOBAL_POSITION_INT messages. | </summary>
-        [Description("Enable LOCAL_POSITION, GLOBAL_POSITION/GLOBAL_POSITION_INT messages.")]
+        ///<summary> Enable LOCAL_POSITION, GLOBAL_POSITION_INT messages. | </summary>
+        [Description("Enable LOCAL_POSITION, GLOBAL_POSITION_INT messages.")]
         POSITION=6, 
         ///<summary> Dependent on the autopilot | </summary>
         [Description("Dependent on the autopilot")]
@@ -1733,31 +2154,31 @@ public partial class MAVLink
     {
         ///<summary> Command / mission item is ok. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Command / mission item is ok.")]
-        OK=1, 
+        OK=0, 
         ///<summary> Generic error message if none of the other reasons fails or if no detailed error reporting is implemented. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Generic error message if none of the other reasons fails or if no detailed error reporting is implemented.")]
-        ERR_FAIL=2, 
+        ERR_FAIL=1, 
         ///<summary> The system is refusing to accept this command from this source / communication partner. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("The system is refusing to accept this command from this source / communication partner.")]
-        ERR_ACCESS_DENIED=3, 
+        ERR_ACCESS_DENIED=2, 
         ///<summary> Command or mission item is not supported, other commands would be accepted. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("Command or mission item is not supported, other commands would be accepted.")]
-        ERR_NOT_SUPPORTED=4, 
+        ERR_NOT_SUPPORTED=3, 
         ///<summary> The coordinate frame of this command / mission item is not supported. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("The coordinate frame of this command / mission item is not supported.")]
-        ERR_COORDINATE_FRAME_NOT_SUPPORTED=5, 
+        ERR_COORDINATE_FRAME_NOT_SUPPORTED=4, 
         ///<summary> The coordinate frame of this command is ok, but he coordinate values exceed the safety limits of this system. This is a generic error, please use the more specific error messages below if possible. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("The coordinate frame of this command is ok, but he coordinate values exceed the safety limits of this system. This is a generic error, please use the more specific error messages below if possible.")]
-        ERR_COORDINATES_OUT_OF_RANGE=6, 
+        ERR_COORDINATES_OUT_OF_RANGE=5, 
         ///<summary> The X or latitude value is out of range. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("The X or latitude value is out of range.")]
-        ERR_X_LAT_OUT_OF_RANGE=7, 
+        ERR_X_LAT_OUT_OF_RANGE=6, 
         ///<summary> The Y or longitude value is out of range. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("The Y or longitude value is out of range.")]
-        ERR_Y_LON_OUT_OF_RANGE=8, 
+        ERR_Y_LON_OUT_OF_RANGE=7, 
         ///<summary> The Z or altitude value is out of range. |Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)| Reserved (default:0)|  </summary>
         [Description("The Z or altitude value is out of range.")]
-        ERR_Z_ALT_OUT_OF_RANGE=9, 
+        ERR_Z_ALT_OUT_OF_RANGE=8, 
         
     };
     
@@ -1836,27 +2257,30 @@ public partial class MAVLink
         
     };
     
-    ///<summary> result from a mavlink command </summary>
+    ///<summary> Result from a MAVLink command (MAV_CMD) </summary>
     public enum MAV_RESULT: byte
     {
-        ///<summary> Command ACCEPTED and EXECUTED | </summary>
-        [Description("Command ACCEPTED and EXECUTED")]
+        ///<summary> Command is valid (is supported and has valid parameters), and was executed. | </summary>
+        [Description("Command is valid (is supported and has valid parameters), and was executed.")]
         ACCEPTED=0, 
-        ///<summary> Command TEMPORARY REJECTED/DENIED | </summary>
-        [Description("Command TEMPORARY REJECTED/DENIED")]
+        ///<summary> Command is valid, but cannot be executed at this time. This is used to indicate a problem that should be fixed just by waiting (e.g. a state machine is busy, can't arm because have not got GPS lock, etc.). Retrying later should work. | </summary>
+        [Description("Command is valid, but cannot be executed at this time. This is used to indicate a problem that should be fixed just by waiting (e.g. a state machine is busy, can't arm because have not got GPS lock, etc.). Retrying later should work.")]
         TEMPORARILY_REJECTED=1, 
-        ///<summary> Command PERMANENTLY DENIED | </summary>
-        [Description("Command PERMANENTLY DENIED")]
+        ///<summary> Command is invalid (is supported but has invalid parameters). Retrying same command and parameters will not work. | </summary>
+        [Description("Command is invalid (is supported but has invalid parameters). Retrying same command and parameters will not work.")]
         DENIED=2, 
-        ///<summary> Command UNKNOWN/UNSUPPORTED | </summary>
-        [Description("Command UNKNOWN/UNSUPPORTED")]
+        ///<summary> Command is not supported (unknown). | </summary>
+        [Description("Command is not supported (unknown).")]
         UNSUPPORTED=3, 
-        ///<summary> Command executed, but failed | </summary>
-        [Description("Command executed, but failed")]
+        ///<summary> Command is valid, but execution has failed. This is used to indicate any non-temporary or unexpected problem, i.e. any problem that must be fixed before the command can succeed/be retried. For example, attempting to write a file when out of memory, attempting to arm when sensors are not calibrated, etc. | </summary>
+        [Description("Command is valid, but execution has failed. This is used to indicate any non-temporary or unexpected problem, i.e. any problem that must be fixed before the command can succeed/be retried. For example, attempting to write a file when out of memory, attempting to arm when sensors are not calibrated, etc.")]
         FAILED=4, 
-        ///<summary> WIP: Command being executed | </summary>
-        [Description("WIP: Command being executed")]
+        ///<summary> Command is valid and is being executed. This will be followed by further progress updates, i.e. the component may send further COMMAND_ACK messages with result MAV_RESULT_IN_PROGRESS (at a rate decided by the implementation), and must terminate by sending a COMMAND_ACK message with final result of the operation. The COMMAND_ACK.progress field can be used to indicate the progress of the operation. | </summary>
+        [Description("Command is valid and is being executed. This will be followed by further progress updates, i.e. the component may send further COMMAND_ACK messages with result MAV_RESULT_IN_PROGRESS (at a rate decided by the implementation), and must terminate by sending a COMMAND_ACK message with final result of the operation. The COMMAND_ACK.progress field can be used to indicate the progress of the operation.")]
         IN_PROGRESS=5, 
+        ///<summary> Command has been cancelled (as a result of receiving a COMMAND_CANCEL message). | </summary>
+        [Description("Command has been cancelled (as a result of receiving a COMMAND_CANCEL message).")]
+        CANCELLED=6, 
         
     };
     
@@ -1875,8 +2299,8 @@ public partial class MAVLink
         ///<summary> Command is not supported. | </summary>
         [Description("Command is not supported.")]
         MAV_MISSION_UNSUPPORTED=3, 
-        ///<summary> Mission item exceeds storage space. | </summary>
-        [Description("Mission item exceeds storage space.")]
+        ///<summary> Mission items exceed storage space. | </summary>
+        [Description("Mission items exceed storage space.")]
         MAV_MISSION_NO_SPACE=4, 
         ///<summary> One of the parameters has an invalid value. | </summary>
         [Description("One of the parameters has an invalid value.")]
@@ -1987,6 +2411,36 @@ public partial class MAVLink
         ///<summary> system shell | </summary>
         [Description("system shell")]
         SHELL=10, 
+        ///<summary> SERIAL0 | </summary>
+        [Description("SERIAL0")]
+        SERIAL_CONTROL_SERIAL0=100, 
+        ///<summary> SERIAL1 | </summary>
+        [Description("SERIAL1")]
+        SERIAL_CONTROL_SERIAL1=101, 
+        ///<summary> SERIAL2 | </summary>
+        [Description("SERIAL2")]
+        SERIAL_CONTROL_SERIAL2=102, 
+        ///<summary> SERIAL3 | </summary>
+        [Description("SERIAL3")]
+        SERIAL_CONTROL_SERIAL3=103, 
+        ///<summary> SERIAL4 | </summary>
+        [Description("SERIAL4")]
+        SERIAL_CONTROL_SERIAL4=104, 
+        ///<summary> SERIAL5 | </summary>
+        [Description("SERIAL5")]
+        SERIAL_CONTROL_SERIAL5=105, 
+        ///<summary> SERIAL6 | </summary>
+        [Description("SERIAL6")]
+        SERIAL_CONTROL_SERIAL6=106, 
+        ///<summary> SERIAL7 | </summary>
+        [Description("SERIAL7")]
+        SERIAL_CONTROL_SERIAL7=107, 
+        ///<summary> SERIAL8 | </summary>
+        [Description("SERIAL8")]
+        SERIAL_CONTROL_SERIAL8=108, 
+        ///<summary> SERIAL9 | </summary>
+        [Description("SERIAL9")]
+        SERIAL_CONTROL_SERIAL9=109, 
         
     };
     
@@ -2169,23 +2623,23 @@ public partial class MAVLink
     [Flags]
 	public enum MAV_PROTOCOL_CAPABILITY: ulong
     {
-        ///<summary> Autopilot supports MISSION float message type. | </summary>
-        [Description("Autopilot supports MISSION float message type.")]
+        ///<summary> Autopilot supports the MISSION_ITEM float message type.           Note that MISSION_ITEM is deprecated, and autopilots should use MISSION_INT instead.          | </summary>
+        [Description("Autopilot supports the MISSION_ITEM float message type.           Note that MISSION_ITEM is deprecated, and autopilots should use MISSION_INT instead.         ")]
         MISSION_FLOAT=1, 
         ///<summary> Autopilot supports the new param float message type. | </summary>
         [Description("Autopilot supports the new param float message type.")]
         PARAM_FLOAT=2, 
-        ///<summary> Autopilot supports MISSION_INT scaled integer message type. | </summary>
-        [Description("Autopilot supports MISSION_INT scaled integer message type.")]
+        ///<summary> Autopilot supports MISSION_ITEM_INT scaled integer message type.           Note that this flag must always be set if missions are supported, because missions must always use MISSION_ITEM_INT (rather than MISSION_ITEM, which is deprecated).          | </summary>
+        [Description("Autopilot supports MISSION_ITEM_INT scaled integer message type.           Note that this flag must always be set if missions are supported, because missions must always use MISSION_ITEM_INT (rather than MISSION_ITEM, which is deprecated).         ")]
         MISSION_INT=4, 
         ///<summary> Autopilot supports COMMAND_INT scaled integer message type. | </summary>
         [Description("Autopilot supports COMMAND_INT scaled integer message type.")]
         COMMAND_INT=8, 
-        ///<summary> Autopilot supports the new param union message type. | </summary>
-        [Description("Autopilot supports the new param union message type.")]
-        PARAM_UNION=16, 
-        ///<summary> Autopilot supports the new FILE_TRANSFER_PROTOCOL message type. | </summary>
-        [Description("Autopilot supports the new FILE_TRANSFER_PROTOCOL message type.")]
+        ///<summary> Parameter protocol uses byte-wise encoding of parameter values into param_value (float) fields: https://mavlink.io/en/services/parameter.html#parameter-encoding.           Note that either this flag or MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_BYTEWISE should be set if the parameter protocol is supported.          | </summary>
+        [Description("Parameter protocol uses byte-wise encoding of parameter values into param_value (float) fields: https://mavlink.io/en/services/parameter.html#parameter-encoding.           Note that either this flag or MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_BYTEWISE should be set if the parameter protocol is supported.         ")]
+        PARAM_ENCODE_BYTEWISE=16, 
+        ///<summary> Autopilot supports the File Transfer Protocol v1: https://mavlink.io/en/services/ftp.html. | </summary>
+        [Description("Autopilot supports the File Transfer Protocol v1: https://mavlink.io/en/services/ftp.html.")]
         FTP=32, 
         ///<summary> Autopilot supports commanding attitude offboard. | </summary>
         [Description("Autopilot supports commanding attitude offboard.")]
@@ -2202,8 +2656,8 @@ public partial class MAVLink
         ///<summary> Autopilot supports direct actuator control. | </summary>
         [Description("Autopilot supports direct actuator control.")]
         SET_ACTUATOR_TARGET=1024, 
-        ///<summary> Autopilot supports the flight termination command. | </summary>
-        [Description("Autopilot supports the flight termination command.")]
+        ///<summary> Autopilot supports the MAV_CMD_DO_FLIGHTTERMINATION command (flight termination). | </summary>
+        [Description("Autopilot supports the MAV_CMD_DO_FLIGHTTERMINATION command (flight termination).")]
         FLIGHT_TERMINATION=2048, 
         ///<summary> Autopilot supports onboard compass calibration. | </summary>
         [Description("Autopilot supports onboard compass calibration.")]
@@ -2217,9 +2671,12 @@ public partial class MAVLink
         ///<summary> Autopilot supports mission rally point protocol. | </summary>
         [Description("Autopilot supports mission rally point protocol.")]
         MISSION_RALLY=32768, 
-        ///<summary> Autopilot supports the flight information protocol. | </summary>
-        [Description("Autopilot supports the flight information protocol.")]
-        FLIGHT_INFORMATION=65536, 
+        ///<summary> Reserved for future use. | </summary>
+        [Description("Reserved for future use.")]
+        RESERVED2=65536, 
+        ///<summary> Parameter protocol uses C-cast of parameter values to set the param_value (float) fields: https://mavlink.io/en/services/parameter.html#parameter-encoding.           Note that either this flag or MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_BYTEWISE should be set if the parameter protocol is supported.          | </summary>
+        [Description("Parameter protocol uses C-cast of parameter values to set the param_value (float) fields: https://mavlink.io/en/services/parameter.html#parameter-encoding.           Note that either this flag or MAV_PROTOCOL_CAPABILITY_PARAM_ENCODE_BYTEWISE should be set if the parameter protocol is supported.         ")]
+        PARAM_ENCODE_C_CAST=131072, 
         
     };
     
@@ -2244,6 +2701,9 @@ public partial class MAVLink
     ///<summary> Enumeration of estimator types </summary>
     public enum MAV_ESTIMATOR_TYPE: byte
     {
+        ///<summary> Unknown type of the estimator. | </summary>
+        [Description("Unknown type of the estimator.")]
+        UNKNOWN=0, 
         ///<summary> This is a naive estimator without any real covariance feedback. | </summary>
         [Description("This is a naive estimator without any real covariance feedback.")]
         NAIVE=1, 
@@ -2259,6 +2719,15 @@ public partial class MAVLink
         ///<summary> Estimator integrating GPS and inertial sensing. | </summary>
         [Description("Estimator integrating GPS and inertial sensing.")]
         GPS_INS=5, 
+        ///<summary> Estimate from external motion capturing system. | </summary>
+        [Description("Estimate from external motion capturing system.")]
+        MOCAP=6, 
+        ///<summary> Estimator based on lidar sensor input. | </summary>
+        [Description("Estimator based on lidar sensor input.")]
+        LIDAR=7, 
+        ///<summary> Estimator on autopilot. | </summary>
+        [Description("Estimator on autopilot.")]
+        AUTOPILOT=8, 
         
     };
     
@@ -2322,11 +2791,11 @@ public partial class MAVLink
         ///<summary> Battery state is too low for ordinary abort sequence. Perform fastest possible emergency stop to prevent damage. | </summary>
         [Description("Battery state is too low for ordinary abort sequence. Perform fastest possible emergency stop to prevent damage.")]
         EMERGENCY=4, 
-        ///<summary> Battery failed, damage unavoidable. | </summary>
-        [Description("Battery failed, damage unavoidable.")]
+        ///<summary> Battery failed, damage unavoidable. Possible causes (faults) are listed in MAV_BATTERY_FAULT. | </summary>
+        [Description("Battery failed, damage unavoidable. Possible causes (faults) are listed in MAV_BATTERY_FAULT.")]
         FAILED=5, 
-        ///<summary> Battery is diagnosed to be defective or an error occurred, usage is discouraged / prohibited. | </summary>
-        [Description("Battery is diagnosed to be defective or an error occurred, usage is discouraged / prohibited.")]
+        ///<summary> Battery is diagnosed to be defective or an error occurred, usage is discouraged / prohibited. Possible causes (faults) are listed in MAV_BATTERY_FAULT. | </summary>
+        [Description("Battery is diagnosed to be defective or an error occurred, usage is discouraged / prohibited. Possible causes (faults) are listed in MAV_BATTERY_FAULT.")]
         UNHEALTHY=6, 
         ///<summary> Battery is charging. | </summary>
         [Description("Battery is charging.")]
@@ -2334,9 +2803,24 @@ public partial class MAVLink
         
     };
     
-    ///<summary> Smart battery supply status/fault flags (bitmask) for health indication. </summary>
+    ///<summary> Battery mode. Note, the normal operation mode (i.e. when flying) should be reported as MAV_BATTERY_MODE_UNKNOWN to allow message trimming in normal flight. </summary>
+    public enum MAV_BATTERY_MODE: byte
+    {
+        ///<summary> Battery mode not supported/unknown battery mode/normal operation. | </summary>
+        [Description("Battery mode not supported/unknown battery mode/normal operation.")]
+        UNKNOWN=0, 
+        ///<summary> Battery is auto discharging (towards storage level). | </summary>
+        [Description("Battery is auto discharging (towards storage level).")]
+        AUTO_DISCHARGING=1, 
+        ///<summary> Battery in hot-swap mode (current limited to prevent spikes that might damage sensitive electrical circuits). | </summary>
+        [Description("Battery in hot-swap mode (current limited to prevent spikes that might damage sensitive electrical circuits).")]
+        HOT_SWAP=2, 
+        
+    };
+    
+    ///<summary> Smart battery supply status/fault flags (bitmask) for health indication. The battery must also report either MAV_BATTERY_CHARGE_STATE_FAILED or MAV_BATTERY_CHARGE_STATE_UNHEALTHY if any of these are set. </summary>
     [Flags]
-	public enum MAV_SMART_BATTERY_FAULT: int
+	public enum MAV_BATTERY_FAULT: uint
     {
         ///<summary> Battery has deep discharged. | </summary>
         [Description("Battery has deep discharged.")]
@@ -2344,9 +2828,9 @@ public partial class MAVLink
         ///<summary> Voltage spikes. | </summary>
         [Description("Voltage spikes.")]
         SPIKES=2, 
-        ///<summary> Single cell has failed. | </summary>
-        [Description("Single cell has failed.")]
-        SINGLE_CELL_FAIL=4, 
+        ///<summary> One or more cells have failed. Battery should also report MAV_BATTERY_CHARGE_STATE_FAILE (and should not be used). | </summary>
+        [Description("One or more cells have failed. Battery should also report MAV_BATTERY_CHARGE_STATE_FAILE (and should not be used).")]
+        CELL_FAIL=4, 
         ///<summary> Over-current fault. | </summary>
         [Description("Over-current fault.")]
         OVER_CURRENT=8, 
@@ -2356,6 +2840,90 @@ public partial class MAVLink
         ///<summary> Under-temperature fault. | </summary>
         [Description("Under-temperature fault.")]
         UNDER_TEMPERATURE=32, 
+        ///<summary> Vehicle voltage is not compatible with this battery (batteries on same power rail should have similar voltage). | </summary>
+        [Description("Vehicle voltage is not compatible with this battery (batteries on same power rail should have similar voltage).")]
+        INCOMPATIBLE_VOLTAGE=64, 
+        ///<summary> Battery firmware is not compatible with current autopilot firmware. | </summary>
+        [Description("Battery firmware is not compatible with current autopilot firmware.")]
+        INCOMPATIBLE_FIRMWARE=128, 
+        ///<summary> Battery is not compatible due to cell configuration (e.g. 5s1p when vehicle requires 6s). | </summary>
+        [Description("Battery is not compatible due to cell configuration (e.g. 5s1p when vehicle requires 6s).")]
+        BATTERY_FAULT_INCOMPATIBLE_CELLS_CONFIGURATION=256, 
+        
+    };
+    
+    ///<summary> Flags to report status/failure cases for a power generator (used in GENERATOR_STATUS). Note that FAULTS are conditions that cause the generator to fail. Warnings are conditions that require attention before the next use (they indicate the system is not operating properly). </summary>
+    public enum MAV_GENERATOR_STATUS_FLAG: ulong
+    {
+        ///<summary> Generator is off. | </summary>
+        [Description("Generator is off.")]
+        OFF=1, 
+        ///<summary> Generator is ready to start generating power. | </summary>
+        [Description("Generator is ready to start generating power.")]
+        READY=2, 
+        ///<summary> Generator is generating power. | </summary>
+        [Description("Generator is generating power.")]
+        GENERATING=4, 
+        ///<summary> Generator is charging the batteries (generating enough power to charge and provide the load). | </summary>
+        [Description("Generator is charging the batteries (generating enough power to charge and provide the load).")]
+        CHARGING=8, 
+        ///<summary> Generator is operating at a reduced maximum power. | </summary>
+        [Description("Generator is operating at a reduced maximum power.")]
+        REDUCED_POWER=16, 
+        ///<summary> Generator is providing the maximum output. | </summary>
+        [Description("Generator is providing the maximum output.")]
+        MAXPOWER=32, 
+        ///<summary> Generator is near the maximum operating temperature, cooling is insufficient. | </summary>
+        [Description("Generator is near the maximum operating temperature, cooling is insufficient.")]
+        OVERTEMP_WARNING=64, 
+        ///<summary> Generator hit the maximum operating temperature and shutdown. | </summary>
+        [Description("Generator hit the maximum operating temperature and shutdown.")]
+        OVERTEMP_FAULT=128, 
+        ///<summary> Power electronics are near the maximum operating temperature, cooling is insufficient. | </summary>
+        [Description("Power electronics are near the maximum operating temperature, cooling is insufficient.")]
+        ELECTRONICS_OVERTEMP_WARNING=256, 
+        ///<summary> Power electronics hit the maximum operating temperature and shutdown. | </summary>
+        [Description("Power electronics hit the maximum operating temperature and shutdown.")]
+        ELECTRONICS_OVERTEMP_FAULT=512, 
+        ///<summary> Power electronics experienced a fault and shutdown. | </summary>
+        [Description("Power electronics experienced a fault and shutdown.")]
+        ELECTRONICS_FAULT=1024, 
+        ///<summary> The power source supplying the generator failed e.g. mechanical generator stopped, tether is no longer providing power, solar cell is in shade, hydrogen reaction no longer happening. | </summary>
+        [Description("The power source supplying the generator failed e.g. mechanical generator stopped, tether is no longer providing power, solar cell is in shade, hydrogen reaction no longer happening.")]
+        POWERSOURCE_FAULT=2048, 
+        ///<summary> Generator controller having communication problems. | </summary>
+        [Description("Generator controller having communication problems.")]
+        COMMUNICATION_WARNING=4096, 
+        ///<summary> Power electronic or generator cooling system error. | </summary>
+        [Description("Power electronic or generator cooling system error.")]
+        COOLING_WARNING=8192, 
+        ///<summary> Generator controller power rail experienced a fault. | </summary>
+        [Description("Generator controller power rail experienced a fault.")]
+        POWER_RAIL_FAULT=16384, 
+        ///<summary> Generator controller exceeded the overcurrent threshold and shutdown to prevent damage. | </summary>
+        [Description("Generator controller exceeded the overcurrent threshold and shutdown to prevent damage.")]
+        OVERCURRENT_FAULT=32768, 
+        ///<summary> Generator controller detected a high current going into the batteries and shutdown to prevent battery damage. | </summary>
+        [Description("Generator controller detected a high current going into the batteries and shutdown to prevent battery damage.")]
+        BATTERY_OVERCHARGE_CURRENT_FAULT=65536, 
+        ///<summary> Generator controller exceeded it's overvoltage threshold and shutdown to prevent it exceeding the voltage rating. | </summary>
+        [Description("Generator controller exceeded it's overvoltage threshold and shutdown to prevent it exceeding the voltage rating.")]
+        OVERVOLTAGE_FAULT=131072, 
+        ///<summary> Batteries are under voltage (generator will not start). | </summary>
+        [Description("Batteries are under voltage (generator will not start).")]
+        BATTERY_UNDERVOLT_FAULT=262144, 
+        ///<summary> Generator start is inhibited by e.g. a safety switch. | </summary>
+        [Description("Generator start is inhibited by e.g. a safety switch.")]
+        START_INHIBITED=524288, 
+        ///<summary> Generator requires maintenance. | </summary>
+        [Description("Generator requires maintenance.")]
+        MAINTENANCE_REQUIRED=1048576, 
+        ///<summary> Generator is not ready to generate yet. | </summary>
+        [Description("Generator is not ready to generate yet.")]
+        WARMING_UP=2097152, 
+        ///<summary> Generator is idle. | </summary>
+        [Description("Generator is idle.")]
+        IDLE=4194304, 
         
     };
     
@@ -2504,6 +3072,15 @@ public partial class MAVLink
         ///<summary>  | </summary>
         [Description("")]
         SIMULATED=64, 
+        ///<summary>  | </summary>
+        [Description("")]
+        VERTICAL_VELOCITY_VALID=128, 
+        ///<summary>  | </summary>
+        [Description("")]
+        BARO_VALID=256, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SOURCE_UAT=32768, 
         
     };
     
@@ -2517,7 +3094,7 @@ public partial class MAVLink
         
     };
     
-    ///<summary> Flags in EKF_STATUS message </summary>
+    ///<summary> Flags in ESTIMATOR_STATUS message </summary>
     [Flags]
 	public enum ESTIMATOR_STATUS_FLAGS: ushort
     {
@@ -2560,35 +3137,35 @@ public partial class MAVLink
         
     };
     
-    ///<summary>  </summary>
+    ///<summary> Sequence that motors are tested when using MAV_CMD_DO_MOTOR_TEST. </summary>
     public enum MOTOR_TEST_ORDER: int /*default*/
     {
-        ///<summary> default autopilot motor test method | </summary>
-        [Description("default autopilot motor test method")]
+        ///<summary> Default autopilot motor test method. | </summary>
+        [Description("Default autopilot motor test method.")]
         DEFAULT=0, 
-        ///<summary> motor numbers are specified as their index in a predefined vehicle-specific sequence | </summary>
-        [Description("motor numbers are specified as their index in a predefined vehicle-specific sequence")]
+        ///<summary> Motor numbers are specified as their index in a predefined vehicle-specific sequence. | </summary>
+        [Description("Motor numbers are specified as their index in a predefined vehicle-specific sequence.")]
         SEQUENCE=1, 
-        ///<summary> motor numbers are specified as the output as labeled on the board | </summary>
-        [Description("motor numbers are specified as the output as labeled on the board")]
+        ///<summary> Motor numbers are specified as the output as labeled on the board. | </summary>
+        [Description("Motor numbers are specified as the output as labeled on the board.")]
         BOARD=2, 
         
     };
     
-    ///<summary>  </summary>
+    ///<summary> Defines how throttle value is represented in MAV_CMD_DO_MOTOR_TEST. </summary>
     public enum MOTOR_TEST_THROTTLE_TYPE: int /*default*/
     {
-        ///<summary> throttle as a percentage from 0 ~ 100 | </summary>
-        [Description("throttle as a percentage from 0 ~ 100")]
+        ///<summary> Throttle as a percentage (0 ~ 100) | </summary>
+        [Description("Throttle as a percentage (0 ~ 100)")]
         MOTOR_TEST_THROTTLE_PERCENT=0, 
-        ///<summary> throttle as an absolute PWM value (normally in range of 1000~2000) | </summary>
-        [Description("throttle as an absolute PWM value (normally in range of 1000~2000)")]
+        ///<summary> Throttle as an absolute PWM value (normally in range of 1000~2000). | </summary>
+        [Description("Throttle as an absolute PWM value (normally in range of 1000~2000).")]
         MOTOR_TEST_THROTTLE_PWM=1, 
-        ///<summary> throttle pass-through from pilot's transmitter | </summary>
-        [Description("throttle pass-through from pilot's transmitter")]
+        ///<summary> Throttle pass-through from pilot's transmitter. | </summary>
+        [Description("Throttle pass-through from pilot's transmitter.")]
         MOTOR_TEST_THROTTLE_PILOT=2, 
-        ///<summary> per-motor compass calibration test | </summary>
-        [Description("per-motor compass calibration test")]
+        ///<summary> Per-motor compass calibration test. | </summary>
+        [Description("Per-motor compass calibration test.")]
         MOTOR_TEST_COMPASS_CAL=3, 
         
     };
@@ -2717,8 +3294,8 @@ public partial class MAVLink
         ///<summary> Earth-centered, Earth-fixed | </summary>
         [Description("Earth-centered, Earth-fixed")]
         ECEF=0, 
-        ///<summary> North, East, Down | </summary>
-        [Description("North, East, Down")]
+        ///<summary> RTK basestation centered, north, east, down | </summary>
+        [Description("RTK basestation centered, north, east, down")]
         NED=1, 
         
     };
@@ -2790,9 +3367,18 @@ public partial class MAVLink
         ///<summary> Camera has basic focus control (MAV_CMD_SET_CAMERA_FOCUS) | </summary>
         [Description("Camera has basic focus control (MAV_CMD_SET_CAMERA_FOCUS)")]
         HAS_BASIC_FOCUS=128, 
-        ///<summary> Camera has video streaming capabilities (use MAV_CMD_REQUEST_VIDEO_STREAM_INFORMATION for video streaming info) | </summary>
-        [Description("Camera has video streaming capabilities (use MAV_CMD_REQUEST_VIDEO_STREAM_INFORMATION for video streaming info)")]
+        ///<summary> Camera has video streaming capabilities (request VIDEO_STREAM_INFORMATION with MAV_CMD_REQUEST_MESSAGE for video streaming info) | </summary>
+        [Description("Camera has video streaming capabilities (request VIDEO_STREAM_INFORMATION with MAV_CMD_REQUEST_MESSAGE for video streaming info)")]
         HAS_VIDEO_STREAM=256, 
+        ///<summary> Camera supports tracking of a point on the camera view. | </summary>
+        [Description("Camera supports tracking of a point on the camera view.")]
+        HAS_TRACKING_POINT=512, 
+        ///<summary> Camera supports tracking of a selection rectangle on the camera view. | </summary>
+        [Description("Camera supports tracking of a selection rectangle on the camera view.")]
+        HAS_TRACKING_RECTANGLE=1024, 
+        ///<summary> Camera supports tracking geo status (CAMERA_TRACKING_GEO_STATUS). | </summary>
+        [Description("Camera supports tracking geo status (CAMERA_TRACKING_GEO_STATUS).")]
+        HAS_TRACKING_GEO_STATUS=2048, 
         
     };
     
@@ -2827,6 +3413,55 @@ public partial class MAVLink
         
     };
     
+    ///<summary> Camera tracking status flags </summary>
+    [Flags]
+	public enum CAMERA_TRACKING_STATUS_FLAGS: byte
+    {
+        ///<summary> Camera is not tracking | </summary>
+        [Description("Camera is not tracking")]
+        IDLE=0, 
+        ///<summary> Camera is tracking | </summary>
+        [Description("Camera is tracking")]
+        ACTIVE=1, 
+        ///<summary> Camera tracking in error state | </summary>
+        [Description("Camera tracking in error state")]
+        ERROR=2, 
+        
+    };
+    
+    ///<summary> Camera tracking modes </summary>
+    public enum CAMERA_TRACKING_MODE: byte
+    {
+        ///<summary> Not tracking | </summary>
+        [Description("Not tracking")]
+        NONE=0, 
+        ///<summary> Target is a point | </summary>
+        [Description("Target is a point")]
+        POINT=1, 
+        ///<summary> Target is a rectangle | </summary>
+        [Description("Target is a rectangle")]
+        RECTANGLE=2, 
+        
+    };
+    
+    ///<summary> Camera tracking target data (shows where tracked target is within image) </summary>
+    public enum CAMERA_TRACKING_TARGET_DATA: byte
+    {
+        ///<summary> No target data | </summary>
+        [Description("No target data")]
+        NONE=0, 
+        ///<summary> Target data embedded in image data (proprietary) | </summary>
+        [Description("Target data embedded in image data (proprietary)")]
+        EMBEDDED=1, 
+        ///<summary> Target data rendered in image | </summary>
+        [Description("Target data rendered in image")]
+        RENDERED=2, 
+        ///<summary> Target data within status message (Point or Rectangle) | </summary>
+        [Description("Target data within status message (Point or Rectangle)")]
+        IN_STATUS=4, 
+        
+    };
+    
     ///<summary> Zoom types for MAV_CMD_SET_CAMERA_ZOOM </summary>
     public enum CAMERA_ZOOM_TYPE: int /*default*/
     {
@@ -2839,6 +3474,9 @@ public partial class MAVLink
         ///<summary> Zoom value as proportion of full camera range (a value between 0.0 and 100.0) | </summary>
         [Description("Zoom value as proportion of full camera range (a value between 0.0 and 100.0)")]
         ZOOM_TYPE_RANGE=2, 
+        ///<summary> Zoom value/variable focal length in millimetres. Note that there is no message to get the valid zoom range of the camera, so this can type can only be used for cameras where the zoom range is known (implying that this cannot reliably be used in a GCS for an arbitrary camera) | </summary>
+        [Description("Zoom value/variable focal length in millimetres. Note that there is no message to get the valid zoom range of the camera, so this can type can only be used for cameras where the zoom range is known (implying that this cannot reliably be used in a GCS for an arbitrary camera)")]
+        ZOOM_TYPE_FOCAL_LENGTH=3, 
         
     };
     
@@ -2851,13 +3489,25 @@ public partial class MAVLink
         ///<summary> Continuous focus up/down until stopped (-1 for focusing in, 1 for focusing out towards infinity, 0 to stop focusing) | </summary>
         [Description("Continuous focus up/down until stopped (-1 for focusing in, 1 for focusing out towards infinity, 0 to stop focusing)")]
         FOCUS_TYPE_CONTINUOUS=1, 
-        ///<summary> Zoom value as proportion of full camera range (a value between 0.0 and 100.0) | </summary>
-        [Description("Zoom value as proportion of full camera range (a value between 0.0 and 100.0)")]
+        ///<summary> Focus value as proportion of full camera focus range (a value between 0.0 and 100.0) | </summary>
+        [Description("Focus value as proportion of full camera focus range (a value between 0.0 and 100.0)")]
         FOCUS_TYPE_RANGE=2, 
+        ///<summary> Focus value in metres. Note that there is no message to get the valid focus range of the camera, so this can type can only be used for cameras where the range is known (implying that this cannot reliably be used in a GCS for an arbitrary camera). | </summary>
+        [Description("Focus value in metres. Note that there is no message to get the valid focus range of the camera, so this can type can only be used for cameras where the range is known (implying that this cannot reliably be used in a GCS for an arbitrary camera).")]
+        FOCUS_TYPE_METERS=3, 
+        ///<summary> Focus automatically. | </summary>
+        [Description("Focus automatically.")]
+        FOCUS_TYPE_AUTO=4, 
+        ///<summary> Single auto focus. Mainly used for still pictures. Usually abbreviated as AF-S. | </summary>
+        [Description("Single auto focus. Mainly used for still pictures. Usually abbreviated as AF-S.")]
+        FOCUS_TYPE_AUTO_SINGLE=5, 
+        ///<summary> Continuous auto focus. Mainly used for dynamic scenes. Abbreviated as AF-C. | </summary>
+        [Description("Continuous auto focus. Mainly used for dynamic scenes. Abbreviated as AF-C.")]
+        FOCUS_TYPE_AUTO_CONTINUOUS=6, 
         
     };
     
-    ///<summary> Result from a PARAM_EXT_SET message. </summary>
+    ///<summary> Result from PARAM_EXT_SET message (or a PARAM_SET within a transaction). </summary>
     public enum PARAM_ACK: byte
     {
         ///<summary> Parameter value ACCEPTED and SET | </summary>
@@ -2869,8 +3519,8 @@ public partial class MAVLink
         ///<summary> Parameter failed to set | </summary>
         [Description("Parameter failed to set")]
         FAILED=2, 
-        ///<summary> Parameter value received but not yet validated or set. A subsequent PARAM_EXT_ACK will follow once operation is completed with the actual result. These are for parameters that may take longer to set. Instead of waiting for an ACK and potentially timing out, you will immediately receive this response to let you know it was received. | </summary>
-        [Description("Parameter value received but not yet validated or set. A subsequent PARAM_EXT_ACK will follow once operation is completed with the actual result. These are for parameters that may take longer to set. Instead of waiting for an ACK and potentially timing out, you will immediately receive this response to let you know it was received.")]
+        ///<summary> Parameter value received but not yet set/accepted. A subsequent PARAM_ACK_TRANSACTION or PARAM_EXT_ACK with the final result will follow once operation is completed. This is returned immediately for parameters that take longer to set, indicating that the the parameter was received and does not need to be resent. | </summary>
+        [Description("Parameter value received but not yet set/accepted. A subsequent PARAM_ACK_TRANSACTION or PARAM_EXT_ACK with the final result will follow once operation is completed. This is returned immediately for parameters that take longer to set, indicating that the the parameter was received and does not need to be resent.")]
         IN_PROGRESS=3, 
         
     };
@@ -2968,6 +3618,30 @@ public partial class MAVLink
         
     };
     
+    ///<summary> Bitmap to indicate which dimensions should be ignored by the vehicle: a value of 0b00000000 indicates that none of the setpoint dimensions should be ignored. </summary>
+    public enum ATTITUDE_TARGET_TYPEMASK: byte
+    {
+        ///<summary> Ignore body roll rate | </summary>
+        [Description("Ignore body roll rate")]
+        BODY_ROLL_RATE_IGNORE=1, 
+        ///<summary> Ignore body pitch rate | </summary>
+        [Description("Ignore body pitch rate")]
+        BODY_PITCH_RATE_IGNORE=2, 
+        ///<summary> Ignore body yaw rate | </summary>
+        [Description("Ignore body yaw rate")]
+        BODY_YAW_RATE_IGNORE=4, 
+        ///<summary> Use 3D body thrust setpoint instead of throttle | </summary>
+        [Description("Use 3D body thrust setpoint instead of throttle")]
+        THRUST_BODY_SET=32, 
+        ///<summary> Ignore throttle | </summary>
+        [Description("Ignore throttle")]
+        THROTTLE_IGNORE=64, 
+        ///<summary> Ignore attitude | </summary>
+        [Description("Ignore attitude")]
+        ATTITUDE_IGNORE=128, 
+        
+    };
+    
     ///<summary> Airborne status of UAS. </summary>
     public enum UTM_FLIGHT_STATE: byte
     {
@@ -3020,6 +3694,69 @@ public partial class MAVLink
         
     };
     
+    ///<summary> These flags encode the cellular network status </summary>
+    public enum CELLULAR_STATUS_FLAG: byte
+    {
+        ///<summary> State unknown or not reportable. | </summary>
+        [Description("State unknown or not reportable.")]
+        UNKNOWN=0, 
+        ///<summary> Modem is unusable | </summary>
+        [Description("Modem is unusable")]
+        FAILED=1, 
+        ///<summary> Modem is being initialized | </summary>
+        [Description("Modem is being initialized")]
+        INITIALIZING=2, 
+        ///<summary> Modem is locked | </summary>
+        [Description("Modem is locked")]
+        LOCKED=3, 
+        ///<summary> Modem is not enabled and is powered down | </summary>
+        [Description("Modem is not enabled and is powered down")]
+        DISABLED=4, 
+        ///<summary> Modem is currently transitioning to the CELLULAR_STATUS_FLAG_DISABLED state | </summary>
+        [Description("Modem is currently transitioning to the CELLULAR_STATUS_FLAG_DISABLED state")]
+        DISABLING=5, 
+        ///<summary> Modem is currently transitioning to the CELLULAR_STATUS_FLAG_ENABLED state | </summary>
+        [Description("Modem is currently transitioning to the CELLULAR_STATUS_FLAG_ENABLED state")]
+        ENABLING=6, 
+        ///<summary> Modem is enabled and powered on but not registered with a network provider and not available for data connections | </summary>
+        [Description("Modem is enabled and powered on but not registered with a network provider and not available for data connections")]
+        ENABLED=7, 
+        ///<summary> Modem is searching for a network provider to register | </summary>
+        [Description("Modem is searching for a network provider to register")]
+        SEARCHING=8, 
+        ///<summary> Modem is registered with a network provider, and data connections and messaging may be available for use | </summary>
+        [Description("Modem is registered with a network provider, and data connections and messaging may be available for use")]
+        REGISTERED=9, 
+        ///<summary> Modem is disconnecting and deactivating the last active packet data bearer. This state will not be entered if more than one packet data bearer is active and one of the active bearers is deactivated | </summary>
+        [Description("Modem is disconnecting and deactivating the last active packet data bearer. This state will not be entered if more than one packet data bearer is active and one of the active bearers is deactivated")]
+        DISCONNECTING=10, 
+        ///<summary> Modem is activating and connecting the first packet data bearer. Subsequent bearer activations when another bearer is already active do not cause this state to be entered | </summary>
+        [Description("Modem is activating and connecting the first packet data bearer. Subsequent bearer activations when another bearer is already active do not cause this state to be entered")]
+        CONNECTING=11, 
+        ///<summary> One or more packet data bearers is active and connected | </summary>
+        [Description("One or more packet data bearers is active and connected")]
+        CONNECTED=12, 
+        
+    };
+    
+    ///<summary> These flags are used to diagnose the failure state of CELLULAR_STATUS </summary>
+    public enum CELLULAR_NETWORK_FAILED_REASON: byte
+    {
+        ///<summary> No error | </summary>
+        [Description("No error")]
+        NONE=0, 
+        ///<summary> Error state is unknown | </summary>
+        [Description("Error state is unknown")]
+        UNKNOWN=1, 
+        ///<summary> SIM is required for the modem but missing | </summary>
+        [Description("SIM is required for the modem but missing")]
+        SIM_MISSING=2, 
+        ///<summary> SIM is available, but not usable for connection | </summary>
+        [Description("SIM is available, but not usable for connection")]
+        SIM_ERROR=3, 
+        
+    };
+    
     ///<summary> Cellular network radio type </summary>
     public enum CELLULAR_NETWORK_RADIO_TYPE: byte
     {
@@ -3041,15 +3778,6 @@ public partial class MAVLink
         
     };
     
-    ///<summary> These flags encode the cellular network status </summary>
-    public enum CELLULAR_NETWORK_STATUS_FLAG: ushort
-    {
-        ///<summary> Roaming is active | </summary>
-        [Description("Roaming is active")]
-        ROAMING=1, 
-        
-    };
-    
     ///<summary> Precision land modes (used in MAV_CMD_NAV_LAND). </summary>
     public enum PRECISION_LAND_MODE: int /*default*/
     {
@@ -3065,91 +3793,1983 @@ public partial class MAVLink
         
     };
     
-    ///<summary>  </summary>
+    ///<summary> Parachute actions. Trigger release and enable/disable auto-release. </summary>
     public enum PARACHUTE_ACTION: int /*default*/
     {
-        ///<summary> Disable parachute release. | </summary>
-        [Description("Disable parachute release.")]
+        ///<summary> Disable auto-release of parachute (i.e. release triggered by crash detectors). | </summary>
+        [Description("Disable auto-release of parachute (i.e. release triggered by crash detectors).")]
         PARACHUTE_DISABLE=0, 
-        ///<summary> Enable parachute release. | </summary>
-        [Description("Enable parachute release.")]
+        ///<summary> Enable auto-release of parachute. | </summary>
+        [Description("Enable auto-release of parachute.")]
         PARACHUTE_ENABLE=1, 
-        ///<summary> Release parachute. | </summary>
-        [Description("Release parachute.")]
+        ///<summary> Release parachute and kill motors. | </summary>
+        [Description("Release parachute and kill motors.")]
         PARACHUTE_RELEASE=2, 
         
     };
-
+    
     ///<summary>  </summary>
+    public enum MAV_TUNNEL_PAYLOAD_TYPE: ushort
+    {
+        ///<summary> Encoding of payload unknown. | </summary>
+        [Description("Encoding of payload unknown.")]
+        UNKNOWN=0, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED0=200, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED1=201, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED2=202, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED3=203, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED4=204, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED5=205, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED6=206, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED7=207, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED8=208, 
+        ///<summary> Registered for STorM32 gimbal controller. | </summary>
+        [Description("Registered for STorM32 gimbal controller.")]
+        STORM32_RESERVED9=209, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_ID_TYPE: byte
+    {
+        ///<summary> No type defined. | </summary>
+        [Description("No type defined.")]
+        NONE=0, 
+        ///<summary> Manufacturer Serial Number (ANSI/CTA-2063 format). | </summary>
+        [Description("Manufacturer Serial Number (ANSI/CTA-2063 format).")]
+        SERIAL_NUMBER=1, 
+        ///<summary> CAA (Civil Aviation Authority) registered ID. Format: [ICAO Country Code].[CAA Assigned ID]. | </summary>
+        [Description("CAA (Civil Aviation Authority) registered ID. Format: [ICAO Country Code].[CAA Assigned ID].")]
+        CAA_REGISTRATION_ID=2, 
+        ///<summary> UTM (Unmanned Traffic Management) assigned UUID (RFC4122). | </summary>
+        [Description("UTM (Unmanned Traffic Management) assigned UUID (RFC4122).")]
+        UTM_ASSIGNED_UUID=3, 
+        ///<summary> A 20 byte ID for a specific flight/session. The exact ID type is indicated by the first byte of uas_id and these type values are managed by ICAO. | </summary>
+        [Description("A 20 byte ID for a specific flight/session. The exact ID type is indicated by the first byte of uas_id and these type values are managed by ICAO.")]
+        SPECIFIC_SESSION_ID=4, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_UA_TYPE: byte
+    {
+        ///<summary> No UA (Unmanned Aircraft) type defined. | </summary>
+        [Description("No UA (Unmanned Aircraft) type defined.")]
+        NONE=0, 
+        ///<summary> Aeroplane/Airplane. Fixed wing. | </summary>
+        [Description("Aeroplane/Airplane. Fixed wing.")]
+        AEROPLANE=1, 
+        ///<summary> Helicopter or multirotor. | </summary>
+        [Description("Helicopter or multirotor.")]
+        HELICOPTER_OR_MULTIROTOR=2, 
+        ///<summary> Gyroplane. | </summary>
+        [Description("Gyroplane.")]
+        GYROPLANE=3, 
+        ///<summary> VTOL (Vertical Take-Off and Landing). Fixed wing aircraft that can take off vertically. | </summary>
+        [Description("VTOL (Vertical Take-Off and Landing). Fixed wing aircraft that can take off vertically.")]
+        HYBRID_LIFT=4, 
+        ///<summary> Ornithopter. | </summary>
+        [Description("Ornithopter.")]
+        ORNITHOPTER=5, 
+        ///<summary> Glider. | </summary>
+        [Description("Glider.")]
+        GLIDER=6, 
+        ///<summary> Kite. | </summary>
+        [Description("Kite.")]
+        KITE=7, 
+        ///<summary> Free Balloon. | </summary>
+        [Description("Free Balloon.")]
+        FREE_BALLOON=8, 
+        ///<summary> Captive Balloon. | </summary>
+        [Description("Captive Balloon.")]
+        CAPTIVE_BALLOON=9, 
+        ///<summary> Airship. E.g. a blimp. | </summary>
+        [Description("Airship. E.g. a blimp.")]
+        AIRSHIP=10, 
+        ///<summary> Free Fall/Parachute (unpowered). | </summary>
+        [Description("Free Fall/Parachute (unpowered).")]
+        FREE_FALL_PARACHUTE=11, 
+        ///<summary> Rocket. | </summary>
+        [Description("Rocket.")]
+        ROCKET=12, 
+        ///<summary> Tethered powered aircraft. | </summary>
+        [Description("Tethered powered aircraft.")]
+        TETHERED_POWERED_AIRCRAFT=13, 
+        ///<summary> Ground Obstacle. | </summary>
+        [Description("Ground Obstacle.")]
+        GROUND_OBSTACLE=14, 
+        ///<summary> Other type of aircraft not listed earlier. | </summary>
+        [Description("Other type of aircraft not listed earlier.")]
+        OTHER=15, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_STATUS: byte
+    {
+        ///<summary> The status of the (UA) Unmanned Aircraft is undefined. | </summary>
+        [Description("The status of the (UA) Unmanned Aircraft is undefined.")]
+        UNDECLARED=0, 
+        ///<summary> The UA is on the ground. | </summary>
+        [Description("The UA is on the ground.")]
+        GROUND=1, 
+        ///<summary> The UA is in the air. | </summary>
+        [Description("The UA is in the air.")]
+        AIRBORNE=2, 
+        ///<summary> The UA is having an emergency. | </summary>
+        [Description("The UA is having an emergency.")]
+        EMERGENCY=3, 
+        ///<summary> The remote ID system is failing or unreliable in some way. | </summary>
+        [Description("The remote ID system is failing or unreliable in some way.")]
+        REMOTE_ID_SYSTEM_FAILURE=4, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_HEIGHT_REF: byte
+    {
+        ///<summary> The height field is relative to the take-off location. | </summary>
+        [Description("The height field is relative to the take-off location.")]
+        OVER_TAKEOFF=0, 
+        ///<summary> The height field is relative to ground. | </summary>
+        [Description("The height field is relative to ground.")]
+        OVER_GROUND=1, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_HOR_ACC: byte
+    {
+        ///<summary> The horizontal accuracy is unknown. | </summary>
+        [Description("The horizontal accuracy is unknown.")]
+        UNKNOWN=0, 
+        ///<summary> The horizontal accuracy is smaller than 10 Nautical Miles. 18.52 km. | </summary>
+        [Description("The horizontal accuracy is smaller than 10 Nautical Miles. 18.52 km.")]
+        _10NM=1, 
+        ///<summary> The horizontal accuracy is smaller than 4 Nautical Miles. 7.408 km. | </summary>
+        [Description("The horizontal accuracy is smaller than 4 Nautical Miles. 7.408 km.")]
+        _4NM=2, 
+        ///<summary> The horizontal accuracy is smaller than 2 Nautical Miles. 3.704 km. | </summary>
+        [Description("The horizontal accuracy is smaller than 2 Nautical Miles. 3.704 km.")]
+        _2NM=3, 
+        ///<summary> The horizontal accuracy is smaller than 1 Nautical Miles. 1.852 km. | </summary>
+        [Description("The horizontal accuracy is smaller than 1 Nautical Miles. 1.852 km.")]
+        _1NM=4, 
+        ///<summary> The horizontal accuracy is smaller than 0.5 Nautical Miles. 926 m. | </summary>
+        [Description("The horizontal accuracy is smaller than 0.5 Nautical Miles. 926 m.")]
+        _0_5NM=5, 
+        ///<summary> The horizontal accuracy is smaller than 0.3 Nautical Miles. 555.6 m. | </summary>
+        [Description("The horizontal accuracy is smaller than 0.3 Nautical Miles. 555.6 m.")]
+        _0_3NM=6, 
+        ///<summary> The horizontal accuracy is smaller than 0.1 Nautical Miles. 185.2 m. | </summary>
+        [Description("The horizontal accuracy is smaller than 0.1 Nautical Miles. 185.2 m.")]
+        _0_1NM=7, 
+        ///<summary> The horizontal accuracy is smaller than 0.05 Nautical Miles. 92.6 m. | </summary>
+        [Description("The horizontal accuracy is smaller than 0.05 Nautical Miles. 92.6 m.")]
+        _0_05NM=8, 
+        ///<summary> The horizontal accuracy is smaller than 30 meter. | </summary>
+        [Description("The horizontal accuracy is smaller than 30 meter.")]
+        _30_METER=9, 
+        ///<summary> The horizontal accuracy is smaller than 10 meter. | </summary>
+        [Description("The horizontal accuracy is smaller than 10 meter.")]
+        _10_METER=10, 
+        ///<summary> The horizontal accuracy is smaller than 3 meter. | </summary>
+        [Description("The horizontal accuracy is smaller than 3 meter.")]
+        _3_METER=11, 
+        ///<summary> The horizontal accuracy is smaller than 1 meter. | </summary>
+        [Description("The horizontal accuracy is smaller than 1 meter.")]
+        _1_METER=12, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_VER_ACC: byte
+    {
+        ///<summary> The vertical accuracy is unknown. | </summary>
+        [Description("The vertical accuracy is unknown.")]
+        UNKNOWN=0, 
+        ///<summary> The vertical accuracy is smaller than 150 meter. | </summary>
+        [Description("The vertical accuracy is smaller than 150 meter.")]
+        _150_METER=1, 
+        ///<summary> The vertical accuracy is smaller than 45 meter. | </summary>
+        [Description("The vertical accuracy is smaller than 45 meter.")]
+        _45_METER=2, 
+        ///<summary> The vertical accuracy is smaller than 25 meter. | </summary>
+        [Description("The vertical accuracy is smaller than 25 meter.")]
+        _25_METER=3, 
+        ///<summary> The vertical accuracy is smaller than 10 meter. | </summary>
+        [Description("The vertical accuracy is smaller than 10 meter.")]
+        _10_METER=4, 
+        ///<summary> The vertical accuracy is smaller than 3 meter. | </summary>
+        [Description("The vertical accuracy is smaller than 3 meter.")]
+        _3_METER=5, 
+        ///<summary> The vertical accuracy is smaller than 1 meter. | </summary>
+        [Description("The vertical accuracy is smaller than 1 meter.")]
+        _1_METER=6, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_SPEED_ACC: byte
+    {
+        ///<summary> The speed accuracy is unknown. | </summary>
+        [Description("The speed accuracy is unknown.")]
+        UNKNOWN=0, 
+        ///<summary> The speed accuracy is smaller than 10 meters per second. | </summary>
+        [Description("The speed accuracy is smaller than 10 meters per second.")]
+        _10_METERS_PER_SECOND=1, 
+        ///<summary> The speed accuracy is smaller than 3 meters per second. | </summary>
+        [Description("The speed accuracy is smaller than 3 meters per second.")]
+        _3_METERS_PER_SECOND=2, 
+        ///<summary> The speed accuracy is smaller than 1 meters per second. | </summary>
+        [Description("The speed accuracy is smaller than 1 meters per second.")]
+        _1_METERS_PER_SECOND=3, 
+        ///<summary> The speed accuracy is smaller than 0.3 meters per second. | </summary>
+        [Description("The speed accuracy is smaller than 0.3 meters per second.")]
+        _0_3_METERS_PER_SECOND=4, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_TIME_ACC: byte
+    {
+        ///<summary> The timestamp accuracy is unknown. | </summary>
+        [Description("The timestamp accuracy is unknown.")]
+        UNKNOWN=0, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.1 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.1 second.")]
+        _0_1_SECOND=1, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.2 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.2 second.")]
+        _0_2_SECOND=2, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.3 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.3 second.")]
+        _0_3_SECOND=3, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.4 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.4 second.")]
+        _0_4_SECOND=4, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.5 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.5 second.")]
+        _0_5_SECOND=5, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.6 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.6 second.")]
+        _0_6_SECOND=6, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.7 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.7 second.")]
+        _0_7_SECOND=7, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.8 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.8 second.")]
+        _0_8_SECOND=8, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 0.9 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 0.9 second.")]
+        _0_9_SECOND=9, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 1.0 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 1.0 second.")]
+        _1_0_SECOND=10, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 1.1 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 1.1 second.")]
+        _1_1_SECOND=11, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 1.2 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 1.2 second.")]
+        _1_2_SECOND=12, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 1.3 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 1.3 second.")]
+        _1_3_SECOND=13, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 1.4 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 1.4 second.")]
+        _1_4_SECOND=14, 
+        ///<summary> The timestamp accuracy is smaller than or equal to 1.5 second. | </summary>
+        [Description("The timestamp accuracy is smaller than or equal to 1.5 second.")]
+        _1_5_SECOND=15, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_AUTH_TYPE: byte
+    {
+        ///<summary> No authentication type is specified. | </summary>
+        [Description("No authentication type is specified.")]
+        NONE=0, 
+        ///<summary> Signature for the UAS (Unmanned Aircraft System) ID. | </summary>
+        [Description("Signature for the UAS (Unmanned Aircraft System) ID.")]
+        UAS_ID_SIGNATURE=1, 
+        ///<summary> Signature for the Operator ID. | </summary>
+        [Description("Signature for the Operator ID.")]
+        OPERATOR_ID_SIGNATURE=2, 
+        ///<summary> Signature for the entire message set. | </summary>
+        [Description("Signature for the entire message set.")]
+        MESSAGE_SET_SIGNATURE=3, 
+        ///<summary> Authentication is provided by Network Remote ID. | </summary>
+        [Description("Authentication is provided by Network Remote ID.")]
+        NETWORK_REMOTE_ID=4, 
+        ///<summary> The exact authentication type is indicated by the first byte of authentication_data and these type values are managed by ICAO. | </summary>
+        [Description("The exact authentication type is indicated by the first byte of authentication_data and these type values are managed by ICAO.")]
+        SPECIFIC_AUTHENTICATION=5, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_DESC_TYPE: byte
+    {
+        ///<summary> Optional free-form text description of the purpose of the flight. | </summary>
+        [Description("Optional free-form text description of the purpose of the flight.")]
+        TEXT=0, 
+        ///<summary> Optional additional clarification when status == MAV_ODID_STATUS_EMERGENCY. | </summary>
+        [Description("Optional additional clarification when status == MAV_ODID_STATUS_EMERGENCY.")]
+        EMERGENCY=1, 
+        ///<summary> Optional additional clarification when status != MAV_ODID_STATUS_EMERGENCY. | </summary>
+        [Description("Optional additional clarification when status != MAV_ODID_STATUS_EMERGENCY.")]
+        EXTENDED_STATUS=2, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_OPERATOR_LOCATION_TYPE: byte
+    {
+        ///<summary> The location/altitude of the operator is the same as the take-off location. | </summary>
+        [Description("The location/altitude of the operator is the same as the take-off location.")]
+        TAKEOFF=0, 
+        ///<summary> The location/altitude of the operator is dynamic. E.g. based on live GNSS data. | </summary>
+        [Description("The location/altitude of the operator is dynamic. E.g. based on live GNSS data.")]
+        LIVE_GNSS=1, 
+        ///<summary> The location/altitude of the operator are fixed values. | </summary>
+        [Description("The location/altitude of the operator are fixed values.")]
+        FIXED=2, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_CLASSIFICATION_TYPE: byte
+    {
+        ///<summary> The classification type for the UA is undeclared. | </summary>
+        [Description("The classification type for the UA is undeclared.")]
+        UNDECLARED=0, 
+        ///<summary> The classification type for the UA follows EU (European Union) specifications. | </summary>
+        [Description("The classification type for the UA follows EU (European Union) specifications.")]
+        EU=1, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_CATEGORY_EU: byte
+    {
+        ///<summary> The category for the UA, according to the EU specification, is undeclared. | </summary>
+        [Description("The category for the UA, according to the EU specification, is undeclared.")]
+        UNDECLARED=0, 
+        ///<summary> The category for the UA, according to the EU specification, is the Open category. | </summary>
+        [Description("The category for the UA, according to the EU specification, is the Open category.")]
+        OPEN=1, 
+        ///<summary> The category for the UA, according to the EU specification, is the Specific category. | </summary>
+        [Description("The category for the UA, according to the EU specification, is the Specific category.")]
+        SPECIFIC=2, 
+        ///<summary> The category for the UA, according to the EU specification, is the Certified category. | </summary>
+        [Description("The category for the UA, according to the EU specification, is the Certified category.")]
+        CERTIFIED=3, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_CLASS_EU: byte
+    {
+        ///<summary> The class for the UA, according to the EU specification, is undeclared. | </summary>
+        [Description("The class for the UA, according to the EU specification, is undeclared.")]
+        UNDECLARED=0, 
+        ///<summary> The class for the UA, according to the EU specification, is Class 0. | </summary>
+        [Description("The class for the UA, according to the EU specification, is Class 0.")]
+        CLASS_0=1, 
+        ///<summary> The class for the UA, according to the EU specification, is Class 1. | </summary>
+        [Description("The class for the UA, according to the EU specification, is Class 1.")]
+        CLASS_1=2, 
+        ///<summary> The class for the UA, according to the EU specification, is Class 2. | </summary>
+        [Description("The class for the UA, according to the EU specification, is Class 2.")]
+        CLASS_2=3, 
+        ///<summary> The class for the UA, according to the EU specification, is Class 3. | </summary>
+        [Description("The class for the UA, according to the EU specification, is Class 3.")]
+        CLASS_3=4, 
+        ///<summary> The class for the UA, according to the EU specification, is Class 4. | </summary>
+        [Description("The class for the UA, according to the EU specification, is Class 4.")]
+        CLASS_4=5, 
+        ///<summary> The class for the UA, according to the EU specification, is Class 5. | </summary>
+        [Description("The class for the UA, according to the EU specification, is Class 5.")]
+        CLASS_5=6, 
+        ///<summary> The class for the UA, according to the EU specification, is Class 6. | </summary>
+        [Description("The class for the UA, according to the EU specification, is Class 6.")]
+        CLASS_6=7, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_OPERATOR_ID_TYPE: byte
+    {
+        ///<summary> CAA (Civil Aviation Authority) registered operator ID. | </summary>
+        [Description("CAA (Civil Aviation Authority) registered operator ID.")]
+        CAA=0, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_ODID_ARM_STATUS: byte
+    {
+        ///<summary> Passing arming checks. | </summary>
+        [Description("Passing arming checks.")]
+        MAV_ODID_GOOD_TO_ARM=0, 
+        ///<summary> Generic arming failure, see error string for details. | </summary>
+        [Description("Generic arming failure, see error string for details.")]
+        MAV_ODID_PRE_ARM_FAIL_GENERIC=1, 
+        
+    };
+    
+    ///<summary> Tune formats (used for vehicle buzzer/tone generation). </summary>
+    public enum TUNE_FORMAT: uint
+    {
+        ///<summary> Format is QBasic 1.1 Play: https://www.qbasic.net/en/reference/qb11/Statement/PLAY-006.htm. | </summary>
+        [Description("Format is QBasic 1.1 Play: https://www.qbasic.net/en/reference/qb11/Statement/PLAY-006.htm.")]
+        QBASIC1_1=1, 
+        ///<summary> Format is Modern Music Markup Language (MML): https://en.wikipedia.org/wiki/Music_Macro_Language#Modern_MML. | </summary>
+        [Description("Format is Modern Music Markup Language (MML): https://en.wikipedia.org/wiki/Music_Macro_Language#Modern_MML.")]
+        MML_MODERN=2, 
+        
+    };
+    
+    ///<summary> Type of AIS vessel, enum duplicated from AIS standard, https://gpsd.gitlab.io/gpsd/AIVDM.html </summary>
+    public enum AIS_TYPE: byte
+    {
+        ///<summary> Not available (default). | </summary>
+        [Description("Not available (default).")]
+        UNKNOWN=0, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_1=1, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_2=2, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_3=3, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_4=4, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_5=5, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_6=6, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_7=7, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_8=8, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_9=9, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_10=10, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_11=11, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_12=12, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_13=13, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_14=14, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_15=15, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_16=16, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_17=17, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_18=18, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_19=19, 
+        ///<summary> Wing In Ground effect. | </summary>
+        [Description("Wing In Ground effect.")]
+        WIG=20, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_HAZARDOUS_A=21, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_HAZARDOUS_B=22, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_HAZARDOUS_C=23, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_HAZARDOUS_D=24, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_RESERVED_1=25, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_RESERVED_2=26, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_RESERVED_3=27, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_RESERVED_4=28, 
+        ///<summary>  | </summary>
+        [Description("")]
+        WIG_RESERVED_5=29, 
+        ///<summary>  | </summary>
+        [Description("")]
+        FISHING=30, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TOWING=31, 
+        ///<summary> Towing: length exceeds 200m or breadth exceeds 25m. | </summary>
+        [Description("Towing: length exceeds 200m or breadth exceeds 25m.")]
+        TOWING_LARGE=32, 
+        ///<summary> Dredging or other underwater ops. | </summary>
+        [Description("Dredging or other underwater ops.")]
+        DREDGING=33, 
+        ///<summary>  | </summary>
+        [Description("")]
+        DIVING=34, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MILITARY=35, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SAILING=36, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PLEASURE=37, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_20=38, 
+        ///<summary>  | </summary>
+        [Description("")]
+        RESERVED_21=39, 
+        ///<summary> High Speed Craft. | </summary>
+        [Description("High Speed Craft.")]
+        HSC=40, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_HAZARDOUS_A=41, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_HAZARDOUS_B=42, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_HAZARDOUS_C=43, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_HAZARDOUS_D=44, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_RESERVED_1=45, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_RESERVED_2=46, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_RESERVED_3=47, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_RESERVED_4=48, 
+        ///<summary>  | </summary>
+        [Description("")]
+        HSC_UNKNOWN=49, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PILOT=50, 
+        ///<summary> Search And Rescue vessel. | </summary>
+        [Description("Search And Rescue vessel.")]
+        SAR=51, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TUG=52, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PORT_TENDER=53, 
+        ///<summary> Anti-pollution equipment. | </summary>
+        [Description("Anti-pollution equipment.")]
+        ANTI_POLLUTION=54, 
+        ///<summary>  | </summary>
+        [Description("")]
+        LAW_ENFORCEMENT=55, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SPARE_LOCAL_1=56, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SPARE_LOCAL_2=57, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MEDICAL_TRANSPORT=58, 
+        ///<summary> Noncombatant ship according to RR Resolution No. 18. | </summary>
+        [Description("Noncombatant ship according to RR Resolution No. 18.")]
+        NONECOMBATANT=59, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER=60, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_HAZARDOUS_A=61, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_HAZARDOUS_B=62, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_HAZARDOUS_C=63, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_HAZARDOUS_D=64, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_RESERVED_1=65, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_RESERVED_2=66, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_RESERVED_3=67, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_RESERVED_4=68, 
+        ///<summary>  | </summary>
+        [Description("")]
+        PASSENGER_UNKNOWN=69, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO=70, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_HAZARDOUS_A=71, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_HAZARDOUS_B=72, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_HAZARDOUS_C=73, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_HAZARDOUS_D=74, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_RESERVED_1=75, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_RESERVED_2=76, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_RESERVED_3=77, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_RESERVED_4=78, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CARGO_UNKNOWN=79, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER=80, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_HAZARDOUS_A=81, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_HAZARDOUS_B=82, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_HAZARDOUS_C=83, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_HAZARDOUS_D=84, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_RESERVED_1=85, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_RESERVED_2=86, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_RESERVED_3=87, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_RESERVED_4=88, 
+        ///<summary>  | </summary>
+        [Description("")]
+        TANKER_UNKNOWN=89, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER=90, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_HAZARDOUS_A=91, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_HAZARDOUS_B=92, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_HAZARDOUS_C=93, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_HAZARDOUS_D=94, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_RESERVED_1=95, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_RESERVED_2=96, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_RESERVED_3=97, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_RESERVED_4=98, 
+        ///<summary>  | </summary>
+        [Description("")]
+        OTHER_UNKNOWN=99, 
+        
+    };
+    
+    ///<summary> Navigational status of AIS vessel, enum duplicated from AIS standard, https://gpsd.gitlab.io/gpsd/AIVDM.html </summary>
+    public enum AIS_NAV_STATUS: byte
+    {
+        ///<summary> Under way using engine. | </summary>
+        [Description("Under way using engine.")]
+        UNDER_WAY=0, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_ANCHORED=1, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_UN_COMMANDED=2, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_RESTRICTED_MANOEUVERABILITY=3, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_DRAUGHT_CONSTRAINED=4, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_MOORED=5, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_AGROUND=6, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_FISHING=7, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_SAILING=8, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_RESERVED_HSC=9, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_RESERVED_WIG=10, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_RESERVED_1=11, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_RESERVED_2=12, 
+        ///<summary>  | </summary>
+        [Description("")]
+        AIS_RESERVED_3=13, 
+        ///<summary> Search And Rescue Transponder. | </summary>
+        [Description("Search And Rescue Transponder.")]
+        AIS_AIS_SART=14, 
+        ///<summary> Not available (default). | </summary>
+        [Description("Not available (default).")]
+        AIS_UNKNOWN=15, 
+        
+    };
+    
+    ///<summary> These flags are used in the AIS_VESSEL.fields bitmask to indicate validity of data in the other message fields. When set, the data is valid. </summary>
     [Flags]
-    public enum HIL_SENSORS_UPDATED : uint /*default*/
+	public enum AIS_FLAGS: ushort
     {
-        NONE            = 0,
-        XACC            = (1 << 0 ),
-        YACC            = (1 << 1 ),
-        ZACC            = (1 << 2 ),
-        XGYRO           = (1 << 3 ),
-        YGYRO           = (1 << 4 ),
-        ZGYRO           = (1 << 5 ),
-        XMAG            = (1 << 6 ),
-        YMAG            = (1 << 7 ),
-        ZMAG            = (1 << 8 ),
-        ABS_PRESSURE    = (1 << 9 ),
-        DIFF_PRESSURE   = (1 << 10),
-        PRESSURE_ALT    = (1 << 11),
-        TEMPERATURE     = (1 << 12),
-        RESET           = unchecked((uint)(1 << 31))
+        ///<summary> 1 = Position accuracy less than 10m, 0 = position accuracy greater than 10m. | </summary>
+        [Description("1 = Position accuracy less than 10m, 0 = position accuracy greater than 10m.")]
+        POSITION_ACCURACY=1, 
+        ///<summary>  | </summary>
+        [Description("")]
+        VALID_COG=2, 
+        ///<summary>  | </summary>
+        [Description("")]
+        VALID_VELOCITY=4, 
+        ///<summary> 1 = Velocity over 52.5765m/s (102.2 knots) | </summary>
+        [Description("1 = Velocity over 52.5765m/s (102.2 knots)")]
+        HIGH_VELOCITY=8, 
+        ///<summary>  | </summary>
+        [Description("")]
+        VALID_TURN_RATE=16, 
+        ///<summary> Only the sign of the returned turn rate value is valid, either greater than 5deg/30s or less than -5deg/30s | </summary>
+        [Description("Only the sign of the returned turn rate value is valid, either greater than 5deg/30s or less than -5deg/30s")]
+        TURN_RATE_SIGN_ONLY=32, 
+        ///<summary>  | </summary>
+        [Description("")]
+        VALID_DIMENSIONS=64, 
+        ///<summary> Distance to bow is larger than 511m | </summary>
+        [Description("Distance to bow is larger than 511m")]
+        LARGE_BOW_DIMENSION=128, 
+        ///<summary> Distance to stern is larger than 511m | </summary>
+        [Description("Distance to stern is larger than 511m")]
+        LARGE_STERN_DIMENSION=256, 
+        ///<summary> Distance to port side is larger than 63m | </summary>
+        [Description("Distance to port side is larger than 63m")]
+        LARGE_PORT_DIMENSION=512, 
+        ///<summary> Distance to starboard side is larger than 63m | </summary>
+        [Description("Distance to starboard side is larger than 63m")]
+        LARGE_STARBOARD_DIMENSION=1024, 
+        ///<summary>  | </summary>
+        [Description("")]
+        VALID_CALLSIGN=2048, 
+        ///<summary>  | </summary>
+        [Description("")]
+        VALID_NAME=4096, 
+        
     };
-
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=9)]
-    ///<summary> The heartbeat message shows that a system or component is present and responding. The type and autopilot fields (along with the message component id), allow the receiving system to treat further messages from this system appropriately (e.g. by laying out the user interface based on the autopilot). This microservice is documented at https://mavlink.io/en/services/heartbeat.html </summary>
-    public struct HEARTBEAT_MSG
+    
+    ///<summary> List of possible units where failures can be injected. </summary>
+    public enum FAILURE_UNIT: int /*default*/
     {
-        public HEARTBEAT_MSG(uint custom_mode,/*MAV_TYPE*/byte type,/*MAV_AUTOPILOT*/byte autopilot,/*MAV_MODE_FLAG*/byte base_mode,/*MAV_STATE*/byte system_status,byte mavlink_version) 
-        {
-              this.custom_mode = custom_mode;
-              this.type = type;
-              this.autopilot = autopilot;
-              this.base_mode = base_mode;
-              this.system_status = system_status;
-              this.mavlink_version = mavlink_version;
-            
-        }
-        /// <summary>A bitfield for use for autopilot-specific flags   </summary>
-        [Units("")]
-        [Description("A bitfield for use for autopilot-specific flags")]
-        public  uint custom_mode;
-            /// <summary>Type of the system (quadrotor, helicopter, etc.). Components use the same type as their associated system. MAV_TYPE  </summary>
-        [Units("")]
-        [Description("Type of the system (quadrotor, helicopter, etc.). Components use the same type as their associated system.")]
-        public  /*MAV_TYPE*/byte type;
-            /// <summary>Autopilot type / class. MAV_AUTOPILOT  </summary>
-        [Units("")]
-        [Description("Autopilot type / class.")]
-        public  /*MAV_AUTOPILOT*/byte autopilot;
-            /// <summary>System mode bitmap. MAV_MODE_FLAG  bitmask</summary>
-        [Units("")]
-        [Description("System mode bitmap.")]
-        public  /*MAV_MODE_FLAG*/byte base_mode;
-            /// <summary>System status flag. MAV_STATE  </summary>
-        [Units("")]
-        [Description("System status flag.")]
-        public  /*MAV_STATE*/byte system_status;
-            /// <summary>MAVLink version, not writable by user, gets added by protocol because of magic data type: uint8_t_mavlink_version   </summary>
-        [Units("")]
-        [Description("MAVLink version, not writable by user, gets added by protocol because of magic data type: uint8_t_mavlink_version")]
-        public  byte mavlink_version;
-    
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_GYRO=0, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_ACCEL=1, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_MAG=2, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_BARO=3, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_GPS=4, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_OPTICAL_FLOW=5, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_VIO=6, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_DISTANCE_SENSOR=7, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SENSOR_AIRSPEED=8, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SYSTEM_BATTERY=100, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SYSTEM_MOTOR=101, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SYSTEM_SERVO=102, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SYSTEM_AVOIDANCE=103, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SYSTEM_RC_SIGNAL=104, 
+        ///<summary>  | </summary>
+        [Description("")]
+        SYSTEM_MAVLINK_SIGNAL=105, 
+        
     };
-
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=31)]
+    ///<summary> List of possible failure type to inject. </summary>
+    public enum FAILURE_TYPE: int /*default*/
+    {
+        ///<summary> No failure injected, used to reset a previous failure. | </summary>
+        [Description("No failure injected, used to reset a previous failure.")]
+        OK=0, 
+        ///<summary> Sets unit off, so completely non-responsive. | </summary>
+        [Description("Sets unit off, so completely non-responsive.")]
+        OFF=1, 
+        ///<summary> Unit is stuck e.g. keeps reporting the same value. | </summary>
+        [Description("Unit is stuck e.g. keeps reporting the same value.")]
+        STUCK=2, 
+        ///<summary> Unit is reporting complete garbage. | </summary>
+        [Description("Unit is reporting complete garbage.")]
+        GARBAGE=3, 
+        ///<summary> Unit is consistently wrong. | </summary>
+        [Description("Unit is consistently wrong.")]
+        WRONG=4, 
+        ///<summary> Unit is slow, so e.g. reporting at slower than expected rate. | </summary>
+        [Description("Unit is slow, so e.g. reporting at slower than expected rate.")]
+        SLOW=5, 
+        ///<summary> Data of unit is delayed in time. | </summary>
+        [Description("Data of unit is delayed in time.")]
+        DELAYED=6, 
+        ///<summary> Unit is sometimes working, sometimes not. | </summary>
+        [Description("Unit is sometimes working, sometimes not.")]
+        INTERMITTENT=7, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum NAV_VTOL_LAND_OPTIONS: int /*default*/
+    {
+        ///<summary> Default autopilot landing behaviour. | </summary>
+        [Description("Default autopilot landing behaviour.")]
+        VTOL_LAND_OPTIONS_DEFAULT=0, 
+        ///<summary> Descend in fixed wing mode, transitioning to multicopter mode for vertical landing when close to the ground.           The fixed wing descent pattern is at the discretion of the vehicle (e.g. transition altitude, loiter direction, radius, and speed, etc.).          | </summary>
+        [Description("Descend in fixed wing mode, transitioning to multicopter mode for vertical landing when close to the ground.           The fixed wing descent pattern is at the discretion of the vehicle (e.g. transition altitude, loiter direction, radius, and speed, etc.).         ")]
+        VTOL_LAND_OPTIONS_FW_DESCENT=1, 
+        ///<summary> Land in multicopter mode on reaching the landing coordinates (the whole landing is by 'hover descent'). | </summary>
+        [Description("Land in multicopter mode on reaching the landing coordinates (the whole landing is by 'hover descent').")]
+        VTOL_LAND_OPTIONS_HOVER_DESCENT=2, 
+        
+    };
+    
+    ///<summary> Winch status flags used in WINCH_STATUS </summary>
+    public enum MAV_WINCH_STATUS_FLAG: uint
+    {
+        ///<summary> Winch is healthy | </summary>
+        [Description("Winch is healthy")]
+        MAV_WINCH_STATUS_HEALTHY=1, 
+        ///<summary> Winch line is fully retracted | </summary>
+        [Description("Winch line is fully retracted")]
+        MAV_WINCH_STATUS_FULLY_RETRACTED=2, 
+        ///<summary> Winch motor is moving | </summary>
+        [Description("Winch motor is moving")]
+        MAV_WINCH_STATUS_MOVING=4, 
+        ///<summary> Winch clutch is engaged allowing motor to move freely. | </summary>
+        [Description("Winch clutch is engaged allowing motor to move freely.")]
+        MAV_WINCH_STATUS_CLUTCH_ENGAGED=8, 
+        ///<summary> Winch is locked by locking mechanism. | </summary>
+        [Description("Winch is locked by locking mechanism.")]
+        MAV_WINCH_STATUS_LOCKED=16, 
+        ///<summary> Winch is gravity dropping payload. | </summary>
+        [Description("Winch is gravity dropping payload.")]
+        MAV_WINCH_STATUS_DROPPING=32, 
+        ///<summary> Winch is arresting payload descent. | </summary>
+        [Description("Winch is arresting payload descent.")]
+        MAV_WINCH_STATUS_ARRESTING=64, 
+        ///<summary> Winch is using torque measurements to sense the ground. | </summary>
+        [Description("Winch is using torque measurements to sense the ground.")]
+        MAV_WINCH_STATUS_GROUND_SENSE=128, 
+        ///<summary> Winch is returning to the fully retracted position. | </summary>
+        [Description("Winch is returning to the fully retracted position.")]
+        MAV_WINCH_STATUS_RETRACTING=256, 
+        ///<summary> Winch is redelivering the payload. This is a failover state if the line tension goes above a threshold during RETRACTING. | </summary>
+        [Description("Winch is redelivering the payload. This is a failover state if the line tension goes above a threshold during RETRACTING.")]
+        MAV_WINCH_STATUS_REDELIVER=512, 
+        ///<summary> Winch is abandoning the line and possibly payload. Winch unspools the entire calculated line length. This is a failover state from REDELIVER if the number of attempts exceeds a threshold. | </summary>
+        [Description("Winch is abandoning the line and possibly payload. Winch unspools the entire calculated line length. This is a failover state from REDELIVER if the number of attempts exceeds a threshold.")]
+        MAV_WINCH_STATUS_ABANDON_LINE=1024, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAG_CAL_STATUS: byte
+    {
+        ///<summary>  | </summary>
+        [Description("")]
+        MAG_CAL_NOT_STARTED=0, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MAG_CAL_WAITING_TO_START=1, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MAG_CAL_RUNNING_STEP_ONE=2, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MAG_CAL_RUNNING_STEP_TWO=3, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MAG_CAL_SUCCESS=4, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MAG_CAL_FAILED=5, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MAG_CAL_BAD_ORIENTATION=6, 
+        ///<summary>  | </summary>
+        [Description("")]
+        MAG_CAL_BAD_RADIUS=7, 
+        
+    };
+    
+    ///<summary> Reason for an event error response. </summary>
+    public enum MAV_EVENT_ERROR_REASON: byte
+    {
+        ///<summary> The requested event is not available (anymore). | </summary>
+        [Description("The requested event is not available (anymore).")]
+        UNAVAILABLE=0, 
+        
+    };
+    
+    ///<summary> Flags for CURRENT_EVENT_SEQUENCE. </summary>
+    [Flags]
+	public enum MAV_EVENT_CURRENT_SEQUENCE_FLAGS: byte
+    {
+        ///<summary> A sequence reset has happened (e.g. vehicle reboot). | </summary>
+        [Description("A sequence reset has happened (e.g. vehicle reboot).")]
+        RESET=1, 
+        
+    };
+    
+    ///<summary> Flags in the HIL_SENSOR message indicate which fields have updated since the last message </summary>
+    [Flags]
+	public enum HIL_SENSOR_UPDATED_FLAGS: uint
+    {
+        ///<summary> None of the fields in HIL_SENSOR have been updated | </summary>
+        [Description("None of the fields in HIL_SENSOR have been updated")]
+        HIL_SENSOR_UPDATED_NONE=0, 
+        ///<summary> The value in the xacc field has been updated | </summary>
+        [Description("The value in the xacc field has been updated")]
+        HIL_SENSOR_UPDATED_XACC=1, 
+        ///<summary> The value in the yacc field has been updated | </summary>
+        [Description("The value in the yacc field has been updated")]
+        HIL_SENSOR_UPDATED_YACC=2, 
+        ///<summary> The value in the zacc field has been updated | </summary>
+        [Description("The value in the zacc field has been updated")]
+        HIL_SENSOR_UPDATED_ZACC=4, 
+        ///<summary> The value in the xgyro field has been updated | </summary>
+        [Description("The value in the xgyro field has been updated")]
+        HIL_SENSOR_UPDATED_XGYRO=8, 
+        ///<summary> The value in the ygyro field has been updated | </summary>
+        [Description("The value in the ygyro field has been updated")]
+        HIL_SENSOR_UPDATED_YGYRO=16, 
+        ///<summary> The value in the zgyro field has been updated | </summary>
+        [Description("The value in the zgyro field has been updated")]
+        HIL_SENSOR_UPDATED_ZGYRO=32, 
+        ///<summary> The value in the xmag field has been updated | </summary>
+        [Description("The value in the xmag field has been updated")]
+        HIL_SENSOR_UPDATED_XMAG=64, 
+        ///<summary> The value in the ymag field has been updated | </summary>
+        [Description("The value in the ymag field has been updated")]
+        HIL_SENSOR_UPDATED_YMAG=128, 
+        ///<summary> The value in the zmag field has been updated | </summary>
+        [Description("The value in the zmag field has been updated")]
+        HIL_SENSOR_UPDATED_ZMAG=256, 
+        ///<summary> The value in the abs_pressure field has been updated | </summary>
+        [Description("The value in the abs_pressure field has been updated")]
+        HIL_SENSOR_UPDATED_ABS_PRESSURE=512, 
+        ///<summary> The value in the diff_pressure field has been updated | </summary>
+        [Description("The value in the diff_pressure field has been updated")]
+        HIL_SENSOR_UPDATED_DIFF_PRESSURE=1024, 
+        ///<summary> The value in the pressure_alt field has been updated | </summary>
+        [Description("The value in the pressure_alt field has been updated")]
+        HIL_SENSOR_UPDATED_PRESSURE_ALT=2048, 
+        ///<summary> The value in the temperature field has been updated | </summary>
+        [Description("The value in the temperature field has been updated")]
+        HIL_SENSOR_UPDATED_TEMPERATURE=4096, 
+        ///<summary> Full reset of attitude/position/velocities/etc was performed in sim (Bit 31). | </summary>
+        [Description("Full reset of attitude/position/velocities/etc was performed in sim (Bit 31).")]
+        HIL_SENSOR_UPDATED_RESET=2147483648, 
+        
+    };
+    
+    ///<summary> Flags in the HIGHRES_IMU message indicate which fields have updated since the last message </summary>
+    [Flags]
+	public enum HIGHRES_IMU_UPDATED_FLAGS: ushort
+    {
+        ///<summary> None of the fields in HIGHRES_IMU have been updated | </summary>
+        [Description("None of the fields in HIGHRES_IMU have been updated")]
+        HIGHRES_IMU_UPDATED_NONE=0, 
+        ///<summary> The value in the xacc field has been updated | </summary>
+        [Description("The value in the xacc field has been updated")]
+        HIGHRES_IMU_UPDATED_XACC=1, 
+        ///<summary> The value in the yacc field has been updated | </summary>
+        [Description("The value in the yacc field has been updated")]
+        HIGHRES_IMU_UPDATED_YACC=2, 
+        ///<summary> The value in the zacc field has been updated since | </summary>
+        [Description("The value in the zacc field has been updated since")]
+        HIGHRES_IMU_UPDATED_ZACC=4, 
+        ///<summary> The value in the xgyro field has been updated | </summary>
+        [Description("The value in the xgyro field has been updated")]
+        HIGHRES_IMU_UPDATED_XGYRO=8, 
+        ///<summary> The value in the ygyro field has been updated | </summary>
+        [Description("The value in the ygyro field has been updated")]
+        HIGHRES_IMU_UPDATED_YGYRO=16, 
+        ///<summary> The value in the zgyro field has been updated | </summary>
+        [Description("The value in the zgyro field has been updated")]
+        HIGHRES_IMU_UPDATED_ZGYRO=32, 
+        ///<summary> The value in the xmag field has been updated | </summary>
+        [Description("The value in the xmag field has been updated")]
+        HIGHRES_IMU_UPDATED_XMAG=64, 
+        ///<summary> The value in the ymag field has been updated | </summary>
+        [Description("The value in the ymag field has been updated")]
+        HIGHRES_IMU_UPDATED_YMAG=128, 
+        ///<summary> The value in the zmag field has been updated | </summary>
+        [Description("The value in the zmag field has been updated")]
+        HIGHRES_IMU_UPDATED_ZMAG=256, 
+        ///<summary> The value in the abs_pressure field has been updated | </summary>
+        [Description("The value in the abs_pressure field has been updated")]
+        HIGHRES_IMU_UPDATED_ABS_PRESSURE=512, 
+        ///<summary> The value in the diff_pressure field has been updated | </summary>
+        [Description("The value in the diff_pressure field has been updated")]
+        HIGHRES_IMU_UPDATED_DIFF_PRESSURE=1024, 
+        ///<summary> The value in the pressure_alt field has been updated | </summary>
+        [Description("The value in the pressure_alt field has been updated")]
+        HIGHRES_IMU_UPDATED_PRESSURE_ALT=2048, 
+        ///<summary> The value in the temperature field has been updated | </summary>
+        [Description("The value in the temperature field has been updated")]
+        HIGHRES_IMU_UPDATED_TEMPERATURE=4096, 
+        ///<summary> All fields in HIGHRES_IMU have been updated. | </summary>
+        [Description("All fields in HIGHRES_IMU have been updated.")]
+        HIGHRES_IMU_UPDATED_ALL=65535, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum CAN_FILTER_OP: byte
+    {
+        ///<summary>  | </summary>
+        [Description("")]
+        CAN_FILTER_REPLACE=0, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CAN_FILTER_ADD=1, 
+        ///<summary>  | </summary>
+        [Description("")]
+        CAN_FILTER_REMOVE=2, 
+        
+    };
+    
+    ///<summary> MAV FTP error codes (https://mavlink.io/en/services/ftp.html) </summary>
+    public enum MAV_FTP_ERR: int /*default*/
+    {
+        ///<summary> None: No error | </summary>
+        [Description("None: No error")]
+        NONE=0, 
+        ///<summary> Fail: Unknown failure | </summary>
+        [Description("Fail: Unknown failure")]
+        FAIL=1, 
+        ///<summary> FailErrno: Command failed, Err number sent back in PayloadHeader.data[1]. 		This is a file-system error number understood by the server operating system. | </summary>
+        [Description("FailErrno: Command failed, Err number sent back in PayloadHeader.data[1]. 		This is a file-system error number understood by the server operating system.")]
+        FAILERRNO=2, 
+        ///<summary> InvalidDataSize: Payload size is invalid | </summary>
+        [Description("InvalidDataSize: Payload size is invalid")]
+        INVALIDDATASIZE=3, 
+        ///<summary> InvalidSession: Session is not currently open | </summary>
+        [Description("InvalidSession: Session is not currently open")]
+        INVALIDSESSION=4, 
+        ///<summary> NoSessionsAvailable: All available sessions are already in use | </summary>
+        [Description("NoSessionsAvailable: All available sessions are already in use")]
+        NOSESSIONSAVAILABLE=5, 
+        ///<summary> EOF: Offset past end of file for ListDirectory and ReadFile commands | </summary>
+        [Description("EOF: Offset past end of file for ListDirectory and ReadFile commands")]
+        EOF=6, 
+        ///<summary> UnknownCommand: Unknown command / opcode | </summary>
+        [Description("UnknownCommand: Unknown command / opcode")]
+        UNKNOWNCOMMAND=7, 
+        ///<summary> FileExists: File/directory already exists | </summary>
+        [Description("FileExists: File/directory already exists")]
+        FILEEXISTS=8, 
+        ///<summary> FileProtected: File/directory is write protected | </summary>
+        [Description("FileProtected: File/directory is write protected")]
+        FILEPROTECTED=9, 
+        ///<summary> FileNotFound: File/directory not found | </summary>
+        [Description("FileNotFound: File/directory not found")]
+        FILENOTFOUND=10, 
+        
+    };
+    
+    ///<summary> MAV FTP opcodes: https://mavlink.io/en/services/ftp.html </summary>
+    public enum MAV_FTP_OPCODE: int /*default*/
+    {
+        ///<summary> None. Ignored, always ACKed | </summary>
+        [Description("None. Ignored, always ACKed")]
+        NONE=0, 
+        ///<summary> TerminateSession: Terminates open Read session | </summary>
+        [Description("TerminateSession: Terminates open Read session")]
+        TERMINATESESSION=1, 
+        ///<summary> ResetSessions: Terminates all open read sessions | </summary>
+        [Description("ResetSessions: Terminates all open read sessions")]
+        RESETSESSION=2, 
+        ///<summary> ListDirectory. List files and directories in path from offset | </summary>
+        [Description("ListDirectory. List files and directories in path from offset")]
+        LISTDIRECTORY=3, 
+        ///<summary> OpenFileRO: Opens file at path for reading, returns session | </summary>
+        [Description("OpenFileRO: Opens file at path for reading, returns session")]
+        OPENFILERO=4, 
+        ///<summary> ReadFile: Reads size bytes from offset in session | </summary>
+        [Description("ReadFile: Reads size bytes from offset in session")]
+        READFILE=5, 
+        ///<summary> CreateFile: Creates file at path for writing, returns session | </summary>
+        [Description("CreateFile: Creates file at path for writing, returns session")]
+        CREATEFILE=6, 
+        ///<summary> WriteFile: Writes size bytes to offset in session | </summary>
+        [Description("WriteFile: Writes size bytes to offset in session")]
+        WRITEFILE=7, 
+        ///<summary> RemoveFile: Remove file at path | </summary>
+        [Description("RemoveFile: Remove file at path")]
+        REMOVEFILE=8, 
+        ///<summary> CreateDirectory: Creates directory at path | </summary>
+        [Description("CreateDirectory: Creates directory at path")]
+        CREATEDIRECTORY=9, 
+        ///<summary> RemoveDirectory: Removes directory at path. The directory must be empty. | </summary>
+        [Description("RemoveDirectory: Removes directory at path. The directory must be empty.")]
+        REMOVEDIRECTORY=10, 
+        ///<summary> OpenFileWO: Opens file at path for writing, returns session | </summary>
+        [Description("OpenFileWO: Opens file at path for writing, returns session")]
+        OPENFILEWO=11, 
+        ///<summary> TruncateFile: Truncate file at path to offset length | </summary>
+        [Description("TruncateFile: Truncate file at path to offset length")]
+        TRUNCATEFILE=12, 
+        ///<summary> Rename: Rename path1 to path2 | </summary>
+        [Description("Rename: Rename path1 to path2")]
+        RENAME=13, 
+        ///<summary> CalcFileCRC32: Calculate CRC32 for file at path | </summary>
+        [Description("CalcFileCRC32: Calculate CRC32 for file at path")]
+        CALCFILECRC=14, 
+        ///<summary> BurstReadFile: Burst download session file | </summary>
+        [Description("BurstReadFile: Burst download session file")]
+        BURSTREADFILE=15, 
+        ///<summary> ACK: ACK response | </summary>
+        [Description("ACK: ACK response")]
+        ACK=128, 
+        ///<summary> NAK: NAK response | </summary>
+        [Description("NAK: NAK response")]
+        NAK=129, 
+        
+    };
+    
+    
+    ///<summary> Micro air vehicle / autopilot classes. This identifies the individual model. </summary>
+    public enum MAV_AUTOPILOT: byte
+    {
+        ///<summary> Generic autopilot, full support for everything | </summary>
+        [Description("Generic autopilot, full support for everything")]
+        GENERIC=0, 
+        ///<summary> Reserved for future use. | </summary>
+        [Description("Reserved for future use.")]
+        RESERVED=1, 
+        ///<summary> SLUGS autopilot, http://slugsuav.soe.ucsc.edu | </summary>
+        [Description("SLUGS autopilot, http://slugsuav.soe.ucsc.edu")]
+        SLUGS=2, 
+        ///<summary> ArduPilot - Plane/Copter/Rover/Sub/Tracker, https://ardupilot.org | </summary>
+        [Description("ArduPilot - Plane/Copter/Rover/Sub/Tracker, https://ardupilot.org")]
+        ARDUPILOTMEGA=3, 
+        ///<summary> OpenPilot, http://openpilot.org | </summary>
+        [Description("OpenPilot, http://openpilot.org")]
+        OPENPILOT=4, 
+        ///<summary> Generic autopilot only supporting simple waypoints | </summary>
+        [Description("Generic autopilot only supporting simple waypoints")]
+        GENERIC_WAYPOINTS_ONLY=5, 
+        ///<summary> Generic autopilot supporting waypoints and other simple navigation commands | </summary>
+        [Description("Generic autopilot supporting waypoints and other simple navigation commands")]
+        GENERIC_WAYPOINTS_AND_SIMPLE_NAVIGATION_ONLY=6, 
+        ///<summary> Generic autopilot supporting the full mission command set | </summary>
+        [Description("Generic autopilot supporting the full mission command set")]
+        GENERIC_MISSION_FULL=7, 
+        ///<summary> No valid autopilot, e.g. a GCS or other MAVLink component | </summary>
+        [Description("No valid autopilot, e.g. a GCS or other MAVLink component")]
+        INVALID=8, 
+        ///<summary> PPZ UAV - http://nongnu.org/paparazzi | </summary>
+        [Description("PPZ UAV - http://nongnu.org/paparazzi")]
+        PPZ=9, 
+        ///<summary> UAV Dev Board | </summary>
+        [Description("UAV Dev Board")]
+        UDB=10, 
+        ///<summary> FlexiPilot | </summary>
+        [Description("FlexiPilot")]
+        FP=11, 
+        ///<summary> PX4 Autopilot - http://px4.io/ | </summary>
+        [Description("PX4 Autopilot - http://px4.io/")]
+        PX4=12, 
+        ///<summary> SMACCMPilot - http://smaccmpilot.org | </summary>
+        [Description("SMACCMPilot - http://smaccmpilot.org")]
+        SMACCMPILOT=13, 
+        ///<summary> AutoQuad -- http://autoquad.org | </summary>
+        [Description("AutoQuad -- http://autoquad.org")]
+        AUTOQUAD=14, 
+        ///<summary> Armazila -- http://armazila.com | </summary>
+        [Description("Armazila -- http://armazila.com")]
+        ARMAZILA=15, 
+        ///<summary> Aerob -- http://aerob.ru | </summary>
+        [Description("Aerob -- http://aerob.ru")]
+        AEROB=16, 
+        ///<summary> ASLUAV autopilot -- http://www.asl.ethz.ch | </summary>
+        [Description("ASLUAV autopilot -- http://www.asl.ethz.ch")]
+        ASLUAV=17, 
+        ///<summary> SmartAP Autopilot - http://sky-drones.com | </summary>
+        [Description("SmartAP Autopilot - http://sky-drones.com")]
+        SMARTAP=18, 
+        ///<summary> AirRails - http://uaventure.com | </summary>
+        [Description("AirRails - http://uaventure.com")]
+        AIRRAILS=19, 
+        ///<summary> Fusion Reflex - https://fusion.engineering | </summary>
+        [Description("Fusion Reflex - https://fusion.engineering")]
+        REFLEX=20, 
+        
+    };
+    
+    ///<summary> MAVLINK component type reported in HEARTBEAT message. Flight controllers must report the type of the vehicle on which they are mounted (e.g. MAV_TYPE_OCTOROTOR). All other components must report a value appropriate for their type (e.g. a camera must use MAV_TYPE_CAMERA). </summary>
+    public enum MAV_TYPE: byte
+    {
+        ///<summary> Generic micro air vehicle | </summary>
+        [Description("Generic micro air vehicle")]
+        GENERIC=0, 
+        ///<summary> Fixed wing aircraft. | </summary>
+        [Description("Fixed wing aircraft.")]
+        FIXED_WING=1, 
+        ///<summary> Quadrotor | </summary>
+        [Description("Quadrotor")]
+        QUADROTOR=2, 
+        ///<summary> Coaxial helicopter | </summary>
+        [Description("Coaxial helicopter")]
+        COAXIAL=3, 
+        ///<summary> Normal helicopter with tail rotor. | </summary>
+        [Description("Normal helicopter with tail rotor.")]
+        HELICOPTER=4, 
+        ///<summary> Ground installation | </summary>
+        [Description("Ground installation")]
+        ANTENNA_TRACKER=5, 
+        ///<summary> Operator control unit / ground control station | </summary>
+        [Description("Operator control unit / ground control station")]
+        GCS=6, 
+        ///<summary> Airship, controlled | </summary>
+        [Description("Airship, controlled")]
+        AIRSHIP=7, 
+        ///<summary> Free balloon, uncontrolled | </summary>
+        [Description("Free balloon, uncontrolled")]
+        FREE_BALLOON=8, 
+        ///<summary> Rocket | </summary>
+        [Description("Rocket")]
+        ROCKET=9, 
+        ///<summary> Ground rover | </summary>
+        [Description("Ground rover")]
+        GROUND_ROVER=10, 
+        ///<summary> Surface vessel, boat, ship | </summary>
+        [Description("Surface vessel, boat, ship")]
+        SURFACE_BOAT=11, 
+        ///<summary> Submarine | </summary>
+        [Description("Submarine")]
+        SUBMARINE=12, 
+        ///<summary> Hexarotor | </summary>
+        [Description("Hexarotor")]
+        HEXAROTOR=13, 
+        ///<summary> Octorotor | </summary>
+        [Description("Octorotor")]
+        OCTOROTOR=14, 
+        ///<summary> Tricopter | </summary>
+        [Description("Tricopter")]
+        TRICOPTER=15, 
+        ///<summary> Flapping wing | </summary>
+        [Description("Flapping wing")]
+        FLAPPING_WING=16, 
+        ///<summary> Kite | </summary>
+        [Description("Kite")]
+        KITE=17, 
+        ///<summary> Onboard companion controller | </summary>
+        [Description("Onboard companion controller")]
+        ONBOARD_CONTROLLER=18, 
+        ///<summary> Two-rotor Tailsitter VTOL that additionally uses control surfaces in vertical operation. Note, value previously named MAV_TYPE_VTOL_DUOROTOR. | </summary>
+        [Description("Two-rotor Tailsitter VTOL that additionally uses control surfaces in vertical operation. Note, value previously named MAV_TYPE_VTOL_DUOROTOR.")]
+        VTOL_TAILSITTER_DUOROTOR=19, 
+        ///<summary> Quad-rotor Tailsitter VTOL using a V-shaped quad config in vertical operation. Note: value previously named MAV_TYPE_VTOL_QUADROTOR. | </summary>
+        [Description("Quad-rotor Tailsitter VTOL using a V-shaped quad config in vertical operation. Note: value previously named MAV_TYPE_VTOL_QUADROTOR.")]
+        VTOL_TAILSITTER_QUADROTOR=20, 
+        ///<summary> Tiltrotor VTOL. Fuselage and wings stay (nominally) horizontal in all flight phases. It able to tilt (some) rotors to provide thrust in cruise flight. | </summary>
+        [Description("Tiltrotor VTOL. Fuselage and wings stay (nominally) horizontal in all flight phases. It able to tilt (some) rotors to provide thrust in cruise flight.")]
+        VTOL_TILTROTOR=21, 
+        ///<summary> VTOL with separate fixed rotors for hover and cruise flight. Fuselage and wings stay (nominally) horizontal in all flight phases. | </summary>
+        [Description("VTOL with separate fixed rotors for hover and cruise flight. Fuselage and wings stay (nominally) horizontal in all flight phases.")]
+        VTOL_FIXEDROTOR=22, 
+        ///<summary> Tailsitter VTOL. Fuselage and wings orientation changes depending on flight phase: vertical for hover, horizontal for cruise. Use more specific VTOL MAV_TYPE_VTOL_DUOROTOR or MAV_TYPE_VTOL_QUADROTOR if appropriate. | </summary>
+        [Description("Tailsitter VTOL. Fuselage and wings orientation changes depending on flight phase: vertical for hover, horizontal for cruise. Use more specific VTOL MAV_TYPE_VTOL_DUOROTOR or MAV_TYPE_VTOL_QUADROTOR if appropriate.")]
+        VTOL_TAILSITTER=23, 
+        ///<summary> VTOL reserved 4 | </summary>
+        [Description("VTOL reserved 4")]
+        VTOL_RESERVED4=24, 
+        ///<summary> VTOL reserved 5 | </summary>
+        [Description("VTOL reserved 5")]
+        VTOL_RESERVED5=25, 
+        ///<summary> Gimbal | </summary>
+        [Description("Gimbal")]
+        GIMBAL=26, 
+        ///<summary> ADSB system | </summary>
+        [Description("ADSB system")]
+        ADSB=27, 
+        ///<summary> Steerable, nonrigid airfoil | </summary>
+        [Description("Steerable, nonrigid airfoil")]
+        PARAFOIL=28, 
+        ///<summary> Dodecarotor | </summary>
+        [Description("Dodecarotor")]
+        DODECAROTOR=29, 
+        ///<summary> Camera | </summary>
+        [Description("Camera")]
+        CAMERA=30, 
+        ///<summary> Charging station | </summary>
+        [Description("Charging station")]
+        CHARGING_STATION=31, 
+        ///<summary> FLARM collision avoidance system | </summary>
+        [Description("FLARM collision avoidance system")]
+        FLARM=32, 
+        ///<summary> Servo | </summary>
+        [Description("Servo")]
+        SERVO=33, 
+        ///<summary> Open Drone ID. See https://mavlink.io/en/services/opendroneid.html. | </summary>
+        [Description("Open Drone ID. See https://mavlink.io/en/services/opendroneid.html.")]
+        ODID=34, 
+        ///<summary> Decarotor | </summary>
+        [Description("Decarotor")]
+        DECAROTOR=35, 
+        ///<summary> Battery | </summary>
+        [Description("Battery")]
+        BATTERY=36, 
+        ///<summary> Parachute | </summary>
+        [Description("Parachute")]
+        PARACHUTE=37, 
+        ///<summary> Log | </summary>
+        [Description("Log")]
+        LOG=38, 
+        ///<summary> OSD | </summary>
+        [Description("OSD")]
+        OSD=39, 
+        ///<summary> IMU | </summary>
+        [Description("IMU")]
+        IMU=40, 
+        ///<summary> GPS | </summary>
+        [Description("GPS")]
+        GPS=41, 
+        ///<summary> Winch | </summary>
+        [Description("Winch")]
+        WINCH=42, 
+        
+    };
+    
+    ///<summary> These flags encode the MAV mode. </summary>
+    public enum MAV_MODE_FLAG: byte
+    {
+        ///<summary> 0b00000001 Reserved for future use. | </summary>
+        [Description("0b00000001 Reserved for future use.")]
+        CUSTOM_MODE_ENABLED=1, 
+        ///<summary> 0b00000010 system has a test mode enabled. This flag is intended for temporary system tests and should not be used for stable implementations. | </summary>
+        [Description("0b00000010 system has a test mode enabled. This flag is intended for temporary system tests and should not be used for stable implementations.")]
+        TEST_ENABLED=2, 
+        ///<summary> 0b00000100 autonomous mode enabled, system finds its own goal positions. Guided flag can be set or not, depends on the actual implementation. | </summary>
+        [Description("0b00000100 autonomous mode enabled, system finds its own goal positions. Guided flag can be set or not, depends on the actual implementation.")]
+        AUTO_ENABLED=4, 
+        ///<summary> 0b00001000 guided mode enabled, system flies waypoints / mission items. | </summary>
+        [Description("0b00001000 guided mode enabled, system flies waypoints / mission items.")]
+        GUIDED_ENABLED=8, 
+        ///<summary> 0b00010000 system stabilizes electronically its attitude (and optionally position). It needs however further control inputs to move around. | </summary>
+        [Description("0b00010000 system stabilizes electronically its attitude (and optionally position). It needs however further control inputs to move around.")]
+        STABILIZE_ENABLED=16, 
+        ///<summary> 0b00100000 hardware in the loop simulation. All motors / actuators are blocked, but internal software is full operational. | </summary>
+        [Description("0b00100000 hardware in the loop simulation. All motors / actuators are blocked, but internal software is full operational.")]
+        HIL_ENABLED=32, 
+        ///<summary> 0b01000000 remote control input is enabled. | </summary>
+        [Description("0b01000000 remote control input is enabled.")]
+        MANUAL_INPUT_ENABLED=64, 
+        ///<summary> 0b10000000 MAV safety set to armed. Motors are enabled / running / can start. Ready to fly. Additional note: this flag is to be ignore when sent in the command MAV_CMD_DO_SET_MODE and MAV_CMD_COMPONENT_ARM_DISARM shall be used instead. The flag can still be used to report the armed state. | </summary>
+        [Description("0b10000000 MAV safety set to armed. Motors are enabled / running / can start. Ready to fly. Additional note: this flag is to be ignore when sent in the command MAV_CMD_DO_SET_MODE and MAV_CMD_COMPONENT_ARM_DISARM shall be used instead. The flag can still be used to report the armed state.")]
+        SAFETY_ARMED=128, 
+        
+    };
+    
+    ///<summary> These values encode the bit positions of the decode position. These values can be used to read the value of a flag bit by combining the base_mode variable with AND with the flag position value. The result will be either 0 or 1, depending on if the flag is set or not. </summary>
+    public enum MAV_MODE_FLAG_DECODE_POSITION: int /*default*/
+    {
+        ///<summary> Eighth bit: 00000001 | </summary>
+        [Description("Eighth bit: 00000001")]
+        CUSTOM_MODE=1, 
+        ///<summary> Seventh bit: 00000010 | </summary>
+        [Description("Seventh bit: 00000010")]
+        TEST=2, 
+        ///<summary> Sixth bit:   00000100 | </summary>
+        [Description("Sixth bit:   00000100")]
+        AUTO=4, 
+        ///<summary> Fifth bit:  00001000 | </summary>
+        [Description("Fifth bit:  00001000")]
+        GUIDED=8, 
+        ///<summary> Fourth bit: 00010000 | </summary>
+        [Description("Fourth bit: 00010000")]
+        STABILIZE=16, 
+        ///<summary> Third bit:  00100000 | </summary>
+        [Description("Third bit:  00100000")]
+        HIL=32, 
+        ///<summary> Second bit: 01000000 | </summary>
+        [Description("Second bit: 01000000")]
+        MANUAL=64, 
+        ///<summary> First bit:  10000000 | </summary>
+        [Description("First bit:  10000000")]
+        SAFETY=128, 
+        
+    };
+    
+    ///<summary>  </summary>
+    public enum MAV_STATE: byte
+    {
+        ///<summary> Uninitialized system, state is unknown. | </summary>
+        [Description("Uninitialized system, state is unknown.")]
+        UNINIT=0, 
+        ///<summary> System is booting up. | </summary>
+        [Description("System is booting up.")]
+        BOOT=1, 
+        ///<summary> System is calibrating and not flight-ready. | </summary>
+        [Description("System is calibrating and not flight-ready.")]
+        CALIBRATING=2, 
+        ///<summary> System is grounded and on standby. It can be launched any time. | </summary>
+        [Description("System is grounded and on standby. It can be launched any time.")]
+        STANDBY=3, 
+        ///<summary> System is active and might be already airborne. Motors are engaged. | </summary>
+        [Description("System is active and might be already airborne. Motors are engaged.")]
+        ACTIVE=4, 
+        ///<summary> System is in a non-normal flight mode. It can however still navigate. | </summary>
+        [Description("System is in a non-normal flight mode. It can however still navigate.")]
+        CRITICAL=5, 
+        ///<summary> System is in a non-normal flight mode. It lost control over parts or over the whole airframe. It is in mayday and going down. | </summary>
+        [Description("System is in a non-normal flight mode. It lost control over parts or over the whole airframe. It is in mayday and going down.")]
+        EMERGENCY=6, 
+        ///<summary> System just initialized its power-down sequence, will shut down now. | </summary>
+        [Description("System just initialized its power-down sequence, will shut down now.")]
+        POWEROFF=7, 
+        ///<summary> System is terminating itself. | </summary>
+        [Description("System is terminating itself.")]
+        FLIGHT_TERMINATION=8, 
+        
+    };
+    
+    ///<summary> Component ids (values) for the different types and instances of onboard hardware/software that might make up a MAVLink system (autopilot, cameras, servos, GPS systems, avoidance systems etc.).       Components must use the appropriate ID in their source address when sending messages. Components can also use IDs to determine if they are the intended recipient of an incoming message. The MAV_COMP_ID_ALL value is used to indicate messages that must be processed by all components.       When creating new entries, components that can have multiple instances (e.g. cameras, servos etc.) should be allocated sequential values. An appropriate number of values should be left free after these components to allow the number of instances to be expanded. </summary>
+    public enum MAV_COMPONENT: int /*default*/
+    {
+        ///<summary> Target id (target_component) used to broadcast messages to all components of the receiving system. Components should attempt to process messages with this component ID and forward to components on any other interfaces. Note: This is not a valid *source* component id for a message. | </summary>
+        [Description("Target id (target_component) used to broadcast messages to all components of the receiving system. Components should attempt to process messages with this component ID and forward to components on any other interfaces. Note: This is not a valid *source* component id for a message.")]
+        MAV_COMP_ID_ALL=0, 
+        ///<summary> System flight controller component ('autopilot'). Only one autopilot is expected in a particular system. | </summary>
+        [Description("System flight controller component ('autopilot'). Only one autopilot is expected in a particular system.")]
+        MAV_COMP_ID_AUTOPILOT1=1, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER1=25, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER2=26, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER3=27, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER4=28, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER5=29, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER6=30, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER7=31, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER8=32, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER9=33, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER10=34, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER11=35, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER12=36, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER13=37, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER14=38, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER15=39, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER16=40, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER17=41, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER18=42, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER19=43, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER20=44, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER21=45, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER22=46, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER23=47, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER24=48, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER25=49, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER26=50, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER27=51, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER28=52, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER29=53, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER30=54, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER31=55, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER32=56, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER33=57, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER34=58, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER35=59, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER36=60, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER37=61, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER38=62, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER39=63, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER40=64, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER41=65, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER42=66, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER43=67, 
+        ///<summary> Telemetry radio (e.g. SiK radio, or other component that emits RADIO_STATUS messages). | </summary>
+        [Description("Telemetry radio (e.g. SiK radio, or other component that emits RADIO_STATUS messages).")]
+        MAV_COMP_ID_TELEMETRY_RADIO=68, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER45=69, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER46=70, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER47=71, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER48=72, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER49=73, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER50=74, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER51=75, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER52=76, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER53=77, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER54=78, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER55=79, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER56=80, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER57=81, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER58=82, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER59=83, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER60=84, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER61=85, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER62=86, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER63=87, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER64=88, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER65=89, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER66=90, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER67=91, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER68=92, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER69=93, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER70=94, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER71=95, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER72=96, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER73=97, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER74=98, 
+        ///<summary> Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network. | </summary>
+        [Description("Id for a component on privately managed MAVLink network. Can be used for any purpose but may not be published by components outside of the private network.")]
+        MAV_COMP_ID_USER75=99, 
+        ///<summary> Camera #1. | </summary>
+        [Description("Camera #1.")]
+        MAV_COMP_ID_CAMERA=100, 
+        ///<summary> Camera #2. | </summary>
+        [Description("Camera #2.")]
+        MAV_COMP_ID_CAMERA2=101, 
+        ///<summary> Camera #3. | </summary>
+        [Description("Camera #3.")]
+        MAV_COMP_ID_CAMERA3=102, 
+        ///<summary> Camera #4. | </summary>
+        [Description("Camera #4.")]
+        MAV_COMP_ID_CAMERA4=103, 
+        ///<summary> Camera #5. | </summary>
+        [Description("Camera #5.")]
+        MAV_COMP_ID_CAMERA5=104, 
+        ///<summary> Camera #6. | </summary>
+        [Description("Camera #6.")]
+        MAV_COMP_ID_CAMERA6=105, 
+        ///<summary> Servo #1. | </summary>
+        [Description("Servo #1.")]
+        MAV_COMP_ID_SERVO1=140, 
+        ///<summary> Servo #2. | </summary>
+        [Description("Servo #2.")]
+        MAV_COMP_ID_SERVO2=141, 
+        ///<summary> Servo #3. | </summary>
+        [Description("Servo #3.")]
+        MAV_COMP_ID_SERVO3=142, 
+        ///<summary> Servo #4. | </summary>
+        [Description("Servo #4.")]
+        MAV_COMP_ID_SERVO4=143, 
+        ///<summary> Servo #5. | </summary>
+        [Description("Servo #5.")]
+        MAV_COMP_ID_SERVO5=144, 
+        ///<summary> Servo #6. | </summary>
+        [Description("Servo #6.")]
+        MAV_COMP_ID_SERVO6=145, 
+        ///<summary> Servo #7. | </summary>
+        [Description("Servo #7.")]
+        MAV_COMP_ID_SERVO7=146, 
+        ///<summary> Servo #8. | </summary>
+        [Description("Servo #8.")]
+        MAV_COMP_ID_SERVO8=147, 
+        ///<summary> Servo #9. | </summary>
+        [Description("Servo #9.")]
+        MAV_COMP_ID_SERVO9=148, 
+        ///<summary> Servo #10. | </summary>
+        [Description("Servo #10.")]
+        MAV_COMP_ID_SERVO10=149, 
+        ///<summary> Servo #11. | </summary>
+        [Description("Servo #11.")]
+        MAV_COMP_ID_SERVO11=150, 
+        ///<summary> Servo #12. | </summary>
+        [Description("Servo #12.")]
+        MAV_COMP_ID_SERVO12=151, 
+        ///<summary> Servo #13. | </summary>
+        [Description("Servo #13.")]
+        MAV_COMP_ID_SERVO13=152, 
+        ///<summary> Servo #14. | </summary>
+        [Description("Servo #14.")]
+        MAV_COMP_ID_SERVO14=153, 
+        ///<summary> Gimbal #1. | </summary>
+        [Description("Gimbal #1.")]
+        MAV_COMP_ID_GIMBAL=154, 
+        ///<summary> Logging component. | </summary>
+        [Description("Logging component.")]
+        MAV_COMP_ID_LOG=155, 
+        ///<summary> Automatic Dependent Surveillance-Broadcast (ADS-B) component. | </summary>
+        [Description("Automatic Dependent Surveillance-Broadcast (ADS-B) component.")]
+        MAV_COMP_ID_ADSB=156, 
+        ///<summary> On Screen Display (OSD) devices for video links. | </summary>
+        [Description("On Screen Display (OSD) devices for video links.")]
+        MAV_COMP_ID_OSD=157, 
+        ///<summary> Generic autopilot peripheral component ID. Meant for devices that do not implement the parameter microservice. | </summary>
+        [Description("Generic autopilot peripheral component ID. Meant for devices that do not implement the parameter microservice.")]
+        MAV_COMP_ID_PERIPHERAL=158, 
+        ///<summary> Gimbal ID for QX1. | </summary>
+        [Description("Gimbal ID for QX1.")]
+        MAV_COMP_ID_QX1_GIMBAL=159, 
+        ///<summary> FLARM collision alert component. | </summary>
+        [Description("FLARM collision alert component.")]
+        MAV_COMP_ID_FLARM=160, 
+        ///<summary> Parachute component. | </summary>
+        [Description("Parachute component.")]
+        MAV_COMP_ID_PARACHUTE=161, 
+        ///<summary> Gimbal #2. | </summary>
+        [Description("Gimbal #2.")]
+        MAV_COMP_ID_GIMBAL2=171, 
+        ///<summary> Gimbal #3. | </summary>
+        [Description("Gimbal #3.")]
+        MAV_COMP_ID_GIMBAL3=172, 
+        ///<summary> Gimbal #4 | </summary>
+        [Description("Gimbal #4")]
+        MAV_COMP_ID_GIMBAL4=173, 
+        ///<summary> Gimbal #5. | </summary>
+        [Description("Gimbal #5.")]
+        MAV_COMP_ID_GIMBAL5=174, 
+        ///<summary> Gimbal #6. | </summary>
+        [Description("Gimbal #6.")]
+        MAV_COMP_ID_GIMBAL6=175, 
+        ///<summary> Battery #1. | </summary>
+        [Description("Battery #1.")]
+        MAV_COMP_ID_BATTERY=180, 
+        ///<summary> Battery #2. | </summary>
+        [Description("Battery #2.")]
+        MAV_COMP_ID_BATTERY2=181, 
+        ///<summary> CAN over MAVLink client. | </summary>
+        [Description("CAN over MAVLink client.")]
+        MAV_COMP_ID_MAVCAN=189, 
+        ///<summary> Component that can generate/supply a mission flight plan (e.g. GCS or developer API). | </summary>
+        [Description("Component that can generate/supply a mission flight plan (e.g. GCS or developer API).")]
+        MAV_COMP_ID_MISSIONPLANNER=190, 
+        ///<summary> Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on. | </summary>
+        [Description("Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on.")]
+        MAV_COMP_ID_ONBOARD_COMPUTER=191, 
+        ///<summary> Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on. | </summary>
+        [Description("Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on.")]
+        MAV_COMP_ID_ONBOARD_COMPUTER2=192, 
+        ///<summary> Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on. | </summary>
+        [Description("Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on.")]
+        MAV_COMP_ID_ONBOARD_COMPUTER3=193, 
+        ///<summary> Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on. | </summary>
+        [Description("Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on.")]
+        MAV_COMP_ID_ONBOARD_COMPUTER4=194, 
+        ///<summary> Component that finds an optimal path between points based on a certain constraint (e.g. minimum snap, shortest path, cost, etc.). | </summary>
+        [Description("Component that finds an optimal path between points based on a certain constraint (e.g. minimum snap, shortest path, cost, etc.).")]
+        MAV_COMP_ID_PATHPLANNER=195, 
+        ///<summary> Component that plans a collision free path between two points. | </summary>
+        [Description("Component that plans a collision free path between two points.")]
+        MAV_COMP_ID_OBSTACLE_AVOIDANCE=196, 
+        ///<summary> Component that provides position estimates using VIO techniques. | </summary>
+        [Description("Component that provides position estimates using VIO techniques.")]
+        MAV_COMP_ID_VISUAL_INERTIAL_ODOMETRY=197, 
+        ///<summary> Component that manages pairing of vehicle and GCS. | </summary>
+        [Description("Component that manages pairing of vehicle and GCS.")]
+        MAV_COMP_ID_PAIRING_MANAGER=198, 
+        ///<summary> Inertial Measurement Unit (IMU) #1. | </summary>
+        [Description("Inertial Measurement Unit (IMU) #1.")]
+        MAV_COMP_ID_IMU=200, 
+        ///<summary> Inertial Measurement Unit (IMU) #2. | </summary>
+        [Description("Inertial Measurement Unit (IMU) #2.")]
+        MAV_COMP_ID_IMU_2=201, 
+        ///<summary> Inertial Measurement Unit (IMU) #3. | </summary>
+        [Description("Inertial Measurement Unit (IMU) #3.")]
+        MAV_COMP_ID_IMU_3=202, 
+        ///<summary> GPS #1. | </summary>
+        [Description("GPS #1.")]
+        MAV_COMP_ID_GPS=220, 
+        ///<summary> GPS #2. | </summary>
+        [Description("GPS #2.")]
+        MAV_COMP_ID_GPS2=221, 
+        ///<summary> Open Drone ID transmitter/receiver (Bluetooth/WiFi/Internet). | </summary>
+        [Description("Open Drone ID transmitter/receiver (Bluetooth/WiFi/Internet).")]
+        MAV_COMP_ID_ODID_TXRX_1=236, 
+        ///<summary> Open Drone ID transmitter/receiver (Bluetooth/WiFi/Internet). | </summary>
+        [Description("Open Drone ID transmitter/receiver (Bluetooth/WiFi/Internet).")]
+        MAV_COMP_ID_ODID_TXRX_2=237, 
+        ///<summary> Open Drone ID transmitter/receiver (Bluetooth/WiFi/Internet). | </summary>
+        [Description("Open Drone ID transmitter/receiver (Bluetooth/WiFi/Internet).")]
+        MAV_COMP_ID_ODID_TXRX_3=238, 
+        ///<summary> Component to bridge MAVLink to UDP (i.e. from a UART). | </summary>
+        [Description("Component to bridge MAVLink to UDP (i.e. from a UART).")]
+        MAV_COMP_ID_UDP_BRIDGE=240, 
+        ///<summary> Component to bridge to UART (i.e. from UDP). | </summary>
+        [Description("Component to bridge to UART (i.e. from UDP).")]
+        MAV_COMP_ID_UART_BRIDGE=241, 
+        ///<summary> Component handling TUNNEL messages (e.g. vendor specific GUI of a component). | </summary>
+        [Description("Component handling TUNNEL messages (e.g. vendor specific GUI of a component).")]
+        MAV_COMP_ID_TUNNEL_NODE=242, 
+        ///<summary> Component for handling system messages (e.g. to ARM, takeoff, etc.). | </summary>
+        [Description("Component for handling system messages (e.g. to ARM, takeoff, etc.).")]
+        MAV_COMP_ID_SYSTEM_CONTROL=250, 
+        
+    };
+    
+    
+    /// extensions_start 13
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=43)]
     ///<summary> The general system state. If the system is following the MAVLink standard, the system state is mainly defined by three orthogonal states/modes: The system mode, which is either LOCKED (motors shut down and locked), MANUAL (system under RC control), GUIDED (system with autonomous position control, position setpoint controlled manually) or AUTO (system guided by path/waypoint planner). The NAV_MODE defined the current flight state: LIFTOFF (often an open-loop maneuver), LANDING, WAYPOINTS or VECTOR. This represents the internal navigation state machine. The system status shows whether the system is currently active or not and if an emergency occurred. During the CRITICAL and EMERGENCY states the MAV is still considered to be active, but should start emergency procedures autonomously. After a failure occurred it should first move from active to critical to allow manual intervention and then move to emergency after a certain timeout. </summary>
     public struct SYS_STATUS_MSG
     {
-        public SYS_STATUS_MSG(/*MAV_SYS_STATUS_SENSOR*/uint onboard_control_sensors_present,/*MAV_SYS_STATUS_SENSOR*/uint onboard_control_sensors_enabled,/*MAV_SYS_STATUS_SENSOR*/uint onboard_control_sensors_health,ushort load,ushort voltage_battery,short current_battery,ushort drop_rate_comm,ushort errors_comm,ushort errors_count1,ushort errors_count2,ushort errors_count3,ushort errors_count4,sbyte battery_remaining) 
+        public SYS_STATUS_MSG(/*MAV_SYS_STATUS_SENSOR*/uint onboard_control_sensors_present,/*MAV_SYS_STATUS_SENSOR*/uint onboard_control_sensors_enabled,/*MAV_SYS_STATUS_SENSOR*/uint onboard_control_sensors_health,ushort load,ushort voltage_battery,short current_battery,ushort drop_rate_comm,ushort errors_comm,ushort errors_count1,ushort errors_count2,ushort errors_count3,ushort errors_count4,sbyte battery_remaining,/*MAV_SYS_STATUS_SENSOR_EXTENDED*/uint onboard_control_sensors_present_extended,/*MAV_SYS_STATUS_SENSOR_EXTENDED*/uint onboard_control_sensors_enabled_extended,/*MAV_SYS_STATUS_SENSOR_EXTENDED*/uint onboard_control_sensors_health_extended) 
         {
               this.onboard_control_sensors_present = onboard_control_sensors_present;
               this.onboard_control_sensors_enabled = onboard_control_sensors_enabled;
@@ -3164,6 +5784,9 @@ public partial class MAVLink
               this.errors_count3 = errors_count3;
               this.errors_count4 = errors_count4;
               this.battery_remaining = battery_remaining;
+              this.onboard_control_sensors_present_extended = onboard_control_sensors_present_extended;
+              this.onboard_control_sensors_enabled_extended = onboard_control_sensors_enabled_extended;
+              this.onboard_control_sensors_health_extended = onboard_control_sensors_health_extended;
             
         }
         /// <summary>Bitmap showing which onboard controllers and sensors are present. Value of 0: not present. Value of 1: present. MAV_SYS_STATUS_SENSOR  bitmask</summary>
@@ -3182,13 +5805,13 @@ public partial class MAVLink
         [Units("[d%]")]
         [Description("Maximum usage in percent of the mainloop time. Values: [0-1000] - should always be below 1000")]
         public  ushort load;
-            /// <summary>Battery voltage  [mV] </summary>
+            /// <summary>Battery voltage, UINT16_MAX: Voltage not sent by autopilot  [mV] </summary>
         [Units("[mV]")]
-        [Description("Battery voltage")]
+        [Description("Battery voltage, UINT16_MAX: Voltage not sent by autopilot")]
         public  ushort voltage_battery;
-            /// <summary>Battery current, -1: autopilot does not measure the current  [cA] </summary>
+            /// <summary>Battery current, -1: Current not sent by autopilot  [cA] </summary>
         [Units("[cA]")]
-        [Description("Battery current, -1: autopilot does not measure the current")]
+        [Description("Battery current, -1: Current not sent by autopilot")]
         public  short current_battery;
             /// <summary>Communication drop rate, (UART, I2C, SPI, CAN), dropped packets on all links (packets that were corrupted on reception on the MAV)  [c%] </summary>
         [Units("[c%]")]
@@ -3214,10 +5837,22 @@ public partial class MAVLink
         [Units("")]
         [Description("Autopilot-specific errors")]
         public  ushort errors_count4;
-            /// <summary>Remaining battery energy, -1: autopilot estimate the remaining battery  [%] </summary>
+            /// <summary>Battery energy remaining, -1: Battery remaining energy not sent by autopilot  [%] </summary>
         [Units("[%]")]
-        [Description("Remaining battery energy, -1: autopilot estimate the remaining battery")]
+        [Description("Battery energy remaining, -1: Battery remaining energy not sent by autopilot")]
         public  sbyte battery_remaining;
+            /// <summary>Bitmap showing which onboard controllers and sensors are present. Value of 0: not present. Value of 1: present. MAV_SYS_STATUS_SENSOR_EXTENDED  bitmask</summary>
+        [Units("")]
+        [Description("Bitmap showing which onboard controllers and sensors are present. Value of 0: not present. Value of 1: present.")]
+        public  /*MAV_SYS_STATUS_SENSOR_EXTENDED*/uint onboard_control_sensors_present_extended;
+            /// <summary>Bitmap showing which onboard controllers and sensors are enabled:  Value of 0: not enabled. Value of 1: enabled. MAV_SYS_STATUS_SENSOR_EXTENDED  bitmask</summary>
+        [Units("")]
+        [Description("Bitmap showing which onboard controllers and sensors are enabled:  Value of 0: not enabled. Value of 1: enabled.")]
+        public  /*MAV_SYS_STATUS_SENSOR_EXTENDED*/uint onboard_control_sensors_enabled_extended;
+            /// <summary>Bitmap showing which onboard controllers and sensors have an error (or are operational). Value of 0: error. Value of 1: healthy. MAV_SYS_STATUS_SENSOR_EXTENDED  bitmask</summary>
+        [Units("")]
+        [Description("Bitmap showing which onboard controllers and sensors have an error (or are operational). Value of 0: error. Value of 1: healthy.")]
+        public  /*MAV_SYS_STATUS_SENSOR_EXTENDED*/uint onboard_control_sensors_health_extended;
     
     };
 
@@ -3258,9 +5893,9 @@ public partial class MAVLink
               this.target_component = target_component;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>PING sequence   </summary>
         [Units("")]
@@ -3383,13 +6018,13 @@ public partial class MAVLink
         [Units("[ms]")]
         [Description("Timestamp (time since system boot).")]
         public  ulong timestamp;
-            /// <summary>Transmit rate in bytes/s   </summary>
-        [Units("")]
-        [Description("Transmit rate in bytes/s")]
+            /// <summary>Transmit rate  [bytes/s] </summary>
+        [Units("[bytes/s]")]
+        [Description("Transmit rate")]
         public  uint tx_rate;
-            /// <summary>Receive rate in bytes/s   </summary>
-        [Units("")]
-        [Description("Receive rate in bytes/s")]
+            /// <summary>Receive rate  [bytes/s] </summary>
+        [Units("[bytes/s]")]
+        [Description("Receive rate")]
         public  uint rx_rate;
             /// <summary>Messages sent   </summary>
         [Units("")]
@@ -3403,16 +6038,16 @@ public partial class MAVLink
         [Units("")]
         [Description("Messages lost (estimated from counting seq)")]
         public  uint messages_lost;
-            /// <summary>Number of bytes that could not be parsed correctly   </summary>
-        [Units("")]
-        [Description("Number of bytes that could not be parsed correctly")]
+            /// <summary>Number of bytes that could not be parsed correctly.  [bytes] </summary>
+        [Units("[bytes]")]
+        [Description("Number of bytes that could not be parsed correctly.")]
         public  ushort rx_parse_err;
-            /// <summary>Transmit buffer overflows. This number wraps around as it reaches UINT16_MAX   </summary>
-        [Units("")]
+            /// <summary>Transmit buffer overflows. This number wraps around as it reaches UINT16_MAX  [bytes] </summary>
+        [Units("[bytes]")]
         [Description("Transmit buffer overflows. This number wraps around as it reaches UINT16_MAX")]
         public  ushort tx_overflows;
-            /// <summary>Receive buffer overflows. This number wraps around as it reaches UINT16_MAX   </summary>
-        [Units("")]
+            /// <summary>Receive buffer overflows. This number wraps around as it reaches UINT16_MAX  [bytes] </summary>
+        [Units("[bytes]")]
         [Description("Receive buffer overflows. This number wraps around as it reaches UINT16_MAX")]
         public  ushort rx_overflows;
             /// <summary>Remaining free transmit buffer space  [%] </summary>
@@ -3553,7 +6188,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=23)]
-    ///<summary> Set a parameter value (write new value to permanent storage). IMPORTANT: The receiving component should acknowledge the new parameter value by sending a PARAM_VALUE message to all communication partners. This will also ensure that multiple GCS all have an up-to-date list of all parameters. If the sending GCS did not receive a PARAM_VALUE message within its timeout time, it should re-send the PARAM_SET message. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html </summary>
+    ///<summary> Set a parameter value (write new value to permanent storage).         The receiving component should acknowledge the new parameter value by broadcasting a PARAM_VALUE message (broadcasting ensures that multiple GCS all have an up-to-date list of all parameters). If the sending GCS did not receive a PARAM_VALUE within its timeout time, it should re-send the PARAM_SET message. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html.         PARAM_SET may also be called within the context of a transaction (started with MAV_CMD_PARAM_TRANSACTION). Within a transaction the receiving component should respond with PARAM_ACK_TRANSACTION to the setter component (instead of broadcasting PARAM_VALUE), and PARAM_SET should be re-sent if this is ACK not received. </summary>
     public struct PARAM_SET_MSG
     {
         public PARAM_SET_MSG(float param_value,byte target_system,byte target_component,byte[] param_id,/*MAV_PARAM_TYPE*/byte param_type) 
@@ -3591,11 +6226,11 @@ public partial class MAVLink
 
     
     /// extensions_start 10
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=50)]
-    ///<summary> The global position, as returned by the Global Positioning System (GPS). This is                 NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate. </summary>
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=52)]
+    ///<summary> The global position, as returned by the Global Positioning System (GPS). This is                 NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION_INT for the global position estimate. </summary>
     public struct GPS_RAW_INT_MSG
     {
-        public GPS_RAW_INT_MSG(ulong time_usec,int lat,int lon,int alt,ushort eph,ushort epv,ushort vel,ushort cog,/*GPS_FIX_TYPE*/byte fix_type,byte satellites_visible,int alt_ellipsoid,uint h_acc,uint v_acc,uint vel_acc,uint hdg_acc) 
+        public GPS_RAW_INT_MSG(ulong time_usec,int lat,int lon,int alt,ushort eph,ushort epv,ushort vel,ushort cog,/*GPS_FIX_TYPE*/byte fix_type,byte satellites_visible,int alt_ellipsoid,uint h_acc,uint v_acc,uint vel_acc,uint hdg_acc,ushort yaw) 
         {
               this.time_usec = time_usec;
               this.lat = lat;
@@ -3612,11 +6247,12 @@ public partial class MAVLink
               this.v_acc = v_acc;
               this.vel_acc = vel_acc;
               this.hdg_acc = hdg_acc;
+              this.yaw = yaw;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Latitude (WGS84, EGM96 ellipsoid)  [degE7] </summary>
         [Units("[degE7]")]
@@ -3630,13 +6266,13 @@ public partial class MAVLink
         [Units("[mm]")]
         [Description("Altitude (MSL). Positive for up. Note that virtually all GPS modules provide the MSL altitude in addition to the WGS84 altitude.")]
         public  int alt;
-            /// <summary>GPS HDOP horizontal dilution of position (unitless). If unknown, set to: UINT16_MAX   </summary>
+            /// <summary>GPS HDOP horizontal dilution of position (unitless * 100). If unknown, set to: UINT16_MAX   </summary>
         [Units("")]
-        [Description("GPS HDOP horizontal dilution of position (unitless). If unknown, set to: UINT16_MAX")]
+        [Description("GPS HDOP horizontal dilution of position (unitless * 100). If unknown, set to: UINT16_MAX")]
         public  ushort eph;
-            /// <summary>GPS VDOP vertical dilution of position (unitless). If unknown, set to: UINT16_MAX   </summary>
+            /// <summary>GPS VDOP vertical dilution of position (unitless * 100). If unknown, set to: UINT16_MAX   </summary>
         [Units("")]
-        [Description("GPS VDOP vertical dilution of position (unitless). If unknown, set to: UINT16_MAX")]
+        [Description("GPS VDOP vertical dilution of position (unitless * 100). If unknown, set to: UINT16_MAX")]
         public  ushort epv;
             /// <summary>GPS ground speed. If unknown, set to: UINT16_MAX  [cm/s] </summary>
         [Units("[cm/s]")]
@@ -3650,37 +6286,41 @@ public partial class MAVLink
         [Units("")]
         [Description("GPS fix type.")]
         public  /*GPS_FIX_TYPE*/byte fix_type;
-            /// <summary>Number of satellites visible. If unknown, set to 255   </summary>
+            /// <summary>Number of satellites visible. If unknown, set to UINT8_MAX   </summary>
         [Units("")]
-        [Description("Number of satellites visible. If unknown, set to 255")]
+        [Description("Number of satellites visible. If unknown, set to UINT8_MAX")]
         public  byte satellites_visible;
             /// <summary>Altitude (above WGS84, EGM96 ellipsoid). Positive for up.  [mm] </summary>
         [Units("[mm]")]
         [Description("Altitude (above WGS84, EGM96 ellipsoid). Positive for up.")]
         public  int alt_ellipsoid;
-            /// <summary>Position uncertainty. Positive for up.  [mm] </summary>
+            /// <summary>Position uncertainty.  [mm] </summary>
         [Units("[mm]")]
-        [Description("Position uncertainty. Positive for up.")]
+        [Description("Position uncertainty.")]
         public  uint h_acc;
-            /// <summary>Altitude uncertainty. Positive for up.  [mm] </summary>
+            /// <summary>Altitude uncertainty.  [mm] </summary>
         [Units("[mm]")]
-        [Description("Altitude uncertainty. Positive for up.")]
+        [Description("Altitude uncertainty.")]
         public  uint v_acc;
-            /// <summary>Speed uncertainty. Positive for up.  [mm] </summary>
+            /// <summary>Speed uncertainty.  [mm] </summary>
         [Units("[mm]")]
-        [Description("Speed uncertainty. Positive for up.")]
+        [Description("Speed uncertainty.")]
         public  uint vel_acc;
             /// <summary>Heading / track uncertainty  [degE5] </summary>
         [Units("[degE5]")]
         [Description("Heading / track uncertainty")]
         public  uint hdg_acc;
+            /// <summary>Yaw in earth frame from north. Use 0 if this GPS does not provide yaw. Use UINT16_MAX if this GPS is configured to provide yaw and is currently unable to provide it. Use 36000 for north.  [cdeg] </summary>
+        [Units("[cdeg]")]
+        [Description("Yaw in earth frame from north. Use 0 if this GPS does not provide yaw. Use UINT16_MAX if this GPS is configured to provide yaw and is currently unable to provide it. Use 36000 for north.")]
+        public  ushort yaw;
     
     };
 
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=101)]
-    ///<summary> The positioning status, as reported by GPS. This message is intended to display status information about each satellite visible to the receiver. See message GLOBAL_POSITION for the global position estimate. This message can contain information for up to 20 satellites. </summary>
+    ///<summary> The positioning status, as reported by GPS. This message is intended to display status information about each satellite visible to the receiver. See message GLOBAL_POSITION_INT for the global position estimate. This message can contain information for up to 20 satellites. </summary>
     public struct GPS_STATUS_MSG
     {
         public GPS_STATUS_MSG(byte satellites_visible,byte[] satellite_prn,byte[] satellite_used,byte[] satellite_elevation,byte[] satellite_azimuth,byte[] satellite_snr) 
@@ -3726,12 +6366,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=22)]
+    /// extensions_start 10
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=24)]
     ///<summary> The RAW IMU readings for the usual 9DOF sensor setup. This message should contain the scaled values to the described units </summary>
     public struct SCALED_IMU_MSG
     {
-        public SCALED_IMU_MSG(uint time_boot_ms,short xacc,short yacc,short zacc,short xgyro,short ygyro,short zgyro,short xmag,short ymag,short zmag) 
+        public SCALED_IMU_MSG(uint time_boot_ms,short xacc,short yacc,short zacc,short xgyro,short ygyro,short zgyro,short xmag,short ymag,short zmag,short temperature) 
         {
               this.time_boot_ms = time_boot_ms;
               this.xacc = xacc;
@@ -3743,6 +6383,7 @@ public partial class MAVLink
               this.xmag = xmag;
               this.ymag = ymag;
               this.zmag = zmag;
+              this.temperature = temperature;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -3773,28 +6414,32 @@ public partial class MAVLink
         [Units("[mrad/s]")]
         [Description("Angular speed around Z axis")]
         public  short zgyro;
-            /// <summary>X Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>X Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("X Magnetic field")]
         public  short xmag;
-            /// <summary>Y Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>Y Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("Y Magnetic field")]
         public  short ymag;
-            /// <summary>Z Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>Z Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("Z Magnetic field")]
         public  short zmag;
+            /// <summary>Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).")]
+        public  short temperature;
     
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=26)]
-    ///<summary> The RAW IMU readings for the usual 9DOF sensor setup. This message should always contain the true raw values without any scaling to allow data capture and system debugging. </summary>
+    /// extensions_start 10
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=29)]
+    ///<summary> The RAW IMU readings for a 9DOF sensor, which is identified by the id (default IMU1). This message should always contain the true raw values without any scaling to allow data capture and system debugging. </summary>
     public struct RAW_IMU_MSG
     {
-        public RAW_IMU_MSG(ulong time_usec,short xacc,short yacc,short zacc,short xgyro,short ygyro,short zgyro,short xmag,short ymag,short zmag) 
+        public RAW_IMU_MSG(ulong time_usec,short xacc,short yacc,short zacc,short xgyro,short ygyro,short zgyro,short xmag,short ymag,short zmag,byte id,short temperature) 
         {
               this.time_usec = time_usec;
               this.xacc = xacc;
@@ -3806,11 +6451,13 @@ public partial class MAVLink
               this.xmag = xmag;
               this.ymag = ymag;
               this.zmag = zmag;
+              this.id = id;
+              this.temperature = temperature;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>X acceleration (raw)   </summary>
         [Units("")]
@@ -3848,6 +6495,14 @@ public partial class MAVLink
         [Units("")]
         [Description("Z Magnetic field (raw)")]
         public  short zmag;
+            /// <summary>Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)   </summary>
+        [Units("")]
+        [Description("Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)")]
+        public  byte id;
+            /// <summary>Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).")]
+        public  short temperature;
     
     };
 
@@ -3866,9 +6521,9 @@ public partial class MAVLink
               this.temperature = temperature;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Absolute pressure (raw)   </summary>
         [Units("")]
@@ -3890,17 +6545,18 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=14)]
+    /// extensions_start 4
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=16)]
     ///<summary> The pressure readings for the typical setup of one absolute and differential pressure sensor. The units are as specified in each field. </summary>
     public struct SCALED_PRESSURE_MSG
     {
-        public SCALED_PRESSURE_MSG(uint time_boot_ms,float press_abs,float press_diff,short temperature) 
+        public SCALED_PRESSURE_MSG(uint time_boot_ms,float press_abs,float press_diff,short temperature,short temperature_press_diff) 
         {
               this.time_boot_ms = time_boot_ms;
               this.press_abs = press_abs;
               this.press_diff = press_diff;
               this.temperature = temperature;
+              this.temperature_press_diff = temperature_press_diff;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -3915,10 +6571,14 @@ public partial class MAVLink
         [Units("[hPa]")]
         [Description("Differential pressure 1")]
         public  float press_diff;
-            /// <summary>Temperature  [cdegC] </summary>
+            /// <summary>Absolute pressure temperature  [cdegC] </summary>
         [Units("[cdegC]")]
-        [Description("Temperature")]
+        [Description("Absolute pressure temperature")]
         public  short temperature;
+            /// <summary>Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.")]
+        public  short temperature_press_diff;
     
     };
 
@@ -3971,12 +6631,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=32)]
+    /// extensions_start 8
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=48)]
     ///<summary> The attitude in the aeronautical frame (right-handed, Z-down, X-front, Y-right), expressed as quaternion. Quaternion order is w, x, y, z and a zero rotation would be expressed as (1 0 0 0). </summary>
     public struct ATTITUDE_QUATERNION_MSG
     {
-        public ATTITUDE_QUATERNION_MSG(uint time_boot_ms,float q1,float q2,float q3,float q4,float rollspeed,float pitchspeed,float yawspeed) 
+        public ATTITUDE_QUATERNION_MSG(uint time_boot_ms,float q1,float q2,float q3,float q4,float rollspeed,float pitchspeed,float yawspeed,float[] repr_offset_q) 
         {
               this.time_boot_ms = time_boot_ms;
               this.q1 = q1;
@@ -3986,6 +6646,7 @@ public partial class MAVLink
               this.rollspeed = rollspeed;
               this.pitchspeed = pitchspeed;
               this.yawspeed = yawspeed;
+              this.repr_offset_q = repr_offset_q;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -4020,6 +6681,11 @@ public partial class MAVLink
         [Units("[rad/s]")]
         [Description("Yaw angular speed")]
         public  float yawspeed;
+            /// <summary>Rotation offset by which the attitude quaternion and angular speed vector should be rotated for user display (quaternion with [w, x, y, z] order, zero-rotation is [1, 0, 0, 0], send [0, 0, 0, 0] if field not supported). This field is intended for systems in which the reference attitude may change during flight. For example, tailsitters VTOLs rotate their reference attitude by 90 degrees between hover mode and fixed wing mode, thus repr_offset_q is equal to [1, 0, 0, 0] in hover mode and equal to [0.7071, 0, 0.7071, 0] in fixed wing mode.   </summary>
+        [Units("")]
+        [Description("Rotation offset by which the attitude quaternion and angular speed vector should be rotated for user display (quaternion with [w, x, y, z] order, zero-rotation is [1, 0, 0, 0], send [0, 0, 0, 0] if field not supported). This field is intended for systems in which the reference attitude may change during flight. For example, tailsitters VTOLs rotate their reference attitude by 90 degrees between hover mode and fixed wing mode, thus repr_offset_q is equal to [1, 0, 0, 0] in hover mode and equal to [0.7071, 0, 0.7071, 0] in fixed wing mode.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public float[] repr_offset_q;
     
     };
 
@@ -4190,9 +6856,9 @@ public partial class MAVLink
         [Units("")]
         [Description("Servo output port (set of 8 outputs = 1 port). Flight stacks running on Pixhawk should use: 0 = MAIN, 1 = AUX.")]
         public  byte port;
-            /// <summary>Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.   </summary>
+            /// <summary>Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.   </summary>
         [Units("")]
-        [Description("Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.")]
+        [Description("Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.")]
         public  byte rssi;
     
     };
@@ -4258,9 +6924,9 @@ public partial class MAVLink
         [Units("")]
         [Description("Servo output port (set of 8 outputs = 1 port). Flight stacks running on Pixhawk should use: 0 = MAIN, 1 = AUX.")]
         public  byte port;
-            /// <summary>Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.   </summary>
+            /// <summary>Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.   </summary>
         [Units("")]
-        [Description("Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.")]
+        [Description("Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.")]
         public  byte rssi;
     
     };
@@ -4268,7 +6934,7 @@ public partial class MAVLink
     
     /// extensions_start 10
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=37)]
-    ///<summary> The RAW values of the servo outputs (for RC input from the remote, use the RC_CHANNELS messages). The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. </summary>
+    ///<summary> Superseded by ACTUATOR_OUTPUT_STATUS. The RAW values of the servo outputs (for RC input from the remote, use the RC_CHANNELS messages). The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. </summary>
     public struct SERVO_OUTPUT_RAW_MSG
     {
         public SERVO_OUTPUT_RAW_MSG(uint time_usec,ushort servo1_raw,ushort servo2_raw,ushort servo3_raw,ushort servo4_raw,ushort servo5_raw,ushort servo6_raw,ushort servo7_raw,ushort servo8_raw,byte port,ushort servo9_raw,ushort servo10_raw,ushort servo11_raw,ushort servo12_raw,ushort servo13_raw,ushort servo14_raw,ushort servo15_raw,ushort servo16_raw) 
@@ -4293,9 +6959,9 @@ public partial class MAVLink
               this.servo16_raw = servo16_raw;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  uint time_usec;
             /// <summary>Servo output 1 value  [us] </summary>
         [Units("[us]")]
@@ -4447,7 +7113,7 @@ public partial class MAVLink
     
     /// extensions_start 14
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=38)]
-    ///<summary> Message encoding a mission item. This message is emitted to announce                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). See also https://mavlink.io/en/services/mission.html. </summary>
+    ///<summary> Message encoding a mission item. This message is emitted to announce                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). NaN may be used to indicate an optional/default value (e.g. to use the system's current latitude or yaw rather than a specific value). See also https://mavlink.io/en/services/mission.html. </summary>
     public struct MISSION_ITEM_MSG
     {
         public MISSION_ITEM_MSG(float param1,float param2,float param3,float param4,float x,float y,float z,ushort seq,/*MAV_CMD*/ushort command,byte target_system,byte target_component,/*MAV_FRAME*/byte frame,byte current,byte autocontinue,/*MAV_MISSION_TYPE*/byte mission_type) 
@@ -4754,7 +7420,7 @@ public partial class MAVLink
     
     /// extensions_start 4
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=21)]
-    ///<summary> As local waypoints exist, the global waypoint reference allows to transform between the local coordinate frame and the global (GPS) coordinate frame. This can be necessary when e.g. in- and outdoor settings are connected and the MAV should move from in- to outdoor. </summary>
+    ///<summary> Sets the GPS coordinates of the vehicle local origin (0,0,0) position. Vehicle should emit GPS_GLOBAL_ORIGIN irrespective of whether the origin is changed. This enables transform between the local coordinate frame and the global (GPS) coordinate frame, which may be necessary when (for example) indoor and outdoor settings are connected and the MAV should move from in- to outdoor. </summary>
     public struct SET_GPS_GLOBAL_ORIGIN_MSG
     {
         public SET_GPS_GLOBAL_ORIGIN_MSG(int latitude,int longitude,int altitude,byte target_system,ulong time_usec) 
@@ -4782,9 +7448,9 @@ public partial class MAVLink
         [Units("")]
         [Description("System ID")]
         public  byte target_system;
-            /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+            /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
     
     };
@@ -4792,7 +7458,7 @@ public partial class MAVLink
     
     /// extensions_start 3
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=20)]
-    ///<summary> Once the MAV sets a new GPS-Local correspondence, this message announces the origin (0,0,0) position </summary>
+    ///<summary> Publishes the GPS coordinates of the vehicle local origin (0,0,0) position. Emitted whenever a new GPS-Local position mapping is requested or set - e.g. following SET_GPS_GLOBAL_ORIGIN message. </summary>
     public struct GPS_GLOBAL_ORIGIN_MSG
     {
         public GPS_GLOBAL_ORIGIN_MSG(int latitude,int longitude,int altitude,ulong time_usec) 
@@ -4815,9 +7481,9 @@ public partial class MAVLink
         [Units("[mm]")]
         [Description("Altitude (MSL). Positive for up.")]
         public  int altitude;
-            /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+            /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
     
     };
@@ -4907,44 +7573,6 @@ public partial class MAVLink
         [Units("")]
         [Description("Component ID")]
         public  byte target_component;
-            /// <summary>Mission type. MAV_MISSION_TYPE  </summary>
-        [Units("")]
-        [Description("Mission type.")]
-        public  /*MAV_MISSION_TYPE*/byte mission_type;
-    
-    };
-
-    
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=7)]
-    ///<summary> A broadcast message to notify any ground station or SDK if a mission, geofence or safe points have changed on the vehicle. </summary>
-    public struct MISSION_CHANGED_MSG
-    {
-        public MISSION_CHANGED_MSG(short start_index,short end_index,byte origin_sysid,/*MAV_COMPONENT*/byte origin_compid,/*MAV_MISSION_TYPE*/byte mission_type) 
-        {
-              this.start_index = start_index;
-              this.end_index = end_index;
-              this.origin_sysid = origin_sysid;
-              this.origin_compid = origin_compid;
-              this.mission_type = mission_type;
-            
-        }
-        /// <summary>Start index for partial mission change (-1 for all items).   </summary>
-        [Units("")]
-        [Description("Start index for partial mission change (-1 for all items).")]
-        public  short start_index;
-            /// <summary>End index of a partial mission change. -1 is a synonym for the last mission item (i.e. selects all items from start_index). Ignore field if start_index=-1.   </summary>
-        [Units("")]
-        [Description("End index of a partial mission change. -1 is a synonym for the last mission item (i.e. selects all items from start_index). Ignore field if start_index=-1.")]
-        public  short end_index;
-            /// <summary>System ID of the author of the new mission.   </summary>
-        [Units("")]
-        [Description("System ID of the author of the new mission.")]
-        public  byte origin_sysid;
-            /// <summary>Compnent ID of the author of the new mission. MAV_COMPONENT  </summary>
-        [Units("")]
-        [Description("Compnent ID of the author of the new mission.")]
-        public  /*MAV_COMPONENT*/byte origin_compid;
             /// <summary>Mission type. MAV_MISSION_TYPE  </summary>
         [Units("")]
         [Description("Mission type.")]
@@ -5074,9 +7702,9 @@ public partial class MAVLink
               this.covariance = covariance;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation)   </summary>
         [Units("")]
@@ -5106,7 +7734,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=26)]
-    ///<summary> The state of the fixed wing navigation and position controller. </summary>
+    ///<summary> The state of the navigation and position controller. </summary>
     public struct NAV_CONTROLLER_OUTPUT_MSG
     {
         public NAV_CONTROLLER_OUTPUT_MSG(float nav_roll,float nav_pitch,float alt_error,float aspd_error,float xtrack_error,short nav_bearing,short target_bearing,ushort wp_dist) 
@@ -5176,9 +7804,9 @@ public partial class MAVLink
               this.estimator_type = estimator_type;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Latitude  [degE7] </summary>
         [Units("[degE7]")]
@@ -5242,9 +7870,9 @@ public partial class MAVLink
               this.estimator_type = estimator_type;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>X Position  [m] </summary>
         [Units("[m]")]
@@ -5405,9 +8033,9 @@ public partial class MAVLink
         [Units("")]
         [Description("Total number of RC channels being received. This can be larger than 18, indicating that more channels are available but not given in this message. This value should be 0 when no RC channels are available.")]
         public  byte chancount;
-            /// <summary>Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.   </summary>
+            /// <summary>Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.   </summary>
         [Units("")]
-        [Description("Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.")]
+        [Description("Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.")]
         public  byte rssi;
     
     };
@@ -5479,12 +8107,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=11)]
-    ///<summary> This message provides an API for manually controlling the vehicle using standard joystick axes nomenclature, along with a joystick-like input device. Unused axes can be disabled an buttons are also transmit as boolean values of their  </summary>
+    /// extensions_start 6
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=18)]
+    ///<summary> This message provides an API for manually controlling the vehicle using standard joystick axes nomenclature, along with a joystick-like input device. Unused axes can be disabled and buttons states are transmitted as individual on/off bits of a bitmask </summary>
     public struct MANUAL_CONTROL_MSG
     {
-        public MANUAL_CONTROL_MSG(short x,short y,short z,short r,ushort buttons,byte target) 
+        public MANUAL_CONTROL_MSG(short x,short y,short z,short r,ushort buttons,byte target,ushort buttons2,byte enabled_extensions,short s,short t) 
         {
               this.x = x;
               this.y = y;
@@ -5492,6 +8120,10 @@ public partial class MAVLink
               this.r = r;
               this.buttons = buttons;
               this.target = target;
+              this.buttons2 = buttons2;
+              this.enabled_extensions = enabled_extensions;
+              this.s = s;
+              this.t = t;
             
         }
         /// <summary>X-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is invalid. Generally corresponds to forward(1000)-backward(-1000) movement on a joystick and the pitch of a vehicle.   </summary>
@@ -5510,21 +8142,37 @@ public partial class MAVLink
         [Units("")]
         [Description("R-axis, normalized to the range [-1000,1000]. A value of INT16_MAX indicates that this axis is invalid. Generally corresponds to a twisting of the joystick, with counter-clockwise being 1000 and clockwise being -1000, and the yaw of a vehicle.")]
         public  short r;
-            /// <summary>A bitfield corresponding to the joystick buttons' current state, 1 for pressed, 0 for released. The lowest bit corresponds to Button 1.   </summary>
+            /// <summary>A bitfield corresponding to the joystick buttons' 0-15 current state, 1 for pressed, 0 for released. The lowest bit corresponds to Button 1.   </summary>
         [Units("")]
-        [Description("A bitfield corresponding to the joystick buttons' current state, 1 for pressed, 0 for released. The lowest bit corresponds to Button 1.")]
+        [Description("A bitfield corresponding to the joystick buttons' 0-15 current state, 1 for pressed, 0 for released. The lowest bit corresponds to Button 1.")]
         public  ushort buttons;
             /// <summary>The system to be controlled.   </summary>
         [Units("")]
         [Description("The system to be controlled.")]
         public  byte target;
+            /// <summary>A bitfield corresponding to the joystick buttons' 16-31 current state, 1 for pressed, 0 for released. The lowest bit corresponds to Button 16.   </summary>
+        [Units("")]
+        [Description("A bitfield corresponding to the joystick buttons' 16-31 current state, 1 for pressed, 0 for released. The lowest bit corresponds to Button 16.")]
+        public  ushort buttons2;
+            /// <summary>Set bits to 1 to indicate which of the following extension fields contain valid data: bit 0: pitch, bit 1: roll.   </summary>
+        [Units("")]
+        [Description("Set bits to 1 to indicate which of the following extension fields contain valid data: bit 0: pitch, bit 1: roll.")]
+        public  byte enabled_extensions;
+            /// <summary>Pitch-only-axis, normalized to the range [-1000,1000]. Generally corresponds to pitch on vehicles with additional degrees of freedom. Valid if bit 0 of enabled_extensions field is set. Set to 0 if invalid.   </summary>
+        [Units("")]
+        [Description("Pitch-only-axis, normalized to the range [-1000,1000]. Generally corresponds to pitch on vehicles with additional degrees of freedom. Valid if bit 0 of enabled_extensions field is set. Set to 0 if invalid.")]
+        public  short s;
+            /// <summary>Roll-only-axis, normalized to the range [-1000,1000]. Generally corresponds to roll on vehicles with additional degrees of freedom. Valid if bit 1 of enabled_extensions field is set. Set to 0 if invalid.   </summary>
+        [Units("")]
+        [Description("Roll-only-axis, normalized to the range [-1000,1000]. Generally corresponds to roll on vehicles with additional degrees of freedom. Valid if bit 1 of enabled_extensions field is set. Set to 0 if invalid.")]
+        public  short t;
     
     };
 
     
     /// extensions_start 10
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=38)]
-    ///<summary> The RAW values of the RC channels sent to the MAV to override info received from the RC radio. A value of UINT16_MAX means no change to that channel. A value of 0 means control of that channel should be released back to the RC radio. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification. </summary>
+    ///<summary> The RAW values of the RC channels sent to the MAV to override info received from the RC radio. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification.  Note carefully the semantic differences between the first 8 channels and the subsequent channels </summary>
     public struct RC_CHANNELS_OVERRIDE_MSG
     {
         public RC_CHANNELS_OVERRIDE_MSG(ushort chan1_raw,ushort chan2_raw,ushort chan3_raw,ushort chan4_raw,ushort chan5_raw,ushort chan6_raw,ushort chan7_raw,ushort chan8_raw,byte target_system,byte target_component,ushort chan9_raw,ushort chan10_raw,ushort chan11_raw,ushort chan12_raw,ushort chan13_raw,ushort chan14_raw,ushort chan15_raw,ushort chan16_raw,ushort chan17_raw,ushort chan18_raw) 
@@ -5551,37 +8199,37 @@ public partial class MAVLink
               this.chan18_raw = chan18_raw;
             
         }
-        /// <summary>RC channel 1 value. A value of UINT16_MAX means to ignore this field.  [us] </summary>
+        /// <summary>RC channel 1 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 1 value. A value of UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 1 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.")]
         public  ushort chan1_raw;
-            /// <summary>RC channel 2 value. A value of UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 2 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 2 value. A value of UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 2 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.")]
         public  ushort chan2_raw;
-            /// <summary>RC channel 3 value. A value of UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 3 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 3 value. A value of UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 3 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.")]
         public  ushort chan3_raw;
-            /// <summary>RC channel 4 value. A value of UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 4 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 4 value. A value of UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 4 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.")]
         public  ushort chan4_raw;
-            /// <summary>RC channel 5 value. A value of UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 5 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 5 value. A value of UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 5 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.")]
         public  ushort chan5_raw;
-            /// <summary>RC channel 6 value. A value of UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 6 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 6 value. A value of UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 6 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.")]
         public  ushort chan6_raw;
-            /// <summary>RC channel 7 value. A value of UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 7 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 7 value. A value of UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 7 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.")]
         public  ushort chan7_raw;
-            /// <summary>RC channel 8 value. A value of UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 8 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 8 value. A value of UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 8 value. A value of UINT16_MAX means to ignore this field. A value of 0 means to release this channel back to the RC radio.")]
         public  ushort chan8_raw;
             /// <summary>System ID   </summary>
         [Units("")]
@@ -5591,45 +8239,45 @@ public partial class MAVLink
         [Units("")]
         [Description("Component ID")]
         public  byte target_component;
-            /// <summary>RC channel 9 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 9 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 9 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 9 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan9_raw;
-            /// <summary>RC channel 10 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 10 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 10 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 10 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan10_raw;
-            /// <summary>RC channel 11 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 11 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 11 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 11 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan11_raw;
-            /// <summary>RC channel 12 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 12 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 12 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 12 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan12_raw;
-            /// <summary>RC channel 13 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 13 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 13 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 13 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan13_raw;
-            /// <summary>RC channel 14 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 14 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 14 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 14 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan14_raw;
-            /// <summary>RC channel 15 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 15 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 15 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 15 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan15_raw;
-            /// <summary>RC channel 16 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 16 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 16 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 16 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan16_raw;
-            /// <summary>RC channel 17 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 17 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 17 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 17 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan17_raw;
-            /// <summary>RC channel 18 value. A value of 0 or UINT16_MAX means to ignore this field.  [us] </summary>
+            /// <summary>RC channel 18 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.  [us] </summary>
         [Units("[us]")]
-        [Description("RC channel 18 value. A value of 0 or UINT16_MAX means to ignore this field.")]
+        [Description("RC channel 18 value. A value of 0 or UINT16_MAX means to ignore this field. A value of UINT16_MAX-1 means to release this channel back to the RC radio.")]
         public  ushort chan18_raw;
     
     };
@@ -5637,7 +8285,7 @@ public partial class MAVLink
     
     /// extensions_start 14
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=38)]
-    ///<summary> Message encoding a mission item. This message is emitted to announce                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). See also https://mavlink.io/en/services/mission.html. </summary>
+    ///<summary> Message encoding a mission item. This message is emitted to announce                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). NaN or INT32_MAX may be used in float/integer params (respectively) to indicate optional/default values (e.g. to use the component's current latitude, yaw rather than a specific value). See also https://mavlink.io/en/services/mission.html. </summary>
     public struct MISSION_ITEM_INT_MSG
     {
         public MISSION_ITEM_INT_MSG(float param1,float param2,float param3,float param4,int x,int y,float z,ushort seq,/*MAV_CMD*/ushort command,byte target_system,byte target_component,/*MAV_FRAME*/byte frame,byte current,byte autocontinue,/*MAV_MISSION_TYPE*/byte mission_type) 
@@ -5738,9 +8386,9 @@ public partial class MAVLink
               this.throttle = throttle;
             
         }
-        /// <summary>Current indicated airspeed (IAS).  [m/s] </summary>
+        /// <summary>Vehicle speed in form appropriate for vehicle type. For standard aircraft this is typically calibrated airspeed (CAS) or indicated airspeed (IAS) - either of which can be used by a pilot to estimate stall speed.  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("Current indicated airspeed (IAS).")]
+        [Description("Vehicle speed in form appropriate for vehicle type. For standard aircraft this is typically calibrated airspeed (CAS) or indicated airspeed (IAS) - either of which can be used by a pilot to estimate stall speed.")]
         public  float airspeed;
             /// <summary>Current ground speed.  [m/s] </summary>
         [Units("[m/s]")]
@@ -5768,7 +8416,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=35)]
-    ///<summary> Message encoding a command with parameters as scaled integers. Scaling depends on the actual command value. The command microservice is documented at https://mavlink.io/en/services/command.html </summary>
+    ///<summary> Message encoding a command with parameters as scaled integers. Scaling depends on the actual command value. NaN or INT32_MAX may be used in float/integer params (respectively) to indicate optional/default values (e.g. to use the component's current latitude, yaw rather than a specific value). The command microservice is documented at https://mavlink.io/en/services/command.html </summary>
     public struct COMMAND_INT_MSG
     {
         public COMMAND_INT_MSG(float param1,float param2,float param3,float param4,int x,int y,float z,/*MAV_CMD*/ushort command,byte target_system,byte target_component,/*MAV_FRAME*/byte frame,byte current,byte autocontinue) 
@@ -5832,13 +8480,13 @@ public partial class MAVLink
         [Units("")]
         [Description("The coordinate system of the COMMAND.")]
         public  /*MAV_FRAME*/byte frame;
-            /// <summary>false:0, true:1   </summary>
+            /// <summary>Not used.   </summary>
         [Units("")]
-        [Description("false:0, true:1")]
+        [Description("Not used.")]
         public  byte current;
-            /// <summary>autocontinue to next wp   </summary>
+            /// <summary>Not used (set 0).   </summary>
         [Units("")]
-        [Description("autocontinue to next wp")]
+        [Description("Not used (set 0).")]
         public  byte autocontinue;
     
     };
@@ -5935,21 +8583,49 @@ public partial class MAVLink
         [Units("")]
         [Description("Result of command.")]
         public  /*MAV_RESULT*/byte result;
-            /// <summary>WIP: Also used as result_param1, it can be set with a enum containing the errors reasons of why the command was denied or the progress percentage or 255 if unknown the progress when result is MAV_RESULT_IN_PROGRESS.   </summary>
+            /// <summary>Also used as result_param1, it can be set with an enum containing the errors reasons of why the command was denied, or the progress percentage when result is MAV_RESULT_IN_PROGRESS (UINT8_MAX if the progress is unknown).   </summary>
         [Units("")]
-        [Description("WIP: Also used as result_param1, it can be set with a enum containing the errors reasons of why the command was denied or the progress percentage or 255 if unknown the progress when result is MAV_RESULT_IN_PROGRESS.")]
+        [Description("Also used as result_param1, it can be set with an enum containing the errors reasons of why the command was denied, or the progress percentage when result is MAV_RESULT_IN_PROGRESS (UINT8_MAX if the progress is unknown).")]
         public  byte progress;
-            /// <summary>WIP: Additional parameter of the result, example: which parameter of MAV_CMD_NAV_WAYPOINT caused it to be denied.   </summary>
+            /// <summary>Additional parameter of the result, example: which parameter of MAV_CMD_NAV_WAYPOINT caused it to be denied.   </summary>
         [Units("")]
-        [Description("WIP: Additional parameter of the result, example: which parameter of MAV_CMD_NAV_WAYPOINT caused it to be denied.")]
+        [Description("Additional parameter of the result, example: which parameter of MAV_CMD_NAV_WAYPOINT caused it to be denied.")]
         public  int result_param2;
-            /// <summary>WIP: System which requested the command to be executed   </summary>
+            /// <summary>System ID of the target recipient. This is the ID of the system that sent the command for which this COMMAND_ACK is an acknowledgement.   </summary>
         [Units("")]
-        [Description("WIP: System which requested the command to be executed")]
+        [Description("System ID of the target recipient. This is the ID of the system that sent the command for which this COMMAND_ACK is an acknowledgement.")]
         public  byte target_system;
-            /// <summary>WIP: Component which requested the command to be executed   </summary>
+            /// <summary>Component ID of the target recipient. This is the ID of the system that sent the command for which this COMMAND_ACK is an acknowledgement.   </summary>
         [Units("")]
-        [Description("WIP: Component which requested the command to be executed")]
+        [Description("Component ID of the target recipient. This is the ID of the system that sent the command for which this COMMAND_ACK is an acknowledgement.")]
+        public  byte target_component;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=4)]
+    ///<summary> Cancel a long running command. The target system should respond with a COMMAND_ACK to the original command with result=MAV_RESULT_CANCELLED if the long running process was cancelled. If it has already completed, the cancel action can be ignored. The cancel action can be retried until some sort of acknowledgement to the original command has been received. The command microservice is documented at https://mavlink.io/en/services/command.html </summary>
+    public struct COMMAND_CANCEL_MSG
+    {
+        public COMMAND_CANCEL_MSG(/*MAV_CMD*/ushort command,byte target_system,byte target_component) 
+        {
+              this.command = command;
+              this.target_system = target_system;
+              this.target_component = target_component;
+            
+        }
+        /// <summary>Command ID (of command to cancel). MAV_CMD  </summary>
+        [Units("")]
+        [Description("Command ID (of command to cancel).")]
+        public  /*MAV_CMD*/ushort command;
+            /// <summary>System executing long running command. Should not be broadcast (0).   </summary>
+        [Units("")]
+        [Description("System executing long running command. Should not be broadcast (0).")]
+        public  byte target_system;
+            /// <summary>Component executing long running command.   </summary>
+        [Units("")]
+        [Description("Component executing long running command.")]
         public  byte target_component;
     
     };
@@ -6003,12 +8679,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=39)]
+    /// extensions_start 9
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=51)]
     ///<summary> Sets a desired vehicle attitude. Used by an external controller to command the vehicle (manual controller or other system). </summary>
     public struct SET_ATTITUDE_TARGET_MSG
     {
-        public SET_ATTITUDE_TARGET_MSG(uint time_boot_ms,float[] q,float body_roll_rate,float body_pitch_rate,float body_yaw_rate,float thrust,byte target_system,byte target_component,byte type_mask) 
+        public SET_ATTITUDE_TARGET_MSG(uint time_boot_ms,float[] q,float body_roll_rate,float body_pitch_rate,float body_yaw_rate,float thrust,byte target_system,byte target_component,/*ATTITUDE_TARGET_TYPEMASK*/byte type_mask,float[] thrust_body) 
         {
               this.time_boot_ms = time_boot_ms;
               this.q = q;
@@ -6019,6 +8695,7 @@ public partial class MAVLink
               this.target_system = target_system;
               this.target_component = target_component;
               this.type_mask = type_mask;
+              this.thrust_body = thrust_body;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -6054,10 +8731,15 @@ public partial class MAVLink
         [Units("")]
         [Description("Component ID")]
         public  byte target_component;
-            /// <summary>Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 6: reserved, bit 7: throttle, bit 8: attitude   </summary>
+            /// <summary>Bitmap to indicate which dimensions should be ignored by the vehicle. ATTITUDE_TARGET_TYPEMASK  bitmask</summary>
         [Units("")]
-        [Description("Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 6: reserved, bit 7: throttle, bit 8: attitude")]
-        public  byte type_mask;
+        [Description("Bitmap to indicate which dimensions should be ignored by the vehicle.")]
+        public  /*ATTITUDE_TARGET_TYPEMASK*/byte type_mask;
+            /// <summary>3D thrust setpoint in the body NED frame, normalized to -1 .. 1   </summary>
+        [Units("")]
+        [Description("3D thrust setpoint in the body NED frame, normalized to -1 .. 1")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=3)]
+		public float[] thrust_body;
     
     };
 
@@ -6067,7 +8749,7 @@ public partial class MAVLink
     ///<summary> Reports the current commanded attitude of the vehicle as specified by the autopilot. This should match the commands sent in a SET_ATTITUDE_TARGET message if the vehicle is being controlled this way. </summary>
     public struct ATTITUDE_TARGET_MSG
     {
-        public ATTITUDE_TARGET_MSG(uint time_boot_ms,float[] q,float body_roll_rate,float body_pitch_rate,float body_yaw_rate,float thrust,byte type_mask) 
+        public ATTITUDE_TARGET_MSG(uint time_boot_ms,float[] q,float body_roll_rate,float body_pitch_rate,float body_yaw_rate,float thrust,/*ATTITUDE_TARGET_TYPEMASK*/byte type_mask) 
         {
               this.time_boot_ms = time_boot_ms;
               this.q = q;
@@ -6103,10 +8785,10 @@ public partial class MAVLink
         [Units("")]
         [Description("Collective thrust, normalized to 0 .. 1 (-1 .. 1 for vehicles capable of reverse trust)")]
         public  float thrust;
-            /// <summary>Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 7: reserved, bit 8: attitude   bitmask</summary>
+            /// <summary>Bitmap to indicate which dimensions should be ignored by the vehicle. ATTITUDE_TARGET_TYPEMASK  bitmask</summary>
         [Units("")]
-        [Description("Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 7: reserved, bit 8: attitude")]
-        public  byte type_mask;
+        [Description("Bitmap to indicate which dimensions should be ignored by the vehicle.")]
+        public  /*ATTITUDE_TARGET_TYPEMASK*/byte type_mask;
     
     };
 
@@ -6536,9 +9218,9 @@ public partial class MAVLink
               this.zacc = zacc;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Roll angle  [rad] </summary>
         [Units("[rad]")]
@@ -6624,9 +9306,9 @@ public partial class MAVLink
               this.nav_mode = nav_mode;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Control output -1 .. 1   </summary>
         [Units("")]
@@ -6695,9 +9377,9 @@ public partial class MAVLink
               this.rssi = rssi;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>RC channel 1 value  [us] </summary>
         [Units("[us]")]
@@ -6747,9 +9429,9 @@ public partial class MAVLink
         [Units("[us]")]
         [Description("RC channel 12 value")]
         public  ushort chan12_raw;
-            /// <summary>Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.   </summary>
+            /// <summary>Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.   </summary>
         [Units("")]
-        [Description("Receive signal strength indicator in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.")]
+        [Description("Receive signal strength indicator in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.")]
         public  byte rssi;
     
     };
@@ -6768,13 +9450,13 @@ public partial class MAVLink
               this.mode = mode;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
-            /// <summary>Flags as bitfield, reserved for future use.   bitmask</summary>
+            /// <summary>Flags as bitfield, 1: indicate simulation using lockstep.   bitmask</summary>
         [Units("")]
-        [Description("Flags as bitfield, reserved for future use.")]
+        [Description("Flags as bitfield, 1: indicate simulation using lockstep.")]
         public  ulong flags;
             /// <summary>Control outputs -1 .. 1. Channel assignment depends on the simulated hardware.   </summary>
         [Units("")]
@@ -6808,16 +9490,16 @@ public partial class MAVLink
               this.flow_rate_y = flow_rate_y;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
-            /// <summary>Flow in x-sensor direction, angular-speed compensated  [m] </summary>
-        [Units("[m]")]
+            /// <summary>Flow in x-sensor direction, angular-speed compensated  [m/s] </summary>
+        [Units("[m/s]")]
         [Description("Flow in x-sensor direction, angular-speed compensated")]
         public  float flow_comp_m_x;
-            /// <summary>Flow in y-sensor direction, angular-speed compensated  [m] </summary>
-        [Units("[m]")]
+            /// <summary>Flow in y-sensor direction, angular-speed compensated  [m/s] </summary>
+        [Units("[m/s]")]
         [Description("Flow in y-sensor direction, angular-speed compensated")]
         public  float flow_comp_m_y;
             /// <summary>Ground distance. Positive value: distance known. Negative value: Unknown distance  [m] </summary>
@@ -6913,7 +9595,7 @@ public partial class MAVLink
     
     /// extensions_start 7
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=117)]
-    ///<summary> Global position/attitude estimate from a vision source. </summary>
+    ///<summary> Local position/attitude estimate from a vision source. </summary>
     public struct VISION_POSITION_ESTIMATE_MSG
     {
         public VISION_POSITION_ESTIMATE_MSG(ulong usec,float x,float y,float z,float roll,float pitch,float yaw,float[] covariance,byte reset_counter) 
@@ -6933,17 +9615,17 @@ public partial class MAVLink
         [Units("[us]")]
         [Description("Timestamp (UNIX time or time since system boot)")]
         public  ulong usec;
-            /// <summary>Global X position  [m] </summary>
+            /// <summary>Local X position  [m] </summary>
         [Units("[m]")]
-        [Description("Global X position")]
+        [Description("Local X position")]
         public  float x;
-            /// <summary>Global Y position  [m] </summary>
+            /// <summary>Local Y position  [m] </summary>
         [Units("[m]")]
-        [Description("Global Y position")]
+        [Description("Local Y position")]
         public  float y;
-            /// <summary>Global Z position  [m] </summary>
+            /// <summary>Local Z position  [m] </summary>
         [Units("[m]")]
-        [Description("Global Z position")]
+        [Description("Local Z position")]
         public  float z;
             /// <summary>Roll angle  [rad] </summary>
         [Units("[rad]")]
@@ -7068,12 +9750,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=62)]
+    /// extensions_start 15
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=63)]
     ///<summary> The IMU readings in SI units in NED body frame </summary>
     public struct HIGHRES_IMU_MSG
     {
-        public HIGHRES_IMU_MSG(ulong time_usec,float xacc,float yacc,float zacc,float xgyro,float ygyro,float zgyro,float xmag,float ymag,float zmag,float abs_pressure,float diff_pressure,float pressure_alt,float temperature,ushort fields_updated) 
+        public HIGHRES_IMU_MSG(ulong time_usec,float xacc,float yacc,float zacc,float xgyro,float ygyro,float zgyro,float xmag,float ymag,float zmag,float abs_pressure,float diff_pressure,float pressure_alt,float temperature,/*HIGHRES_IMU_UPDATED_FLAGS*/ushort fields_updated,byte id) 
         {
               this.time_usec = time_usec;
               this.xacc = xacc;
@@ -7090,11 +9772,12 @@ public partial class MAVLink
               this.pressure_alt = pressure_alt;
               this.temperature = temperature;
               this.fields_updated = fields_updated;
+              this.id = id;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>X acceleration  [m/s/s] </summary>
         [Units("[m/s/s]")]
@@ -7132,12 +9815,12 @@ public partial class MAVLink
         [Units("[gauss]")]
         [Description("Z Magnetic field")]
         public  float zmag;
-            /// <summary>Absolute pressure  [mbar] </summary>
-        [Units("[mbar]")]
+            /// <summary>Absolute pressure  [hPa] </summary>
+        [Units("[hPa]")]
         [Description("Absolute pressure")]
         public  float abs_pressure;
-            /// <summary>Differential pressure  [mbar] </summary>
-        [Units("[mbar]")]
+            /// <summary>Differential pressure  [hPa] </summary>
+        [Units("[hPa]")]
         [Description("Differential pressure")]
         public  float diff_pressure;
             /// <summary>Altitude calculated from pressure   </summary>
@@ -7148,10 +9831,14 @@ public partial class MAVLink
         [Units("[degC]")]
         [Description("Temperature")]
         public  float temperature;
-            /// <summary>Bitmap for fields that have updated since last message, bit 0 = xacc, bit 12: temperature   bitmask</summary>
+            /// <summary>Bitmap for fields that have updated since last message HIGHRES_IMU_UPDATED_FLAGS  bitmask</summary>
         [Units("")]
-        [Description("Bitmap for fields that have updated since last message, bit 0 = xacc, bit 12: temperature")]
-        public  ushort fields_updated;
+        [Description("Bitmap for fields that have updated since last message")]
+        public  /*HIGHRES_IMU_UPDATED_FLAGS*/ushort fields_updated;
+            /// <summary>Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)   </summary>
+        [Units("")]
+        [Description("Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)")]
+        public  byte id;
     
     };
 
@@ -7177,9 +9864,9 @@ public partial class MAVLink
               this.quality = quality;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Integration time. Divide integrated_x and integrated_y by the integration time to obtain average flow. The integration time also indicates the.  [us] </summary>
         [Units("[us]")]
@@ -7229,12 +9916,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=64)]
+    /// extensions_start 15
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=65)]
     ///<summary> The IMU readings in SI units in NED body frame </summary>
     public struct HIL_SENSOR_MSG
     {
-        public HIL_SENSOR_MSG(ulong time_usec,float xacc,float yacc,float zacc,float xgyro,float ygyro,float zgyro,float xmag,float ymag,float zmag,float abs_pressure,float diff_pressure,float pressure_alt,float temperature,uint fields_updated) 
+        public HIL_SENSOR_MSG(ulong time_usec,float xacc,float yacc,float zacc,float xgyro,float ygyro,float zgyro,float xmag,float ymag,float zmag,float abs_pressure,float diff_pressure,float pressure_alt,float temperature,/*HIL_SENSOR_UPDATED_FLAGS*/uint fields_updated,byte id) 
         {
               this.time_usec = time_usec;
               this.xacc = xacc;
@@ -7251,11 +9938,12 @@ public partial class MAVLink
               this.pressure_alt = pressure_alt;
               this.temperature = temperature;
               this.fields_updated = fields_updated;
+              this.id = id;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>X acceleration  [m/s/s] </summary>
         [Units("[m/s/s]")]
@@ -7293,12 +9981,12 @@ public partial class MAVLink
         [Units("[gauss]")]
         [Description("Z Magnetic field")]
         public  float zmag;
-            /// <summary>Absolute pressure  [mbar] </summary>
-        [Units("[mbar]")]
+            /// <summary>Absolute pressure  [hPa] </summary>
+        [Units("[hPa]")]
         [Description("Absolute pressure")]
         public  float abs_pressure;
-            /// <summary>Differential pressure (airspeed)  [mbar] </summary>
-        [Units("[mbar]")]
+            /// <summary>Differential pressure (airspeed)  [hPa] </summary>
+        [Units("[hPa]")]
         [Description("Differential pressure (airspeed)")]
         public  float diff_pressure;
             /// <summary>Altitude calculated from pressure   </summary>
@@ -7309,10 +9997,14 @@ public partial class MAVLink
         [Units("[degC]")]
         [Description("Temperature")]
         public  float temperature;
-            /// <summary>Bitmap for fields that have updated since last message, bit 0 = xacc, bit 12: temperature, bit 31: full reset of attitude/position/velocities/etc was performed in sim.   bitmask</summary>
+            /// <summary>Bitmap for fields that have updated since last message HIL_SENSOR_UPDATED_FLAGS  bitmask</summary>
         [Units("")]
-        [Description("Bitmap for fields that have updated since last message, bit 0 = xacc, bit 12: temperature, bit 31: full reset of attitude/position/velocities/etc was performed in sim.")]
-        public  uint fields_updated;
+        [Description("Bitmap for fields that have updated since last message")]
+        public  /*HIL_SENSOR_UPDATED_FLAGS*/uint fields_updated;
+            /// <summary>Sensor ID (zero indexed). Used for multiple sensor inputs   </summary>
+        [Units("")]
+        [Description("Sensor ID (zero indexed). Used for multiple sensor inputs")]
+        public  byte id;
     
     };
 
@@ -7419,17 +10111,17 @@ public partial class MAVLink
         [Units("")]
         [Description("Vertical position standard deviation")]
         public  float std_dev_vert;
-            /// <summary>True velocity in NORTH direction in earth-fixed NED frame  [m/s] </summary>
+            /// <summary>True velocity in north direction in earth-fixed NED frame  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("True velocity in NORTH direction in earth-fixed NED frame")]
+        [Description("True velocity in north direction in earth-fixed NED frame")]
         public  float vn;
-            /// <summary>True velocity in EAST direction in earth-fixed NED frame  [m/s] </summary>
+            /// <summary>True velocity in east direction in earth-fixed NED frame  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("True velocity in EAST direction in earth-fixed NED frame")]
+        [Description("True velocity in east direction in earth-fixed NED frame")]
         public  float ve;
-            /// <summary>True velocity in DOWN direction in earth-fixed NED frame  [m/s] </summary>
+            /// <summary>True velocity in down direction in earth-fixed NED frame  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("True velocity in DOWN direction in earth-fixed NED frame")]
+        [Description("True velocity in down direction in earth-fixed NED frame")]
         public  float vd;
     
     };
@@ -7459,25 +10151,25 @@ public partial class MAVLink
         [Units("")]
         [Description("Count of error corrected radio packets (since boot).")]
         public  ushort @fixed;
-            /// <summary>Local (message sender) recieved signal strength indication in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.   </summary>
+            /// <summary>Local (message sender) received signal strength indication in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.   </summary>
         [Units("")]
-        [Description("Local (message sender) recieved signal strength indication in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.")]
+        [Description("Local (message sender) received signal strength indication in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.")]
         public  byte rssi;
-            /// <summary>Remote (message receiver) signal strength indication in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.   </summary>
+            /// <summary>Remote (message receiver) signal strength indication in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.   </summary>
         [Units("")]
-        [Description("Remote (message receiver) signal strength indication in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.")]
+        [Description("Remote (message receiver) signal strength indication in device-dependent units/scale. Values: [0-254], UINT8_MAX: invalid/unknown.")]
         public  byte remrssi;
             /// <summary>Remaining free transmitter buffer space.  [%] </summary>
         [Units("[%]")]
         [Description("Remaining free transmitter buffer space.")]
         public  byte txbuf;
-            /// <summary>Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], 255: invalid/unknown.   </summary>
+            /// <summary>Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], UINT8_MAX: invalid/unknown.   </summary>
         [Units("")]
-        [Description("Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], 255: invalid/unknown.")]
+        [Description("Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], UINT8_MAX: invalid/unknown.")]
         public  byte noise;
-            /// <summary>Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], 255: invalid/unknown.   </summary>
+            /// <summary>Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], UINT8_MAX: invalid/unknown.   </summary>
         [Units("")]
-        [Description("Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], 255: invalid/unknown.")]
+        [Description("Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], UINT8_MAX: invalid/unknown.")]
         public  byte remnoise;
     
     };
@@ -7485,7 +10177,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=254)]
-    ///<summary> File transfer message </summary>
+    ///<summary> File transfer protocol message: https://mavlink.io/en/services/ftp.html. </summary>
     public struct FILE_TRANSFER_PROTOCOL_MSG
     {
         public FILE_TRANSFER_PROTOCOL_MSG(byte target_network,byte target_system,byte target_component,byte[] payload) 
@@ -7508,9 +10200,9 @@ public partial class MAVLink
         [Units("")]
         [Description("Component ID (0 for broadcast)")]
         public  byte target_component;
-            /// <summary>Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.   </summary>
+            /// <summary>Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields. The content/format of this block is defined in https://mavlink.io/en/services/ftp.html.   </summary>
         [Units("")]
-        [Description("Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.")]
+        [Description("Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields. The content/format of this block is defined in https://mavlink.io/en/services/ftp.html.")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=251)]
 		public byte[] payload;
     
@@ -7551,9 +10243,9 @@ public partial class MAVLink
               this.seq = seq;
             
         }
-        /// <summary>Timestamp for image frame (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp for image frame (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp for image frame (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp for image frame (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Image frame sequence   </summary>
         [Units("")]
@@ -7563,12 +10255,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=36)]
-    ///<summary> The global position, as returned by the Global Positioning System (GPS). This is                  NOT the global position estimate of the sytem, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate. </summary>
+    /// extensions_start 13
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=39)]
+    ///<summary> The global position, as returned by the Global Positioning System (GPS). This is                  NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION_INT for the global position estimate. </summary>
     public struct HIL_GPS_MSG
     {
-        public HIL_GPS_MSG(ulong time_usec,int lat,int lon,int alt,ushort eph,ushort epv,ushort vel,short vn,short ve,short vd,ushort cog,byte fix_type,byte satellites_visible) 
+        public HIL_GPS_MSG(ulong time_usec,int lat,int lon,int alt,ushort eph,ushort epv,ushort vel,short vn,short ve,short vd,ushort cog,byte fix_type,byte satellites_visible,byte id,ushort yaw) 
         {
               this.time_usec = time_usec;
               this.lat = lat;
@@ -7583,11 +10275,13 @@ public partial class MAVLink
               this.cog = cog;
               this.fix_type = fix_type;
               this.satellites_visible = satellites_visible;
+              this.id = id;
+              this.yaw = yaw;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Latitude (WGS84)  [degE7] </summary>
         [Units("[degE7]")]
@@ -7601,42 +10295,50 @@ public partial class MAVLink
         [Units("[mm]")]
         [Description("Altitude (MSL). Positive for up.")]
         public  int alt;
-            /// <summary>GPS HDOP horizontal dilution of position. If unknown, set to: 65535  [cm] </summary>
-        [Units("[cm]")]
-        [Description("GPS HDOP horizontal dilution of position. If unknown, set to: 65535")]
+            /// <summary>GPS HDOP horizontal dilution of position (unitless * 100). If unknown, set to: UINT16_MAX   </summary>
+        [Units("")]
+        [Description("GPS HDOP horizontal dilution of position (unitless * 100). If unknown, set to: UINT16_MAX")]
         public  ushort eph;
-            /// <summary>GPS VDOP vertical dilution of position. If unknown, set to: 65535  [cm] </summary>
-        [Units("[cm]")]
-        [Description("GPS VDOP vertical dilution of position. If unknown, set to: 65535")]
+            /// <summary>GPS VDOP vertical dilution of position (unitless * 100). If unknown, set to: UINT16_MAX   </summary>
+        [Units("")]
+        [Description("GPS VDOP vertical dilution of position (unitless * 100). If unknown, set to: UINT16_MAX")]
         public  ushort epv;
-            /// <summary>GPS ground speed. If unknown, set to: 65535  [cm/s] </summary>
+            /// <summary>GPS ground speed. If unknown, set to: UINT16_MAX  [cm/s] </summary>
         [Units("[cm/s]")]
-        [Description("GPS ground speed. If unknown, set to: 65535")]
+        [Description("GPS ground speed. If unknown, set to: UINT16_MAX")]
         public  ushort vel;
-            /// <summary>GPS velocity in NORTH direction in earth-fixed NED frame  [cm/s] </summary>
+            /// <summary>GPS velocity in north direction in earth-fixed NED frame  [cm/s] </summary>
         [Units("[cm/s]")]
-        [Description("GPS velocity in NORTH direction in earth-fixed NED frame")]
+        [Description("GPS velocity in north direction in earth-fixed NED frame")]
         public  short vn;
-            /// <summary>GPS velocity in EAST direction in earth-fixed NED frame  [cm/s] </summary>
+            /// <summary>GPS velocity in east direction in earth-fixed NED frame  [cm/s] </summary>
         [Units("[cm/s]")]
-        [Description("GPS velocity in EAST direction in earth-fixed NED frame")]
+        [Description("GPS velocity in east direction in earth-fixed NED frame")]
         public  short ve;
-            /// <summary>GPS velocity in DOWN direction in earth-fixed NED frame  [cm/s] </summary>
+            /// <summary>GPS velocity in down direction in earth-fixed NED frame  [cm/s] </summary>
         [Units("[cm/s]")]
-        [Description("GPS velocity in DOWN direction in earth-fixed NED frame")]
+        [Description("GPS velocity in down direction in earth-fixed NED frame")]
         public  short vd;
-            /// <summary>Course over ground (NOT heading, but direction of movement), 0.0..359.99 degrees. If unknown, set to: 65535  [cdeg] </summary>
+            /// <summary>Course over ground (NOT heading, but direction of movement), 0.0..359.99 degrees. If unknown, set to: UINT16_MAX  [cdeg] </summary>
         [Units("[cdeg]")]
-        [Description("Course over ground (NOT heading, but direction of movement), 0.0..359.99 degrees. If unknown, set to: 65535")]
+        [Description("Course over ground (NOT heading, but direction of movement), 0.0..359.99 degrees. If unknown, set to: UINT16_MAX")]
         public  ushort cog;
             /// <summary>0-1: no fix, 2: 2D fix, 3: 3D fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.   </summary>
         [Units("")]
         [Description("0-1: no fix, 2: 2D fix, 3: 3D fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.")]
         public  byte fix_type;
-            /// <summary>Number of satellites visible. If unknown, set to 255   </summary>
+            /// <summary>Number of satellites visible. If unknown, set to UINT8_MAX   </summary>
         [Units("")]
-        [Description("Number of satellites visible. If unknown, set to 255")]
+        [Description("Number of satellites visible. If unknown, set to UINT8_MAX")]
         public  byte satellites_visible;
+            /// <summary>GPS ID (zero indexed). Used for multiple GPS inputs   </summary>
+        [Units("")]
+        [Description("GPS ID (zero indexed). Used for multiple GPS inputs")]
+        public  byte id;
+            /// <summary>Yaw of vehicle relative to Earth's North, zero means not available, use 36000 for north  [cdeg] </summary>
+        [Units("[cdeg]")]
+        [Description("Yaw of vehicle relative to Earth's North, zero means not available, use 36000 for north")]
+        public  ushort yaw;
     
     };
 
@@ -7662,9 +10364,9 @@ public partial class MAVLink
               this.quality = quality;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Integration time. Divide integrated_x and integrated_y by the integration time to obtain average flow. The integration time also indicates the.  [us] </summary>
         [Units("[us]")]
@@ -7739,9 +10441,9 @@ public partial class MAVLink
               this.zacc = zacc;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Vehicle attitude expressed as normalized quaternion in w, x, y, z order (with 1 0 0 0 being the null-rotation)   </summary>
         [Units("")]
@@ -7808,12 +10510,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=22)]
+    /// extensions_start 10
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=24)]
     ///<summary> The RAW IMU readings for secondary 9DOF sensor setup. This message should contain the scaled values to the described units </summary>
     public struct SCALED_IMU2_MSG
     {
-        public SCALED_IMU2_MSG(uint time_boot_ms,short xacc,short yacc,short zacc,short xgyro,short ygyro,short zgyro,short xmag,short ymag,short zmag) 
+        public SCALED_IMU2_MSG(uint time_boot_ms,short xacc,short yacc,short zacc,short xgyro,short ygyro,short zgyro,short xmag,short ymag,short zmag,short temperature) 
         {
               this.time_boot_ms = time_boot_ms;
               this.xacc = xacc;
@@ -7825,6 +10527,7 @@ public partial class MAVLink
               this.xmag = xmag;
               this.ymag = ymag;
               this.zmag = zmag;
+              this.temperature = temperature;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -7855,25 +10558,29 @@ public partial class MAVLink
         [Units("[mrad/s]")]
         [Description("Angular speed around Z axis")]
         public  short zgyro;
-            /// <summary>X Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>X Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("X Magnetic field")]
         public  short xmag;
-            /// <summary>Y Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>Y Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("Y Magnetic field")]
         public  short ymag;
-            /// <summary>Z Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>Z Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("Z Magnetic field")]
         public  short zmag;
+            /// <summary>Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).")]
+        public  short temperature;
     
     };
 
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=6)]
-    ///<summary> Request a list of available logs. On some systems calling this may stop on-board logging until LOG_REQUEST_END is called. </summary>
+    ///<summary> Request a list of available logs. On some systems calling this may stop on-board logging until LOG_REQUEST_END is called. If there are no log files available this request shall be answered with one LOG_ENTRY message with id = 0 and num_logs = 0. </summary>
     public struct LOG_REQUEST_LIST_MSG
     {
         public LOG_REQUEST_LIST_MSG(ushort start,ushort end,byte target_system,byte target_component) 
@@ -8094,12 +10801,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=35)]
+    /// extensions_start 12
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=57)]
     ///<summary> Second GPS data. </summary>
     public struct GPS2_RAW_MSG
     {
-        public GPS2_RAW_MSG(ulong time_usec,int lat,int lon,int alt,uint dgps_age,ushort eph,ushort epv,ushort vel,ushort cog,/*GPS_FIX_TYPE*/byte fix_type,byte satellites_visible,byte dgps_numch) 
+        public GPS2_RAW_MSG(ulong time_usec,int lat,int lon,int alt,uint dgps_age,ushort eph,ushort epv,ushort vel,ushort cog,/*GPS_FIX_TYPE*/byte fix_type,byte satellites_visible,byte dgps_numch,ushort yaw,int alt_ellipsoid,uint h_acc,uint v_acc,uint vel_acc,uint hdg_acc) 
         {
               this.time_usec = time_usec;
               this.lat = lat;
@@ -8113,11 +10820,17 @@ public partial class MAVLink
               this.fix_type = fix_type;
               this.satellites_visible = satellites_visible;
               this.dgps_numch = dgps_numch;
+              this.yaw = yaw;
+              this.alt_ellipsoid = alt_ellipsoid;
+              this.h_acc = h_acc;
+              this.v_acc = v_acc;
+              this.vel_acc = vel_acc;
+              this.hdg_acc = hdg_acc;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Latitude (WGS84)  [degE7] </summary>
         [Units("[degE7]")]
@@ -8135,13 +10848,13 @@ public partial class MAVLink
         [Units("[ms]")]
         [Description("Age of DGPS info")]
         public  uint dgps_age;
-            /// <summary>GPS HDOP horizontal dilution of position. If unknown, set to: UINT16_MAX  [cm] </summary>
-        [Units("[cm]")]
-        [Description("GPS HDOP horizontal dilution of position. If unknown, set to: UINT16_MAX")]
+            /// <summary>GPS HDOP horizontal dilution of position (unitless * 100). If unknown, set to: UINT16_MAX   </summary>
+        [Units("")]
+        [Description("GPS HDOP horizontal dilution of position (unitless * 100). If unknown, set to: UINT16_MAX")]
         public  ushort eph;
-            /// <summary>GPS VDOP vertical dilution of position. If unknown, set to: UINT16_MAX  [cm] </summary>
-        [Units("[cm]")]
-        [Description("GPS VDOP vertical dilution of position. If unknown, set to: UINT16_MAX")]
+            /// <summary>GPS VDOP vertical dilution of position (unitless * 100). If unknown, set to: UINT16_MAX   </summary>
+        [Units("")]
+        [Description("GPS VDOP vertical dilution of position (unitless * 100). If unknown, set to: UINT16_MAX")]
         public  ushort epv;
             /// <summary>GPS ground speed. If unknown, set to: UINT16_MAX  [cm/s] </summary>
         [Units("[cm/s]")]
@@ -8155,14 +10868,38 @@ public partial class MAVLink
         [Units("")]
         [Description("GPS fix type.")]
         public  /*GPS_FIX_TYPE*/byte fix_type;
-            /// <summary>Number of satellites visible. If unknown, set to 255   </summary>
+            /// <summary>Number of satellites visible. If unknown, set to UINT8_MAX   </summary>
         [Units("")]
-        [Description("Number of satellites visible. If unknown, set to 255")]
+        [Description("Number of satellites visible. If unknown, set to UINT8_MAX")]
         public  byte satellites_visible;
             /// <summary>Number of DGPS satellites   </summary>
         [Units("")]
         [Description("Number of DGPS satellites")]
         public  byte dgps_numch;
+            /// <summary>Yaw in earth frame from north. Use 0 if this GPS does not provide yaw. Use UINT16_MAX if this GPS is configured to provide yaw and is currently unable to provide it. Use 36000 for north.  [cdeg] </summary>
+        [Units("[cdeg]")]
+        [Description("Yaw in earth frame from north. Use 0 if this GPS does not provide yaw. Use UINT16_MAX if this GPS is configured to provide yaw and is currently unable to provide it. Use 36000 for north.")]
+        public  ushort yaw;
+            /// <summary>Altitude (above WGS84, EGM96 ellipsoid). Positive for up.  [mm] </summary>
+        [Units("[mm]")]
+        [Description("Altitude (above WGS84, EGM96 ellipsoid). Positive for up.")]
+        public  int alt_ellipsoid;
+            /// <summary>Position uncertainty.  [mm] </summary>
+        [Units("[mm]")]
+        [Description("Position uncertainty.")]
+        public  uint h_acc;
+            /// <summary>Altitude uncertainty.  [mm] </summary>
+        [Units("[mm]")]
+        [Description("Altitude uncertainty.")]
+        public  uint v_acc;
+            /// <summary>Speed uncertainty.  [mm] </summary>
+        [Units("[mm]")]
+        [Description("Speed uncertainty.")]
+        public  uint vel_acc;
+            /// <summary>Heading / track uncertainty  [degE5] </summary>
+        [Units("[degE5]")]
+        [Description("Heading / track uncertainty")]
+        public  uint hdg_acc;
     
     };
 
@@ -8195,12 +10932,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=79)]
+    /// extensions_start 6
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=81)]
     ///<summary> Control a serial port. This can be used for raw access to an onboard serial peripheral such as a GPS or telemetry radio. It is designed to make it possible to update the devices firmware via MAVLink messages or change the devices settings. A message with zero bytes can be used to change just the baudrate. </summary>
     public struct SERIAL_CONTROL_MSG
     {
-        public SERIAL_CONTROL_MSG(uint baudrate,ushort timeout,/*SERIAL_CONTROL_DEV*/byte device,/*SERIAL_CONTROL_FLAG*/byte flags,byte count,byte[] data) 
+        public SERIAL_CONTROL_MSG(uint baudrate,ushort timeout,/*SERIAL_CONTROL_DEV*/byte device,/*SERIAL_CONTROL_FLAG*/byte flags,byte count,byte[] data,byte target_system,byte target_component) 
         {
               this.baudrate = baudrate;
               this.timeout = timeout;
@@ -8208,6 +10945,8 @@ public partial class MAVLink
               this.flags = flags;
               this.count = count;
               this.data = data;
+              this.target_system = target_system;
+              this.target_component = target_component;
             
         }
         /// <summary>Baudrate of transfer. Zero means no change.  [bits/s] </summary>
@@ -8235,6 +10974,14 @@ public partial class MAVLink
         [Description("serial data")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=70)]
 		public byte[] data;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
     
     };
 
@@ -8395,12 +11142,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=22)]
+    /// extensions_start 10
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=24)]
     ///<summary> The RAW IMU readings for 3rd 9DOF sensor setup. This message should contain the scaled values to the described units </summary>
     public struct SCALED_IMU3_MSG
     {
-        public SCALED_IMU3_MSG(uint time_boot_ms,short xacc,short yacc,short zacc,short xgyro,short ygyro,short zgyro,short xmag,short ymag,short zmag) 
+        public SCALED_IMU3_MSG(uint time_boot_ms,short xacc,short yacc,short zacc,short xgyro,short ygyro,short zgyro,short xmag,short ymag,short zmag,short temperature) 
         {
               this.time_boot_ms = time_boot_ms;
               this.xacc = xacc;
@@ -8412,6 +11159,7 @@ public partial class MAVLink
               this.xmag = xmag;
               this.ymag = ymag;
               this.zmag = zmag;
+              this.temperature = temperature;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -8442,18 +11190,22 @@ public partial class MAVLink
         [Units("[mrad/s]")]
         [Description("Angular speed around Z axis")]
         public  short zgyro;
-            /// <summary>X Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>X Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("X Magnetic field")]
         public  short xmag;
-            /// <summary>Y Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>Y Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("Y Magnetic field")]
         public  short ymag;
-            /// <summary>Z Magnetic field  [mT] </summary>
-        [Units("[mT]")]
+            /// <summary>Z Magnetic field  [mgauss] </summary>
+        [Units("[mgauss]")]
         [Description("Z Magnetic field")]
         public  short zmag;
+            /// <summary>Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).")]
+        public  short temperature;
     
     };
 
@@ -8463,7 +11215,7 @@ public partial class MAVLink
     ///<summary> Handshake message to initiate, control and stop image streaming when using the Image Transmission Protocol: https://mavlink.io/en/services/image_transmission.html. </summary>
     public struct DATA_TRANSMISSION_HANDSHAKE_MSG
     {
-        public DATA_TRANSMISSION_HANDSHAKE_MSG(uint size,ushort width,ushort height,ushort packets,/*MAVLINK_DATA_STREAM_TYPE*/byte type,byte payload,byte jpg_quality) 
+        public DATA_TRANSMISSION_HANDSHAKE_MSG(uint size,ushort width,ushort height,ushort packets,/*DATA_STREAM_MSGYPE*/byte type,byte payload,byte jpg_quality) 
         {
               this.size = size;
               this.width = width;
@@ -8490,10 +11242,10 @@ public partial class MAVLink
         [Units("")]
         [Description("Number of packets being sent (set on ACK only).")]
         public  ushort packets;
-            /// <summary>Type of requested/acknowledged data. MAVLINK_DATA_STREAM_TYPE  </summary>
+            /// <summary>Type of requested/acknowledged data. DATA_STREAM_MSGYPE  </summary>
         [Units("")]
         [Description("Type of requested/acknowledged data.")]
-        public  /*MAVLINK_DATA_STREAM_TYPE*/byte type;
+        public  /*DATA_STREAM_MSGYPE*/byte type;
             /// <summary>Payload size per packet (normally 253 byte, see DATA field size in message ENCAPSULATED_DATA) (set on ACK only).  [bytes] </summary>
         [Units("[bytes]")]
         [Description("Payload size per packet (normally 253 byte, see DATA field size in message ENCAPSULATED_DATA) (set on ACK only).")]
@@ -8531,11 +11283,11 @@ public partial class MAVLink
 
     
     /// extensions_start 8
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=38)]
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=39)]
     ///<summary> Distance sensor information for an onboard rangefinder. </summary>
     public struct DISTANCE_SENSOR_MSG
     {
-        public DISTANCE_SENSOR_MSG(uint time_boot_ms,ushort min_distance,ushort max_distance,ushort current_distance,/*MAV_DISTANCE_SENSOR*/byte type,byte id,/*MAV_SENSOR_ORIENTATION*/byte orientation,byte covariance,float horizontal_fov,float vertical_fov,float[] quaternion) 
+        public DISTANCE_SENSOR_MSG(uint time_boot_ms,ushort min_distance,ushort max_distance,ushort current_distance,/*MAV_DISTANCE_SENSOR*/byte type,byte id,/*MAV_SENSOR_ORIENTATION*/byte orientation,byte covariance,float horizontal_fov,float vertical_fov,float[] quaternion,byte signal_quality) 
         {
               this.time_boot_ms = time_boot_ms;
               this.min_distance = min_distance;
@@ -8548,6 +11300,7 @@ public partial class MAVLink
               this.horizontal_fov = horizontal_fov;
               this.vertical_fov = vertical_fov;
               this.quaternion = quaternion;
+              this.signal_quality = signal_quality;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -8578,9 +11331,9 @@ public partial class MAVLink
         [Units("")]
         [Description("Direction the sensor faces. downward-facing: ROTATION_PITCH_270, upward-facing: ROTATION_PITCH_90, backward-facing: ROTATION_PITCH_180, forward-facing: ROTATION_NONE, left-facing: ROTATION_YAW_90, right-facing: ROTATION_YAW_270")]
         public  /*MAV_SENSOR_ORIENTATION*/byte orientation;
-            /// <summary>Measurement variance. Max standard deviation is 6cm. 255 if unknown.  [cm^2] </summary>
+            /// <summary>Measurement variance. Max standard deviation is 6cm. UINT8_MAX if unknown.  [cm^2] </summary>
         [Units("[cm^2]")]
-        [Description("Measurement variance. Max standard deviation is 6cm. 255 if unknown.")]
+        [Description("Measurement variance. Max standard deviation is 6cm. UINT8_MAX if unknown.")]
         public  byte covariance;
             /// <summary>Horizontal Field of View (angle) where the distance measurement is valid and the field of view is known. Otherwise this is set to 0.  [rad] </summary>
         [Units("[rad]")]
@@ -8595,13 +11348,17 @@ public partial class MAVLink
         [Description("Quaternion of the sensor orientation in vehicle body frame (w, x, y, z order, zero-rotation is 1, 0, 0, 0). Zero-rotation is along the vehicle body x-axis. This field is required if the orientation is set to MAV_SENSOR_ROTATION_CUSTOM. Set it to 0 if invalid.'")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
 		public float[] quaternion;
+            /// <summary>Signal quality of the sensor. Specific to each sensor type, representing the relation of the signal strength with the target reflectivity, distance, size or aspect, but normalised as a percentage. 0 = unknown/unset signal quality, 1 = invalid signal, 100 = perfect signal.  [%] </summary>
+        [Units("[%]")]
+        [Description("Signal quality of the sensor. Specific to each sensor type, representing the relation of the signal strength with the target reflectivity, distance, size or aspect, but normalised as a percentage. 0 = unknown/unset signal quality, 1 = invalid signal, 100 = perfect signal.")]
+        public  byte signal_quality;
     
     };
 
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=18)]
-    ///<summary> Request for terrain data and terrain status </summary>
+    ///<summary> Request for terrain data and terrain status. See terrain protocol docs: https://mavlink.io/en/services/terrain.html </summary>
     public struct TERRAIN_REQUEST_MSG
     {
         public TERRAIN_REQUEST_MSG(ulong mask,int lat,int lon,ushort grid_spacing) 
@@ -8634,7 +11391,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=43)]
-    ///<summary> Terrain data sent from GCS. The lat/lon and grid_spacing must be the same as a lat/lon from a TERRAIN_REQUEST </summary>
+    ///<summary> Terrain data sent from GCS. The lat/lon and grid_spacing must be the same as a lat/lon from a TERRAIN_REQUEST. See terrain protocol docs: https://mavlink.io/en/services/terrain.html </summary>
     public struct TERRAIN_DATA_MSG
     {
         public TERRAIN_DATA_MSG(int lat,int lon,ushort grid_spacing,short[] data,byte gridbit) 
@@ -8673,7 +11430,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=8)]
-    ///<summary> Request that the vehicle report terrain height at the given location. Used by GCS to check if vehicle has all terrain data needed for a mission. </summary>
+    ///<summary> Request that the vehicle report terrain height at the given location (expected response is a TERRAIN_REPORT). Used by GCS to check if vehicle has all terrain data needed for a mission. </summary>
     public struct TERRAIN_CHECK_MSG
     {
         public TERRAIN_CHECK_MSG(int lat,int lon) 
@@ -8696,7 +11453,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=22)]
-    ///<summary> Response from a TERRAIN_CHECK request </summary>
+    ///<summary> Streamed from drone to report progress of terrain map download (initiated by TERRAIN_REQUEST), or sent as a response to a TERRAIN_CHECK request. See terrain protocol docs: https://mavlink.io/en/services/terrain.html </summary>
     public struct TERRAIN_REPORT_MSG
     {
         public TERRAIN_REPORT_MSG(int lat,int lon,float terrain_height,float current_height,ushort spacing,ushort pending,ushort loaded) 
@@ -8742,17 +11499,18 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=14)]
+    /// extensions_start 4
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=16)]
     ///<summary> Barometer readings for 2nd barometer </summary>
     public struct SCALED_PRESSURE2_MSG
     {
-        public SCALED_PRESSURE2_MSG(uint time_boot_ms,float press_abs,float press_diff,short temperature) 
+        public SCALED_PRESSURE2_MSG(uint time_boot_ms,float press_abs,float press_diff,short temperature,short temperature_press_diff) 
         {
               this.time_boot_ms = time_boot_ms;
               this.press_abs = press_abs;
               this.press_diff = press_diff;
               this.temperature = temperature;
+              this.temperature_press_diff = temperature_press_diff;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -8767,10 +11525,14 @@ public partial class MAVLink
         [Units("[hPa]")]
         [Description("Differential pressure")]
         public  float press_diff;
-            /// <summary>Temperature measurement  [cdegC] </summary>
+            /// <summary>Absolute pressure temperature  [cdegC] </summary>
         [Units("[cdegC]")]
-        [Description("Temperature measurement")]
+        [Description("Absolute pressure temperature")]
         public  short temperature;
+            /// <summary>Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.")]
+        public  short temperature_press_diff;
     
     };
 
@@ -8790,9 +11552,9 @@ public partial class MAVLink
               this.covariance = covariance;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)   </summary>
         [Units("")]
@@ -8834,9 +11596,9 @@ public partial class MAVLink
               this.target_component = target_component;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Actuator controls. Normed to -1..+1 where 0 is neutral position. Throttle for single rotation direction motors is 0..1, negative range for reverse direction. Standard mapping for attitude controls (group 0): (index 0-7): roll, pitch, yaw, throttle, flaps, spoilers, airbrakes, landing gear. Load a pass-through mixer to repurpose them as generic outputs.   </summary>
         [Units("")]
@@ -8871,9 +11633,9 @@ public partial class MAVLink
               this.group_mlx = group_mlx;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Actuator controls. Normed to -1..+1 where 0 is neutral position. Throttle for single rotation direction motors is 0..1, negative range for reverse direction. Standard mapping for attitude controls (group 0): (index 0-7): roll, pitch, yaw, throttle, flaps, spoilers, airbrakes, landing gear. Load a pass-through mixer to repurpose them as generic outputs.   </summary>
         [Units("")]
@@ -8904,9 +11666,9 @@ public partial class MAVLink
               this.bottom_clearance = bottom_clearance;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>This altitude measure is initialized on system boot and monotonic (it is never reset, but represents the local altitude change). The only guarantee on this field is that it will never be reset and is consistent within a flight. The recommended value for this field is the uncorrected barometric altitude at boot time. This altitude will also drift and vary between flights.  [m] </summary>
         [Units("[m]")]
@@ -8976,17 +11738,18 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=14)]
+    /// extensions_start 4
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=16)]
     ///<summary> Barometer readings for 3rd barometer </summary>
     public struct SCALED_PRESSURE3_MSG
     {
-        public SCALED_PRESSURE3_MSG(uint time_boot_ms,float press_abs,float press_diff,short temperature) 
+        public SCALED_PRESSURE3_MSG(uint time_boot_ms,float press_abs,float press_diff,short temperature,short temperature_press_diff) 
         {
               this.time_boot_ms = time_boot_ms;
               this.press_abs = press_abs;
               this.press_diff = press_diff;
               this.temperature = temperature;
+              this.temperature_press_diff = temperature_press_diff;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -9001,10 +11764,14 @@ public partial class MAVLink
         [Units("[hPa]")]
         [Description("Differential pressure")]
         public  float press_diff;
-            /// <summary>Temperature measurement  [cdegC] </summary>
+            /// <summary>Absolute pressure temperature  [cdegC] </summary>
         [Units("[cdegC]")]
-        [Description("Temperature measurement")]
+        [Description("Absolute pressure temperature")]
         public  short temperature;
+            /// <summary>Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Differential pressure temperature (0, if not available). Report values of 0 (or 1) as 1 cdegC.")]
+        public  short temperature_press_diff;
     
     };
 
@@ -9059,9 +11826,9 @@ public partial class MAVLink
         [Description("linear target acceleration (0,0,0) for unknown")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=3)]
 		public float[] acc;
-            /// <summary>(1 0 0 0 for unknown)   </summary>
+            /// <summary>(0 0 0 0 for unknown)   </summary>
         [Units("")]
-        [Description("(1 0 0 0 for unknown)")]
+        [Description("(0 0 0 0 for unknown)")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
 		public float[] attitude_q;
             /// <summary>(0 0 0 for unknown)   </summary>
@@ -9108,9 +11875,9 @@ public partial class MAVLink
               this.yaw_rate = yaw_rate;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>X acceleration in body frame  [m/s/s] </summary>
         [Units("[m/s/s]")]
@@ -9184,11 +11951,11 @@ public partial class MAVLink
 
     
     /// extensions_start 9
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=41)]
-    ///<summary> Battery information. Updates GCS with flight controller battery status. Use SMART_BATTERY_* messages instead for smart batteries. </summary>
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=54)]
+    ///<summary> Battery information. Updates GCS with flight controller battery status. Smart batteries also use this message, but may additionally send SMART_BATTERY_INFO. </summary>
     public struct BATTERY_STATUS_MSG
     {
-        public BATTERY_STATUS_MSG(int current_consumed,int energy_consumed,short temperature,ushort[] voltages,short current_battery,byte id,/*MAV_BATTERY_FUNCTION*/byte battery_function,/*MAV_BATTERY_TYPE*/byte type,sbyte battery_remaining,int time_remaining,/*MAV_BATTERY_CHARGE_STATE*/byte charge_state) 
+        public BATTERY_STATUS_MSG(int current_consumed,int energy_consumed,short temperature,ushort[] voltages,short current_battery,byte id,/*MAV_BATTERY_FUNCTION*/byte battery_function,/*MAV_BATTERY_TYPE*/byte type,sbyte battery_remaining,int time_remaining,/*MAV_BATTERY_CHARGE_STATE*/byte charge_state,ushort[] voltages_ext,/*MAV_BATTERY_MODE*/byte mode,/*MAV_BATTERY_FAULT*/uint fault_bitmask) 
         {
               this.current_consumed = current_consumed;
               this.energy_consumed = energy_consumed;
@@ -9201,6 +11968,9 @@ public partial class MAVLink
               this.battery_remaining = battery_remaining;
               this.time_remaining = time_remaining;
               this.charge_state = charge_state;
+              this.voltages_ext = voltages_ext;
+              this.mode = mode;
+              this.fault_bitmask = fault_bitmask;
             
         }
         /// <summary>Consumed charge, -1: autopilot does not provide consumption estimate  [mAh] </summary>
@@ -9215,9 +11985,9 @@ public partial class MAVLink
         [Units("[cdegC]")]
         [Description("Temperature of the battery. INT16_MAX for unknown temperature.")]
         public  short temperature;
-            /// <summary>Battery voltage of cells. Cells above the valid cell count for this battery should have the UINT16_MAX value.  [mV] </summary>
+            /// <summary>Battery voltage of cells 1 to 10 (see voltages_ext for cells 11-14). Cells in this field above the valid cell count for this battery should have the UINT16_MAX value. If individual cell voltages are unknown or not measured for this battery, then the overall battery voltage should be filled in cell 0, with all others set to UINT16_MAX. If the voltage of the battery is greater than (UINT16_MAX - 1), then cell 0 should be set to (UINT16_MAX - 1), and cell 1 to the remaining voltage. This can be extended to multiple cells if the total voltage is greater than 2 * (UINT16_MAX - 1).  [mV] </summary>
         [Units("[mV]")]
-        [Description("Battery voltage of cells. Cells above the valid cell count for this battery should have the UINT16_MAX value.")]
+        [Description("Battery voltage of cells 1 to 10 (see voltages_ext for cells 11-14). Cells in this field above the valid cell count for this battery should have the UINT16_MAX value. If individual cell voltages are unknown or not measured for this battery, then the overall battery voltage should be filled in cell 0, with all others set to UINT16_MAX. If the voltage of the battery is greater than (UINT16_MAX - 1), then cell 0 should be set to (UINT16_MAX - 1), and cell 1 to the remaining voltage. This can be extended to multiple cells if the total voltage is greater than 2 * (UINT16_MAX - 1).")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=10)]
 		public ushort[] voltages;
             /// <summary>Battery current, -1: autopilot does not measure the current  [cA] </summary>
@@ -9248,13 +12018,26 @@ public partial class MAVLink
         [Units("")]
         [Description("State for extent of discharge, provided by autopilot for warning or external reactions")]
         public  /*MAV_BATTERY_CHARGE_STATE*/byte charge_state;
+            /// <summary>Battery voltages for cells 11 to 14. Cells above the valid cell count for this battery should have a value of 0, where zero indicates not supported (note, this is different than for the voltages field and allows empty byte truncation). If the measured value is 0 then 1 should be sent instead.  [mV] </summary>
+        [Units("[mV]")]
+        [Description("Battery voltages for cells 11 to 14. Cells above the valid cell count for this battery should have a value of 0, where zero indicates not supported (note, this is different than for the voltages field and allows empty byte truncation). If the measured value is 0 then 1 should be sent instead.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public ushort[] voltages_ext;
+            /// <summary>Battery mode. Default (0) is that battery mode reporting is not supported or battery is in normal-use mode. MAV_BATTERY_MODE  </summary>
+        [Units("")]
+        [Description("Battery mode. Default (0) is that battery mode reporting is not supported or battery is in normal-use mode.")]
+        public  /*MAV_BATTERY_MODE*/byte mode;
+            /// <summary>Fault/health indications. These should be set when charge_state is MAV_BATTERY_CHARGE_STATE_FAILED or MAV_BATTERY_CHARGE_STATE_UNHEALTHY (if not, fault reporting is not supported). MAV_BATTERY_FAULT  bitmask</summary>
+        [Units("")]
+        [Description("Fault/health indications. These should be set when charge_state is MAV_BATTERY_CHARGE_STATE_FAILED or MAV_BATTERY_CHARGE_STATE_UNHEALTHY (if not, fault reporting is not supported).")]
+        public  /*MAV_BATTERY_FAULT*/uint fault_bitmask;
     
     };
 
     
     /// extensions_start 11
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=78)]
-    ///<summary> Version and capability of autopilot software </summary>
+    ///<summary> Version and capability of autopilot software. This should be emitted in response to a request with MAV_CMD_REQUEST_MESSAGE. </summary>
     public struct AUTOPILOT_VERSION_MSG
     {
         public AUTOPILOT_VERSION_MSG(/*MAV_PROTOCOL_CAPABILITY*/ulong capabilities,ulong uid,uint flight_sw_version,uint middleware_sw_version,uint os_sw_version,uint board_version,ushort vendor_id,ushort product_id,byte[] flight_custom_version,byte[] middleware_custom_version,byte[] os_custom_version,byte[] uid2) 
@@ -9293,9 +12076,9 @@ public partial class MAVLink
         [Units("")]
         [Description("Operating system version number")]
         public  uint os_sw_version;
-            /// <summary>HW / board version (last 8 bytes should be silicon ID, if any)   </summary>
+            /// <summary>HW / board version (last 8 bits should be silicon ID, if any). The first 16 bits of this field specify https://github.com/PX4/PX4-Bootloader/blob/master/board_types.txt   </summary>
         [Units("")]
-        [Description("HW / board version (last 8 bytes should be silicon ID, if any)")]
+        [Description("HW / board version (last 8 bits should be silicon ID, if any). The first 16 bits of this field specify https://github.com/PX4/PX4-Bootloader/blob/master/board_types.txt")]
         public  uint board_version;
             /// <summary>ID of the board vendor   </summary>
         [Units("")]
@@ -9352,9 +12135,9 @@ public partial class MAVLink
               this.position_valid = position_valid;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>X-axis angular offset of the target from the center of the image  [rad] </summary>
         [Units("[rad]")]
@@ -9413,6 +12196,250 @@ public partial class MAVLink
     };
 
     
+    /// extensions_start 4
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=9)]
+    ///<summary> Status of geo-fencing. Sent in extended status stream when fencing enabled. </summary>
+    public struct FENCE_STATUS_MSG
+    {
+        public FENCE_STATUS_MSG(uint breach_time,ushort breach_count,byte breach_status,/*FENCE_BREACH*/byte breach_type,/*FENCE_MITIGATE*/byte breach_mitigation) 
+        {
+              this.breach_time = breach_time;
+              this.breach_count = breach_count;
+              this.breach_status = breach_status;
+              this.breach_type = breach_type;
+              this.breach_mitigation = breach_mitigation;
+            
+        }
+        /// <summary>Time (since boot) of last breach.  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Time (since boot) of last breach.")]
+        public  uint breach_time;
+            /// <summary>Number of fence breaches.   </summary>
+        [Units("")]
+        [Description("Number of fence breaches.")]
+        public  ushort breach_count;
+            /// <summary>Breach status (0 if currently inside fence, 1 if outside).   </summary>
+        [Units("")]
+        [Description("Breach status (0 if currently inside fence, 1 if outside).")]
+        public  byte breach_status;
+            /// <summary>Last breach type. FENCE_BREACH  </summary>
+        [Units("")]
+        [Description("Last breach type.")]
+        public  /*FENCE_BREACH*/byte breach_type;
+            /// <summary>Active action to prevent fence breach FENCE_MITIGATE  </summary>
+        [Units("")]
+        [Description("Active action to prevent fence breach")]
+        public  /*FENCE_MITIGATE*/byte breach_mitigation;
+    
+    };
+
+    
+    /// extensions_start 14
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=54)]
+    ///<summary> Reports results of completed compass calibration. Sent until MAG_CAL_ACK received. </summary>
+    public struct MAG_CAL_REPORT_MSG
+    {
+        public MAG_CAL_REPORT_MSG(float fitness,float ofs_x,float ofs_y,float ofs_z,float diag_x,float diag_y,float diag_z,float offdiag_x,float offdiag_y,float offdiag_z,byte compass_id,byte cal_mask,/*MAG_CAL_STATUS*/byte cal_status,byte autosaved,float orientation_confidence,/*MAV_SENSOR_ORIENTATION*/byte old_orientation,/*MAV_SENSOR_ORIENTATION*/byte new_orientation,float scale_factor) 
+        {
+              this.fitness = fitness;
+              this.ofs_x = ofs_x;
+              this.ofs_y = ofs_y;
+              this.ofs_z = ofs_z;
+              this.diag_x = diag_x;
+              this.diag_y = diag_y;
+              this.diag_z = diag_z;
+              this.offdiag_x = offdiag_x;
+              this.offdiag_y = offdiag_y;
+              this.offdiag_z = offdiag_z;
+              this.compass_id = compass_id;
+              this.cal_mask = cal_mask;
+              this.cal_status = cal_status;
+              this.autosaved = autosaved;
+              this.orientation_confidence = orientation_confidence;
+              this.old_orientation = old_orientation;
+              this.new_orientation = new_orientation;
+              this.scale_factor = scale_factor;
+            
+        }
+        /// <summary>RMS milligauss residuals.  [mgauss] </summary>
+        [Units("[mgauss]")]
+        [Description("RMS milligauss residuals.")]
+        public  float fitness;
+            /// <summary>X offset.   </summary>
+        [Units("")]
+        [Description("X offset.")]
+        public  float ofs_x;
+            /// <summary>Y offset.   </summary>
+        [Units("")]
+        [Description("Y offset.")]
+        public  float ofs_y;
+            /// <summary>Z offset.   </summary>
+        [Units("")]
+        [Description("Z offset.")]
+        public  float ofs_z;
+            /// <summary>X diagonal (matrix 11).   </summary>
+        [Units("")]
+        [Description("X diagonal (matrix 11).")]
+        public  float diag_x;
+            /// <summary>Y diagonal (matrix 22).   </summary>
+        [Units("")]
+        [Description("Y diagonal (matrix 22).")]
+        public  float diag_y;
+            /// <summary>Z diagonal (matrix 33).   </summary>
+        [Units("")]
+        [Description("Z diagonal (matrix 33).")]
+        public  float diag_z;
+            /// <summary>X off-diagonal (matrix 12 and 21).   </summary>
+        [Units("")]
+        [Description("X off-diagonal (matrix 12 and 21).")]
+        public  float offdiag_x;
+            /// <summary>Y off-diagonal (matrix 13 and 31).   </summary>
+        [Units("")]
+        [Description("Y off-diagonal (matrix 13 and 31).")]
+        public  float offdiag_y;
+            /// <summary>Z off-diagonal (matrix 32 and 23).   </summary>
+        [Units("")]
+        [Description("Z off-diagonal (matrix 32 and 23).")]
+        public  float offdiag_z;
+            /// <summary>Compass being calibrated.   </summary>
+        [Units("")]
+        [Description("Compass being calibrated.")]
+        public  byte compass_id;
+            /// <summary>Bitmask of compasses being calibrated.   bitmask</summary>
+        [Units("")]
+        [Description("Bitmask of compasses being calibrated.")]
+        public  byte cal_mask;
+            /// <summary>Calibration Status. MAG_CAL_STATUS  </summary>
+        [Units("")]
+        [Description("Calibration Status.")]
+        public  /*MAG_CAL_STATUS*/byte cal_status;
+            /// <summary>0=requires a MAV_CMD_DO_ACCEPT_MAG_CAL, 1=saved to parameters.   </summary>
+        [Units("")]
+        [Description("0=requires a MAV_CMD_DO_ACCEPT_MAG_CAL, 1=saved to parameters.")]
+        public  byte autosaved;
+            /// <summary>Confidence in orientation (higher is better).   </summary>
+        [Units("")]
+        [Description("Confidence in orientation (higher is better).")]
+        public  float orientation_confidence;
+            /// <summary>orientation before calibration. MAV_SENSOR_ORIENTATION  </summary>
+        [Units("")]
+        [Description("orientation before calibration.")]
+        public  /*MAV_SENSOR_ORIENTATION*/byte old_orientation;
+            /// <summary>orientation after calibration. MAV_SENSOR_ORIENTATION  </summary>
+        [Units("")]
+        [Description("orientation after calibration.")]
+        public  /*MAV_SENSOR_ORIENTATION*/byte new_orientation;
+            /// <summary>field radius correction factor   </summary>
+        [Units("")]
+        [Description("field radius correction factor")]
+        public  float scale_factor;
+    
+    };
+
+    
+    /// extensions_start 17
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=69)]
+    ///<summary> EFI status output </summary>
+    public struct EFI_STATUS_MSG
+    {
+        public EFI_STATUS_MSG(float ecu_index,float rpm,float fuel_consumed,float fuel_flow,float engine_load,float throttle_position,float spark_dwell_time,float barometric_pressure,float intake_manifold_pressure,float intake_manifold_temperature,float cylinder_head_temperature,float ignition_timing,float injection_time,float exhaust_gas_temperature,float throttle_out,float pt_compensation,byte health,float ignition_voltage) 
+        {
+              this.ecu_index = ecu_index;
+              this.rpm = rpm;
+              this.fuel_consumed = fuel_consumed;
+              this.fuel_flow = fuel_flow;
+              this.engine_load = engine_load;
+              this.throttle_position = throttle_position;
+              this.spark_dwell_time = spark_dwell_time;
+              this.barometric_pressure = barometric_pressure;
+              this.intake_manifold_pressure = intake_manifold_pressure;
+              this.intake_manifold_temperature = intake_manifold_temperature;
+              this.cylinder_head_temperature = cylinder_head_temperature;
+              this.ignition_timing = ignition_timing;
+              this.injection_time = injection_time;
+              this.exhaust_gas_temperature = exhaust_gas_temperature;
+              this.throttle_out = throttle_out;
+              this.pt_compensation = pt_compensation;
+              this.health = health;
+              this.ignition_voltage = ignition_voltage;
+            
+        }
+        /// <summary>ECU index   </summary>
+        [Units("")]
+        [Description("ECU index")]
+        public  float ecu_index;
+            /// <summary>RPM   </summary>
+        [Units("")]
+        [Description("RPM")]
+        public  float rpm;
+            /// <summary>Fuel consumed  [cm^3] </summary>
+        [Units("[cm^3]")]
+        [Description("Fuel consumed")]
+        public  float fuel_consumed;
+            /// <summary>Fuel flow rate  [cm^3/min] </summary>
+        [Units("[cm^3/min]")]
+        [Description("Fuel flow rate")]
+        public  float fuel_flow;
+            /// <summary>Engine load  [%] </summary>
+        [Units("[%]")]
+        [Description("Engine load")]
+        public  float engine_load;
+            /// <summary>Throttle position  [%] </summary>
+        [Units("[%]")]
+        [Description("Throttle position")]
+        public  float throttle_position;
+            /// <summary>Spark dwell time  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Spark dwell time")]
+        public  float spark_dwell_time;
+            /// <summary>Barometric pressure  [kPa] </summary>
+        [Units("[kPa]")]
+        [Description("Barometric pressure")]
+        public  float barometric_pressure;
+            /// <summary>Intake manifold pressure(  [kPa] </summary>
+        [Units("[kPa]")]
+        [Description("Intake manifold pressure(")]
+        public  float intake_manifold_pressure;
+            /// <summary>Intake manifold temperature  [degC] </summary>
+        [Units("[degC]")]
+        [Description("Intake manifold temperature")]
+        public  float intake_manifold_temperature;
+            /// <summary>Cylinder head temperature  [degC] </summary>
+        [Units("[degC]")]
+        [Description("Cylinder head temperature")]
+        public  float cylinder_head_temperature;
+            /// <summary>Ignition timing (Crank angle degrees)  [deg] </summary>
+        [Units("[deg]")]
+        [Description("Ignition timing (Crank angle degrees)")]
+        public  float ignition_timing;
+            /// <summary>Injection time  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Injection time")]
+        public  float injection_time;
+            /// <summary>Exhaust gas temperature  [degC] </summary>
+        [Units("[degC]")]
+        [Description("Exhaust gas temperature")]
+        public  float exhaust_gas_temperature;
+            /// <summary>Output throttle  [%] </summary>
+        [Units("[%]")]
+        [Description("Output throttle")]
+        public  float throttle_out;
+            /// <summary>Pressure/temperature compensation   </summary>
+        [Units("")]
+        [Description("Pressure/temperature compensation")]
+        public  float pt_compensation;
+            /// <summary>EFI health status   </summary>
+        [Units("")]
+        [Description("EFI health status")]
+        public  byte health;
+            /// <summary>Supply voltage to EFI sparking system.  Zero in this value means 'unknown', so if the supply voltage really is zero volts use 0.0001 instead.  [V] </summary>
+        [Units("[V]")]
+        [Description("Supply voltage to EFI sparking system.  Zero in this value means 'unknown', so if the supply voltage really is zero volts use 0.0001 instead.")]
+        public  float ignition_voltage;
+    
+    };
+
+    
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=42)]
     ///<summary> Estimator status message including flags, innovation test ratios and estimated accuracies. The flags message is an integer bitmask containing information on which EKF outputs are valid. See the ESTIMATOR_STATUS_FLAGS enum definition for further information. The innovation test ratios show the magnitude of the sensor innovation divided by the innovation check threshold. Under normal operation the innovation test ratios should be below 0.5 with occasional values up to 1.0. Values greater than 1.0 should be rare under normal operation and indicate that a measurement has been rejected by the filter. The user should be notified if an innovation test ratio greater than 1.0 is recorded. Notifications for values in the range between 0.5 and 1.0 should be optional and controllable by the user. </summary>
@@ -9432,9 +12459,9 @@ public partial class MAVLink
               this.flags = flags;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Velocity innovation test ratio   </summary>
         [Units("")]
@@ -9478,7 +12505,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=40)]
-    ///<summary> Wind covariance estimate from vehicle. </summary>
+    ///<summary> Wind estimate from vehicle. Note that despite the name, this message does not actually contain any covariances but instead variability and accuracy fields in terms of standard deviation (1-STD). </summary>
     public struct WIND_COV_MSG
     {
         public WIND_COV_MSG(ulong time_usec,float wind_x,float wind_y,float wind_z,float var_horiz,float var_vert,float wind_alt,float horiz_accuracy,float vert_accuracy) 
@@ -9494,52 +12521,52 @@ public partial class MAVLink
               this.vert_accuracy = vert_accuracy;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
-            /// <summary>Wind in X (NED) direction  [m/s] </summary>
+            /// <summary>Wind in North (NED) direction (NAN if unknown)  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("Wind in X (NED) direction")]
+        [Description("Wind in North (NED) direction (NAN if unknown)")]
         public  float wind_x;
-            /// <summary>Wind in Y (NED) direction  [m/s] </summary>
+            /// <summary>Wind in East (NED) direction (NAN if unknown)  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("Wind in Y (NED) direction")]
+        [Description("Wind in East (NED) direction (NAN if unknown)")]
         public  float wind_y;
-            /// <summary>Wind in Z (NED) direction  [m/s] </summary>
+            /// <summary>Wind in down (NED) direction (NAN if unknown)  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("Wind in Z (NED) direction")]
+        [Description("Wind in down (NED) direction (NAN if unknown)")]
         public  float wind_z;
-            /// <summary>Variability of the wind in XY. RMS of a 1 Hz lowpassed wind estimate.  [m/s] </summary>
+            /// <summary>Variability of wind in XY, 1-STD estimated from a 1 Hz lowpassed wind estimate (NAN if unknown)  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("Variability of the wind in XY. RMS of a 1 Hz lowpassed wind estimate.")]
+        [Description("Variability of wind in XY, 1-STD estimated from a 1 Hz lowpassed wind estimate (NAN if unknown)")]
         public  float var_horiz;
-            /// <summary>Variability of the wind in Z. RMS of a 1 Hz lowpassed wind estimate.  [m/s] </summary>
+            /// <summary>Variability of wind in Z, 1-STD estimated from a 1 Hz lowpassed wind estimate (NAN if unknown)  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("Variability of the wind in Z. RMS of a 1 Hz lowpassed wind estimate.")]
+        [Description("Variability of wind in Z, 1-STD estimated from a 1 Hz lowpassed wind estimate (NAN if unknown)")]
         public  float var_vert;
-            /// <summary>Altitude (MSL) that this measurement was taken at  [m] </summary>
+            /// <summary>Altitude (MSL) that this measurement was taken at (NAN if unknown)  [m] </summary>
         [Units("[m]")]
-        [Description("Altitude (MSL) that this measurement was taken at")]
+        [Description("Altitude (MSL) that this measurement was taken at (NAN if unknown)")]
         public  float wind_alt;
-            /// <summary>Horizontal speed 1-STD accuracy  [m] </summary>
-        [Units("[m]")]
-        [Description("Horizontal speed 1-STD accuracy")]
+            /// <summary>Horizontal speed 1-STD accuracy (0 if unknown)  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("Horizontal speed 1-STD accuracy (0 if unknown)")]
         public  float horiz_accuracy;
-            /// <summary>Vertical speed 1-STD accuracy  [m] </summary>
-        [Units("[m]")]
-        [Description("Vertical speed 1-STD accuracy")]
+            /// <summary>Vertical speed 1-STD accuracy (0 if unknown)  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("Vertical speed 1-STD accuracy (0 if unknown)")]
         public  float vert_accuracy;
     
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=63)]
+    /// extensions_start 18
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=65)]
     ///<summary> GPS sensor input message.  This is a raw sensor value sent by the GPS. This is NOT the global position estimate of the system. </summary>
     public struct GPS_INPUT_MSG
     {
-        public GPS_INPUT_MSG(ulong time_usec,uint time_week_ms,int lat,int lon,float alt,float hdop,float vdop,float vn,float ve,float vd,float speed_accuracy,float horiz_accuracy,float vert_accuracy,/*GPS_INPUT_IGNORE_FLAGS*/ushort ignore_flags,ushort time_week,byte gps_id,byte fix_type,byte satellites_visible) 
+        public GPS_INPUT_MSG(ulong time_usec,uint time_week_ms,int lat,int lon,float alt,float hdop,float vdop,float vn,float ve,float vd,float speed_accuracy,float horiz_accuracy,float vert_accuracy,/*GPS_INPUT_IGNORE_FLAGS*/ushort ignore_flags,ushort time_week,byte gps_id,byte fix_type,byte satellites_visible,ushort yaw) 
         {
               this.time_usec = time_usec;
               this.time_week_ms = time_week_ms;
@@ -9559,11 +12586,12 @@ public partial class MAVLink
               this.gps_id = gps_id;
               this.fix_type = fix_type;
               this.satellites_visible = satellites_visible;
+              this.yaw = yaw;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>GPS time (from start of GPS week)  [ms] </summary>
         [Units("[ms]")]
@@ -9581,25 +12609,25 @@ public partial class MAVLink
         [Units("[m]")]
         [Description("Altitude (MSL). Positive for up.")]
         public  float alt;
-            /// <summary>GPS HDOP horizontal dilution of position  [m] </summary>
-        [Units("[m]")]
-        [Description("GPS HDOP horizontal dilution of position")]
+            /// <summary>GPS HDOP horizontal dilution of position (unitless). If unknown, set to: UINT16_MAX   </summary>
+        [Units("")]
+        [Description("GPS HDOP horizontal dilution of position (unitless). If unknown, set to: UINT16_MAX")]
         public  float hdop;
-            /// <summary>GPS VDOP vertical dilution of position  [m] </summary>
-        [Units("[m]")]
-        [Description("GPS VDOP vertical dilution of position")]
+            /// <summary>GPS VDOP vertical dilution of position (unitless). If unknown, set to: UINT16_MAX   </summary>
+        [Units("")]
+        [Description("GPS VDOP vertical dilution of position (unitless). If unknown, set to: UINT16_MAX")]
         public  float vdop;
-            /// <summary>GPS velocity in NORTH direction in earth-fixed NED frame  [m/s] </summary>
+            /// <summary>GPS velocity in north direction in earth-fixed NED frame  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("GPS velocity in NORTH direction in earth-fixed NED frame")]
+        [Description("GPS velocity in north direction in earth-fixed NED frame")]
         public  float vn;
-            /// <summary>GPS velocity in EAST direction in earth-fixed NED frame  [m/s] </summary>
+            /// <summary>GPS velocity in east direction in earth-fixed NED frame  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("GPS velocity in EAST direction in earth-fixed NED frame")]
+        [Description("GPS velocity in east direction in earth-fixed NED frame")]
         public  float ve;
-            /// <summary>GPS velocity in DOWN direction in earth-fixed NED frame  [m/s] </summary>
+            /// <summary>GPS velocity in down direction in earth-fixed NED frame  [m/s] </summary>
         [Units("[m/s]")]
-        [Description("GPS velocity in DOWN direction in earth-fixed NED frame")]
+        [Description("GPS velocity in down direction in earth-fixed NED frame")]
         public  float vd;
             /// <summary>GPS speed accuracy  [m/s] </summary>
         [Units("[m/s]")]
@@ -9633,6 +12661,10 @@ public partial class MAVLink
         [Units("")]
         [Description("Number of satellites visible.")]
         public  byte satellites_visible;
+            /// <summary>Yaw of vehicle relative to Earth's North, zero means not available, use 36000 for north  [cdeg] </summary>
+        [Units("[cdeg]")]
+        [Description("Yaw of vehicle relative to Earth's North, zero means not available, use 36000 for north")]
+        public  ushort yaw;
     
     };
 
@@ -9767,9 +12799,9 @@ public partial class MAVLink
         [Units("[m/s]")]
         [Description("climb rate")]
         public  sbyte climb_rate;
-            /// <summary>Number of satellites visible. If unknown, set to 255   </summary>
+            /// <summary>Number of satellites visible. If unknown, set to UINT8_MAX   </summary>
         [Units("")]
-        [Description("Number of satellites visible. If unknown, set to 255")]
+        [Description("Number of satellites visible. If unknown, set to UINT8_MAX")]
         public  byte gps_nsat;
             /// <summary>GPS Fix type. GPS_FIX_TYPE  </summary>
         [Units("")]
@@ -9875,9 +12907,9 @@ public partial class MAVLink
         [Units("")]
         [Description("Type of the MAV (quadrotor, helicopter, etc.)")]
         public  /*MAV_TYPE*/byte type;
-            /// <summary>Autopilot type / class. MAV_AUTOPILOT  </summary>
+            /// <summary>Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight controllers. MAV_AUTOPILOT  </summary>
         [Units("")]
-        [Description("Autopilot type / class.")]
+        [Description("Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight controllers.")]
         public  /*MAV_AUTOPILOT*/byte autopilot;
             /// <summary>Heading  [deg/2] </summary>
         [Units("[deg/2]")]
@@ -9927,9 +12959,9 @@ public partial class MAVLink
         [Units("[dm/s]")]
         [Description("Maximum climb rate magnitude since last message")]
         public  sbyte climb_rate;
-            /// <summary>Battery (percentage, -1 for DNU)  [%] </summary>
+            /// <summary>Battery level (-1 if field not provided).  [%] </summary>
         [Units("[%]")]
-        [Description("Battery (percentage, -1 for DNU)")]
+        [Description("Battery level (-1 if field not provided).")]
         public  sbyte battery;
             /// <summary>Field for custom payload.   </summary>
         [Units("")]
@@ -9963,9 +12995,9 @@ public partial class MAVLink
               this.clipping_2 = clipping_2;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Vibration levels on X-axis   </summary>
         [Units("")]
@@ -9997,7 +13029,7 @@ public partial class MAVLink
     
     /// extensions_start 10
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=60)]
-    ///<summary> This message can be requested by sending the MAV_CMD_GET_HOME_POSITION command. The position the system will return to and land on. The position is set automatically by the system during the takeoff in case it was not explicitly set by the operator before or after. The position the system will return to and land on. The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector. </summary>
+    ///<summary>  	Contains the home position. 	The home position is the default position that the system will return to and land on. 	The position must be set automatically by the system during the takeoff, and may also be explicitly set using MAV_CMD_DO_SET_HOME. 	The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. 	Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. 	The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector.         Note: this message can be requested by sending the MAV_CMD_REQUEST_MESSAGE with param1=242 (or the deprecated MAV_CMD_GET_HOME_POSITION command).        </summary>
     public struct HOME_POSITION_MSG
     {
         public HOME_POSITION_MSG(int latitude,int longitude,int altitude,float x,float y,float z,float[] q,float approach_x,float approach_y,float approach_z,ulong time_usec) 
@@ -10056,9 +13088,9 @@ public partial class MAVLink
         [Units("[m]")]
         [Description("Local Z position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.")]
         public  float approach_z;
-            /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+            /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
     
     };
@@ -10066,7 +13098,7 @@ public partial class MAVLink
     
     /// extensions_start 11
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=61)]
-    ///<summary> The position the system will return to and land on. The position is set automatically by the system during the takeoff in case it was not explicitly set by the operator before or after. The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector. </summary>
+    ///<summary>          Sets the home position. 	The home position is the default position that the system will return to and land on.         The position is set automatically by the system during the takeoff (and may also be set using this message).         The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface.         Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach.         The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector.         Note: the current home position may be emitted in a HOME_POSITION message on request (using MAV_CMD_REQUEST_MESSAGE with param1=242).        </summary>
     public struct SET_HOME_POSITION_MSG
     {
         public SET_HOME_POSITION_MSG(int latitude,int longitude,int altitude,float x,float y,float z,float[] q,float approach_x,float approach_y,float approach_z,byte target_system,ulong time_usec) 
@@ -10130,9 +13162,9 @@ public partial class MAVLink
         [Units("")]
         [Description("System ID.")]
         public  byte target_system;
-            /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+            /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
     
     };
@@ -10140,7 +13172,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=6)]
-    ///<summary> The interval between messages for a particular MAVLink message ID. This interface replaces DATA_STREAM </summary>
+    ///<summary>          The interval between messages for a particular MAVLink message ID.         This message is sent in response to the MAV_CMD_REQUEST_MESSAGE command with param1=244 (this message) and param2=message_id (the id of the message for which the interval is required). 	It may also be sent in response to MAV_CMD_GET_MESSAGE_INTERVAL. 	This interface replaces DATA_STREAM. </summary>
     public struct MESSAGE_INTERVAL_MSG
     {
         public MESSAGE_INTERVAL_MSG(int interval_us,ushort message_id) 
@@ -10325,9 +13357,9 @@ public partial class MAVLink
               this.payload = payload;
             
         }
-        /// <summary>A code that identifies the software component that understands this message (analogous to USB device classes or mime type strings).  If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/extension-message-ids.xml.  Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.   </summary>
+        /// <summary>A code that identifies the software component that understands this message (analogous to USB device classes or mime type strings). If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/definition_files/extension_message_ids.xml. Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.   </summary>
         [Units("")]
-        [Description("A code that identifies the software component that understands this message (analogous to USB device classes or mime type strings).  If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/extension-message-ids.xml.  Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.")]
+        [Description("A code that identifies the software component that understands this message (analogous to USB device classes or mime type strings). If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/definition_files/extension_message_ids.xml. Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.")]
         public  ushort message_type;
             /// <summary>Network ID (0 for broadcast)   </summary>
         [Units("")]
@@ -10341,47 +13373,10 @@ public partial class MAVLink
         [Units("")]
         [Description("Component ID (0 for broadcast)")]
         public  byte target_component;
-            /// <summary>Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.   </summary>
+            /// <summary>Variable length payload. The length must be encoded in the payload as part of the message_type protocol, e.g. by including the length as payload data, or by terminating the payload data with a non-zero marker. This is required in order to reconstruct zero-terminated payloads that are (or otherwise would be) trimmed by MAVLink 2 empty-byte truncation. The entire content of the payload block is opaque unless you understand the encoding message_type. The particular encoding used can be extension specific and might not always be documented as part of the MAVLink specification.   </summary>
         [Units("")]
-        [Description("Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.")]
+        [Description("Variable length payload. The length must be encoded in the payload as part of the message_type protocol, e.g. by including the length as payload data, or by terminating the payload data with a non-zero marker. This is required in order to reconstruct zero-terminated payloads that are (or otherwise would be) trimmed by MAVLink 2 empty-byte truncation. The entire content of the payload block is opaque unless you understand the encoding message_type. The particular encoding used can be extension specific and might not always be documented as part of the MAVLink specification.")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=249)]
-		public byte[] payload;
-    
-    };
-
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=133)]
-    ///<summary> Message for transporting "arbitrary" variable-length data from one component to another (broadcast is not forbidden, but discouraged) </summary>
-    public struct TUNNEL_MSG {
-        public TUNNEL_MSG(/*MAV_TUNNEL_PAYLOAD_TYPE*/ushort payload_type,byte target_system,byte target_component,byte payload_length,byte[] payload) 
-        {
-              this.payload_type = payload_type;
-              this.target_system = target_system;
-              this.target_component = target_component;
-              this.payload_length = payload_length;
-              this.payload = payload;
-            
-        }
-        /// <summary>A code that identifies the content of the payload (0 for unknown, which is the default). If this code is less than 32768, it is a 'registered' payload type and the corresponding code should be added to the MAV_TUNNEL_PAYLOAD_TYPE enum. Software creators can register blocks of types as needed. Codes greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase. MAV_TUNNEL_PAYLOAD_TYPE  </summary>
-        [Units("")]
-        [Description("A code that identifies the content of the payload (0 for unknown, which is the default). If this code is less than 32768, it is a 'registered' payload type and the corresponding code should be added to the MAV_TUNNEL_PAYLOAD_TYPE enum. Software creators can register blocks of types as needed. Codes greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.")]
-        public  /*MAV_TUNNEL_PAYLOAD_TYPE*/ushort payload_type;
-            /// <summary>System ID (can be 0 for broadcast, but this is discouraged)   </summary>
-        [Units("")]
-        [Description("System ID (can be 0 for broadcast, but this is discouraged)")]
-        public  byte target_system;
-            /// <summary>Component ID (can be 0 for broadcast, but this is discouraged)   </summary>
-        [Units("")]
-        [Description("Component ID (can be 0 for broadcast, but this is discouraged)")]
-        public  byte target_component;
-            /// <summary>Length of the data transported in payload   </summary>
-        [Units("")]
-        [Description("Length of the data transported in payload")]
-        public  byte payload_length;
-            /// <summary>Variable length payload. The payload length is defined by payload_length. The entire content of this block is opaque unless you understand the encoding specified by payload_type.   </summary>
-        [Units("")]
-        [Description("Variable length payload. The payload length is defined by payload_length. The entire content of this block is opaque unless you understand the encoding specified by payload_type.")]
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=128)]
 		public byte[] payload;
     
     };
@@ -10435,9 +13430,9 @@ public partial class MAVLink
               this.name = name;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>x   </summary>
         [Units("")]
@@ -10518,15 +13513,17 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=51)]
+    /// extensions_start 2
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=54)]
     ///<summary> Status text message. These messages are printed in yellow in the COMM console of QGroundControl. WARNING: They consume quite some bandwidth, so use only for important status and error messages. If implemented wisely, these messages are buffered on the MCU and sent only at a limited rate (e.g. 10 Hz). </summary>
     public struct STATUSTEXT_MSG
     {
-        public STATUSTEXT_MSG(/*MAV_SEVERITY*/byte severity,byte[] text) 
+        public STATUSTEXT_MSG(/*MAV_SEVERITY*/byte severity,byte[] text,ushort id,byte chunk_seq) 
         {
               this.severity = severity;
               this.text = text;
+              this.id = id;
+              this.chunk_seq = chunk_seq;
             
         }
         /// <summary>Severity of status. Relies on the definitions within RFC-5424. MAV_SEVERITY  </summary>
@@ -10538,6 +13535,14 @@ public partial class MAVLink
         [Description("Status text message, without null termination character")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=50)]
 		public byte[] text;
+            /// <summary>Unique (opaque) identifier for this statustext message.  May be used to reassemble a logical long-statustext message from a sequence of chunks.  A value of zero indicates this is the only chunk in the sequence and the message can be emitted immediately.   </summary>
+        [Units("")]
+        [Description("Unique (opaque) identifier for this statustext message.  May be used to reassemble a logical long-statustext message from a sequence of chunks.  A value of zero indicates this is the only chunk in the sequence and the message can be emitted immediately.")]
+        public  ushort id;
+            /// <summary>This chunk's sequence number; indexing is from zero.  Any null character in the text field is taken to mean this was the last chunk.   </summary>
+        [Units("")]
+        [Description("This chunk's sequence number; indexing is from zero.  Any null character in the text field is taken to mean this was the last chunk.")]
+        public  byte chunk_seq;
     
     };
 
@@ -10634,7 +13639,7 @@ public partial class MAVLink
     
     /// extensions_start 3
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=232)]
-    ///<summary> Control vehicle tone generation (buzzer) </summary>
+    ///<summary> Control vehicle tone generation (buzzer). </summary>
     public struct PLAY_TUNE_MSG
     {
         public PLAY_TUNE_MSG(byte target_system,byte target_component,byte[] tune,byte[] tune2) 
@@ -10669,7 +13674,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=235)]
-    ///<summary> Information about a camera </summary>
+    ///<summary> Information about a camera. Can be requested with a MAV_CMD_REQUEST_MESSAGE command. </summary>
     public struct CAMERA_INFORMATION_MSG
     {
         public CAMERA_INFORMATION_MSG(uint time_boot_ms,uint firmware_version,float focal_length,float sensor_size_h,float sensor_size_v,/*CAMERA_CAP_FLAGS*/uint flags,ushort resolution_h,ushort resolution_v,ushort cam_definition_version,byte[] vendor_name,byte[] model_name,byte lens_id,byte[] cam_definition_uri) 
@@ -10693,9 +13698,9 @@ public partial class MAVLink
         [Units("[ms]")]
         [Description("Timestamp (time since system boot).")]
         public  uint time_boot_ms;
-            /// <summary>Version of the camera firmware (v << 24 & 0xff = Dev, v << 16 & 0xff = Patch, v << 8 & 0xff = Minor, v & 0xff = Major)   </summary>
+            /// <summary>Version of the camera firmware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor & 0xff) << 8 | (Major & 0xff)   </summary>
         [Units("")]
-        [Description("Version of the camera firmware (v << 24 & 0xff = Dev, v << 16 & 0xff = Patch, v << 8 & 0xff = Minor, v & 0xff = Major)")]
+        [Description("Version of the camera firmware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor & 0xff) << 8 | (Major & 0xff)")]
         public  uint firmware_version;
             /// <summary>Focal length  [mm] </summary>
         [Units("[mm]")]
@@ -10709,7 +13714,7 @@ public partial class MAVLink
         [Units("[mm]")]
         [Description("Image sensor size vertical")]
         public  float sensor_size_v;
-            /// <summary>Bitmap of camera capability flags. CAMERA_CAP_FLAGS  </summary>
+            /// <summary>Bitmap of camera capability flags. CAMERA_CAP_FLAGS  bitmask</summary>
         [Units("")]
         [Description("Bitmap of camera capability flags.")]
         public  /*CAMERA_CAP_FLAGS*/uint flags;
@@ -10739,9 +13744,9 @@ public partial class MAVLink
         [Units("")]
         [Description("Reserved for a lens ID")]
         public  byte lens_id;
-            /// <summary>Camera definition URI (if any, otherwise only basic functions will be available).   </summary>
+            /// <summary>Camera definition URI (if any, otherwise only basic functions will be available). HTTP- (http://) and MAVLink FTP- (mavlinkftp://) formatted URIs are allowed (and both must be supported by any GCS that implements the Camera Protocol). The definition file may be xz compressed, which will be indicated by the file extension .xml.xz (a GCS that implements the protocol must support decompressing the file). The string needs to be zero terminated.   </summary>
         [Units("")]
-        [Description("Camera definition URI (if any, otherwise only basic functions will be available).")]
+        [Description("Camera definition URI (if any, otherwise only basic functions will be available). HTTP- (http://) and MAVLink FTP- (mavlinkftp://) formatted URIs are allowed (and both must be supported by any GCS that implements the Camera Protocol). The definition file may be xz compressed, which will be indicated by the file extension .xml.xz (a GCS that implements the protocol must support decompressing the file). The string needs to be zero terminated.")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=140)]
 		public byte[] cam_definition_uri;
     
@@ -10750,7 +13755,7 @@ public partial class MAVLink
     
     /// extensions_start 2
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=13)]
-    ///<summary> Settings of a camera, can be requested using MAV_CMD_REQUEST_CAMERA_SETTINGS. </summary>
+    ///<summary> Settings of a camera. Can be requested with a MAV_CMD_REQUEST_MESSAGE command. </summary>
     public struct CAMERA_SETTINGS_MSG
     {
         public CAMERA_SETTINGS_MSG(uint time_boot_ms,/*CAMERA_MODE*/byte mode_id,float zoomLevel,float focusLevel) 
@@ -10781,12 +13786,12 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=27)]
-    ///<summary> Information about a storage medium. This message is sent in response to a request and whenever the status of the storage changes (STORAGE_STATUS). </summary>
+    /// extensions_start 9
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=61)]
+    ///<summary> Information about a storage medium. This message is sent in response to a request with MAV_CMD_REQUEST_MESSAGE and whenever the status of the storage changes (STORAGE_STATUS). Use MAV_CMD_REQUEST_MESSAGE.param2 to indicate the index/id of requested storage: 0 for all, 1 for first, 2 for second, etc. </summary>
     public struct STORAGE_INFORMATION_MSG
     {
-        public STORAGE_INFORMATION_MSG(uint time_boot_ms,float total_capacity,float used_capacity,float available_capacity,float read_speed,float write_speed,byte storage_id,byte storage_count,/*STORAGE_STATUS*/byte status) 
+        public STORAGE_INFORMATION_MSG(uint time_boot_ms,float total_capacity,float used_capacity,float available_capacity,float read_speed,float write_speed,byte storage_id,byte storage_count,/*STORAGE_STATUS*/byte status,/*STORAGE_TYPE*/byte type,byte[] name,/*STORAGE_USAGE_FLAG*/byte storage_usage) 
         {
               this.time_boot_ms = time_boot_ms;
               this.total_capacity = total_capacity;
@@ -10797,6 +13802,9 @@ public partial class MAVLink
               this.storage_id = storage_id;
               this.storage_count = storage_count;
               this.status = status;
+              this.type = type;
+              this.name = name;
+              this.storage_usage = storage_usage;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -10835,16 +13843,29 @@ public partial class MAVLink
         [Units("")]
         [Description("Status of storage")]
         public  /*STORAGE_STATUS*/byte status;
+            /// <summary>Type of storage STORAGE_TYPE  </summary>
+        [Units("")]
+        [Description("Type of storage")]
+        public  /*STORAGE_TYPE*/byte type;
+            /// <summary>Textual storage name to be used in UI (microSD 1, Internal Memory, etc.) This is a NULL terminated string. If it is exactly 32 characters long, add a terminating NULL. If this string is empty, the generic type is shown to the user.   </summary>
+        [Units("")]
+        [Description("Textual storage name to be used in UI (microSD 1, Internal Memory, etc.) This is a NULL terminated string. If it is exactly 32 characters long, add a terminating NULL. If this string is empty, the generic type is shown to the user.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=32)]
+		public byte[] name;
+            /// <summary>Flags indicating whether this instance is preferred storage for photos, videos, etc.         Note: Implementations should initially set the flags on the system-default storage id used for saving media (if possible/supported).         This setting can then be overridden using MAV_CMD_SET_STORAGE_USAGE.         If the media usage flags are not set, a GCS may assume storage ID 1 is the default storage for all media types. STORAGE_USAGE_FLAG  </summary>
+        [Units("")]
+        [Description("Flags indicating whether this instance is preferred storage for photos, videos, etc.         Note: Implementations should initially set the flags on the system-default storage id used for saving media (if possible/supported).         This setting can then be overridden using MAV_CMD_SET_STORAGE_USAGE.         If the media usage flags are not set, a GCS may assume storage ID 1 is the default storage for all media types.")]
+        public  /*STORAGE_USAGE_FLAG*/byte storage_usage;
     
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=18)]
-    ///<summary> Information about the status of a capture. </summary>
+    /// extensions_start 6
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=22)]
+    ///<summary> Information about the status of a capture. Can be requested with a MAV_CMD_REQUEST_MESSAGE command. </summary>
     public struct CAMERA_CAPTURE_STATUS_MSG
     {
-        public CAMERA_CAPTURE_STATUS_MSG(uint time_boot_ms,float image_interval,uint recording_time_ms,float available_capacity,byte image_status,byte video_status) 
+        public CAMERA_CAPTURE_STATUS_MSG(uint time_boot_ms,float image_interval,uint recording_time_ms,float available_capacity,byte image_status,byte video_status,int image_count) 
         {
               this.time_boot_ms = time_boot_ms;
               this.image_interval = image_interval;
@@ -10852,6 +13873,7 @@ public partial class MAVLink
               this.available_capacity = available_capacity;
               this.image_status = image_status;
               this.video_status = video_status;
+              this.image_count = image_count;
             
         }
         /// <summary>Timestamp (time since system boot).  [ms] </summary>
@@ -10862,9 +13884,9 @@ public partial class MAVLink
         [Units("[s]")]
         [Description("Image capture interval")]
         public  float image_interval;
-            /// <summary>Time since recording started  [ms] </summary>
+            /// <summary>Elapsed time since recording started (0: Not supported/available). A GCS should compute recording time and use non-zero values of this field to correct any discrepancy.  [ms] </summary>
         [Units("[ms]")]
-        [Description("Time since recording started")]
+        [Description("Elapsed time since recording started (0: Not supported/available). A GCS should compute recording time and use non-zero values of this field to correct any discrepancy.")]
         public  uint recording_time_ms;
             /// <summary>Available storage capacity.  [MiB] </summary>
         [Units("[MiB]")]
@@ -10878,13 +13900,17 @@ public partial class MAVLink
         [Units("")]
         [Description("Current status of video capturing (0: idle, 1: capture in progress)")]
         public  byte video_status;
+            /// <summary>Total number of images captured ('forever', or until reset using MAV_CMD_STORAGE_FORMAT).   </summary>
+        [Units("")]
+        [Description("Total number of images captured ('forever', or until reset using MAV_CMD_STORAGE_FORMAT).")]
+        public  int image_count;
     
     };
 
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=255)]
-    ///<summary> Information about a captured image </summary>
+    ///<summary> Information about a captured image. This is emitted every time a message is captured.         MAV_CMD_REQUEST_MESSAGE can be used to (re)request this message for a specific sequence number or range of sequence numbers:         MAV_CMD_REQUEST_MESSAGE.param2 indicates the sequence number the first image to send, or set to -1 to send the message for all sequence numbers.         MAV_CMD_REQUEST_MESSAGE.param3 is used to specify a range of messages to send:         set to 0 (default) to send just the the message for the sequence number in param 2,         set to -1 to send the message for the sequence number in param 2 and all the following sequence numbers,          set to the sequence number of the final message in the range. </summary>
     public struct CAMERA_IMAGE_CAPTURED_MSG
     {
         public CAMERA_IMAGE_CAPTURED_MSG(ulong time_utc,uint time_boot_ms,int lat,int lon,int alt,int relative_alt,float[] q,int image_index,byte camera_id,sbyte capture_result,byte[] file_url) 
@@ -10926,18 +13952,18 @@ public partial class MAVLink
         [Units("[mm]")]
         [Description("Altitude above ground")]
         public  int relative_alt;
-            /// <summary>Quaternion of camera orientation (w, x, y, z order, zero-rotation is 0, 0, 0, 0)   </summary>
+            /// <summary>Quaternion of camera orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)   </summary>
         [Units("")]
-        [Description("Quaternion of camera orientation (w, x, y, z order, zero-rotation is 0, 0, 0, 0)")]
+        [Description("Quaternion of camera orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
 		public float[] q;
-            /// <summary>Zero based index of this image (image count since armed -1)   </summary>
+            /// <summary>Zero based index of this image (i.e. a new image will have index CAMERA_CAPTURE_STATUS.image count -1)   </summary>
         [Units("")]
-        [Description("Zero based index of this image (image count since armed -1)")]
+        [Description("Zero based index of this image (i.e. a new image will have index CAMERA_CAPTURE_STATUS.image count -1)")]
         public  int image_index;
-            /// <summary>Camera ID (1 for first, 2 for second, etc.)   </summary>
+            /// <summary>Deprecated/unused. Component IDs are used to differentiate multiple cameras.   </summary>
         [Units("")]
-        [Description("Camera ID (1 for first, 2 for second, etc.)")]
+        [Description("Deprecated/unused. Component IDs are used to differentiate multiple cameras.")]
         public  byte camera_id;
             /// <summary>Boolean indicating success (1) or failure (0) while capturing this image.   </summary>
         [Units("")]
@@ -10954,7 +13980,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=28)]
-    ///<summary> Information about flight since last arming. </summary>
+    ///<summary> Information about flight since last arming.         This can be requested using MAV_CMD_REQUEST_MESSAGE.        </summary>
     public struct FLIGHT_INFORMATION_MSG
     {
         public FLIGHT_INFORMATION_MSG(ulong arming_time_utc,ulong takeoff_time_utc,ulong flight_uuid,uint time_boot_ms) 
@@ -11011,13 +14037,13 @@ public partial class MAVLink
         [Units("[deg]")]
         [Description("Pitch in global frame (set to NaN for invalid).")]
         public  float pitch;
-            /// <summary>Yaw relative to vehicle(set to NaN for invalid).  [deg] </summary>
+            /// <summary>Yaw relative to vehicle (set to NaN for invalid).  [deg] </summary>
         [Units("[deg]")]
-        [Description("Yaw relative to vehicle(set to NaN for invalid).")]
+        [Description("Yaw relative to vehicle (set to NaN for invalid).")]
         public  float yaw;
-            /// <summary>Yaw in absolute frame, North is 0 (set to NaN for invalid).  [deg] </summary>
+            /// <summary>Yaw in absolute frame relative to Earth's North, north is 0 (set to NaN for invalid).  [deg] </summary>
         [Units("[deg]")]
-        [Description("Yaw in absolute frame, North is 0 (set to NaN for invalid).")]
+        [Description("Yaw in absolute frame relative to Earth's North, north is 0 (set to NaN for invalid).")]
         public  float yaw_absolute;
     
     };
@@ -11054,9 +14080,9 @@ public partial class MAVLink
         [Units("[bytes]")]
         [Description("data length")]
         public  byte length;
-            /// <summary>offset into data where first message starts. This can be used for recovery, when a previous message got lost (set to 255 if no start exists).  [bytes] </summary>
+            /// <summary>offset into data where first message starts. This can be used for recovery, when a previous message got lost (set to UINT8_MAX if no start exists).  [bytes] </summary>
         [Units("[bytes]")]
-        [Description("offset into data where first message starts. This can be used for recovery, when a previous message got lost (set to 255 if no start exists).")]
+        [Description("offset into data where first message starts. This can be used for recovery, when a previous message got lost (set to UINT8_MAX if no start exists).")]
         public  byte first_message_offset;
             /// <summary>logged data   </summary>
         [Units("")]
@@ -11098,9 +14124,9 @@ public partial class MAVLink
         [Units("[bytes]")]
         [Description("data length")]
         public  byte length;
-            /// <summary>offset into data where first message starts. This can be used for recovery, when a previous message got lost (set to 255 if no start exists).  [bytes] </summary>
+            /// <summary>offset into data where first message starts. This can be used for recovery, when a previous message got lost (set to UINT8_MAX if no start exists).  [bytes] </summary>
         [Units("[bytes]")]
-        [Description("offset into data where first message starts. This can be used for recovery, when a previous message got lost (set to 255 if no start exists).")]
+        [Description("offset into data where first message starts. This can be used for recovery, when a previous message got lost (set to UINT8_MAX if no start exists).")]
         public  byte first_message_offset;
             /// <summary>logged data   </summary>
         [Units("")]
@@ -11141,7 +14167,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=213)]
-    ///<summary> Information about video stream </summary>
+    ///<summary> Information about video stream. It may be requested using MAV_CMD_REQUEST_MESSAGE, where param2 indicates the video stream id: 0 for all streams, 1 for first, 2 for second, etc. </summary>
     public struct VIDEO_STREAM_INFORMATION_MSG
     {
         public VIDEO_STREAM_INFORMATION_MSG(float framerate,uint bitrate,/*VIDEO_STREAM_STATUS_FLAGS*/ushort flags,ushort resolution_h,ushort resolution_v,ushort rotation,ushort hfov,byte stream_id,byte count,/*VIDEO_STREAM_TYPE*/byte type,byte[] name,byte[] uri) 
@@ -11216,7 +14242,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=19)]
-    ///<summary> Information about the status of a video stream. </summary>
+    ///<summary> Information about the status of a video stream. It may be requested using MAV_CMD_REQUEST_MESSAGE. </summary>
     public struct VIDEO_STREAM_STATUS_MSG
     {
         public VIDEO_STREAM_STATUS_MSG(float framerate,uint bitrate,/*VIDEO_STREAM_STATUS_FLAGS*/ushort flags,ushort resolution_h,ushort resolution_v,ushort rotation,ushort hfov,byte stream_id) 
@@ -11268,66 +14294,982 @@ public partial class MAVLink
 
     
     /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=96)]
-    ///<summary> Configure AP SSID and Password. </summary>
-    public struct WIFI_CONFIG_AP_MSG
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=52)]
+    ///<summary> Information about the field of view of a camera. Can be requested with a MAV_CMD_REQUEST_MESSAGE command. </summary>
+    public struct CAMERA_FOV_STATUS_MSG
     {
-        public WIFI_CONFIG_AP_MSG(byte[] ssid,byte[] password) 
+        public CAMERA_FOV_STATUS_MSG(uint time_boot_ms,int lat_camera,int lon_camera,int alt_camera,int lat_image,int lon_image,int alt_image,float[] q,float hfov,float vfov) 
         {
-              this.ssid = ssid;
-              this.password = password;
+              this.time_boot_ms = time_boot_ms;
+              this.lat_camera = lat_camera;
+              this.lon_camera = lon_camera;
+              this.alt_camera = alt_camera;
+              this.lat_image = lat_image;
+              this.lon_image = lon_image;
+              this.alt_image = alt_image;
+              this.q = q;
+              this.hfov = hfov;
+              this.vfov = vfov;
             
         }
-        /// <summary>Name of Wi-Fi network (SSID). Leave it blank to leave it unchanged.   </summary>
+        /// <summary>Timestamp (time since system boot).  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Timestamp (time since system boot).")]
+        public  uint time_boot_ms;
+            /// <summary>Latitude of camera (INT32_MAX if unknown).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Latitude of camera (INT32_MAX if unknown).")]
+        public  int lat_camera;
+            /// <summary>Longitude of camera (INT32_MAX if unknown).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Longitude of camera (INT32_MAX if unknown).")]
+        public  int lon_camera;
+            /// <summary>Altitude (MSL) of camera (INT32_MAX if unknown).  [mm] </summary>
+        [Units("[mm]")]
+        [Description("Altitude (MSL) of camera (INT32_MAX if unknown).")]
+        public  int alt_camera;
+            /// <summary>Latitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Latitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).")]
+        public  int lat_image;
+            /// <summary>Longitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Longitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).")]
+        public  int lon_image;
+            /// <summary>Altitude (MSL) of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).  [mm] </summary>
+        [Units("[mm]")]
+        [Description("Altitude (MSL) of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).")]
+        public  int alt_image;
+            /// <summary>Quaternion of camera orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)   </summary>
         [Units("")]
-        [Description("Name of Wi-Fi network (SSID). Leave it blank to leave it unchanged.")]
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=32)]
-		public byte[] ssid;
-            /// <summary>Password. Leave it blank for an open AP.   </summary>
-        [Units("")]
-        [Description("Password. Leave it blank for an open AP.")]
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=64)]
-		public byte[] password;
+        [Description("Quaternion of camera orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public float[] q;
+            /// <summary>Horizontal field of view (NaN if unknown).  [deg] </summary>
+        [Units("[deg]")]
+        [Description("Horizontal field of view (NaN if unknown).")]
+        public  float hfov;
+            /// <summary>Vertical field of view (NaN if unknown).  [deg] </summary>
+        [Units("[deg]")]
+        [Description("Vertical field of view (NaN if unknown).")]
+        public  float vfov;
     
     };
 
     
     /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=22)]
-    ///<summary> Version and capability of protocol version. This message is the response to REQUEST_PROTOCOL_VERSION and is used as part of the handshaking to establish which MAVLink version should be used on the network. Every node should respond to REQUEST_PROTOCOL_VERSION to enable the handshaking. Library implementers should consider adding this into the default decoding state machine to allow the protocol core to respond directly. </summary>
-    public struct PROTOCOL_VERSION_MSG
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=31)]
+    ///<summary> Camera tracking status, sent while in active tracking. Use MAV_CMD_SET_MESSAGE_INTERVAL to define message interval. </summary>
+    public struct CAMERA_TRACKING_IMAGE_STATUS_MSG
     {
-        public PROTOCOL_VERSION_MSG(ushort version,ushort min_version,ushort max_version,byte[] spec_version_hash,byte[] library_version_hash) 
+        public CAMERA_TRACKING_IMAGE_STATUS_MSG(float point_x,float point_y,float radius,float rec_top_x,float rec_top_y,float rec_bottom_x,float rec_bottom_y,/*CAMERA_TRACKING_STATUS_FLAGS*/byte tracking_status,/*CAMERA_TRACKING_MODE*/byte tracking_mode,/*CAMERA_TRACKING_TARGET_DATA*/byte target_data) 
         {
-              this.version = version;
-              this.min_version = min_version;
-              this.max_version = max_version;
-              this.spec_version_hash = spec_version_hash;
-              this.library_version_hash = library_version_hash;
+              this.point_x = point_x;
+              this.point_y = point_y;
+              this.radius = radius;
+              this.rec_top_x = rec_top_x;
+              this.rec_top_y = rec_top_y;
+              this.rec_bottom_x = rec_bottom_x;
+              this.rec_bottom_y = rec_bottom_y;
+              this.tracking_status = tracking_status;
+              this.tracking_mode = tracking_mode;
+              this.target_data = target_data;
             
         }
-        /// <summary>Currently active MAVLink version number * 100: v1.0 is 100, v2.0 is 200, etc.   </summary>
+        /// <summary>Current tracked point x value if CAMERA_TRACKING_MODE_POINT (normalized 0..1, 0 is left, 1 is right), NAN if unknown   </summary>
         [Units("")]
-        [Description("Currently active MAVLink version number * 100: v1.0 is 100, v2.0 is 200, etc.")]
-        public  ushort version;
-            /// <summary>Minimum MAVLink version supported   </summary>
+        [Description("Current tracked point x value if CAMERA_TRACKING_MODE_POINT (normalized 0..1, 0 is left, 1 is right), NAN if unknown")]
+        public  float point_x;
+            /// <summary>Current tracked point y value if CAMERA_TRACKING_MODE_POINT (normalized 0..1, 0 is top, 1 is bottom), NAN if unknown   </summary>
         [Units("")]
-        [Description("Minimum MAVLink version supported")]
-        public  ushort min_version;
-            /// <summary>Maximum MAVLink version supported (set to the same value as version by default)   </summary>
+        [Description("Current tracked point y value if CAMERA_TRACKING_MODE_POINT (normalized 0..1, 0 is top, 1 is bottom), NAN if unknown")]
+        public  float point_y;
+            /// <summary>Current tracked radius if CAMERA_TRACKING_MODE_POINT (normalized 0..1, 0 is image left, 1 is image right), NAN if unknown   </summary>
         [Units("")]
-        [Description("Maximum MAVLink version supported (set to the same value as version by default)")]
-        public  ushort max_version;
-            /// <summary>The first 8 bytes (not characters printed in hex!) of the git hash.   </summary>
+        [Description("Current tracked radius if CAMERA_TRACKING_MODE_POINT (normalized 0..1, 0 is image left, 1 is image right), NAN if unknown")]
+        public  float radius;
+            /// <summary>Current tracked rectangle top x value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is left, 1 is right), NAN if unknown   </summary>
         [Units("")]
-        [Description("The first 8 bytes (not characters printed in hex!) of the git hash.")]
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
-		public byte[] spec_version_hash;
-            /// <summary>The first 8 bytes (not characters printed in hex!) of the git hash.   </summary>
+        [Description("Current tracked rectangle top x value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is left, 1 is right), NAN if unknown")]
+        public  float rec_top_x;
+            /// <summary>Current tracked rectangle top y value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is top, 1 is bottom), NAN if unknown   </summary>
         [Units("")]
-        [Description("The first 8 bytes (not characters printed in hex!) of the git hash.")]
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
-		public byte[] library_version_hash;
+        [Description("Current tracked rectangle top y value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is top, 1 is bottom), NAN if unknown")]
+        public  float rec_top_y;
+            /// <summary>Current tracked rectangle bottom x value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is left, 1 is right), NAN if unknown   </summary>
+        [Units("")]
+        [Description("Current tracked rectangle bottom x value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is left, 1 is right), NAN if unknown")]
+        public  float rec_bottom_x;
+            /// <summary>Current tracked rectangle bottom y value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is top, 1 is bottom), NAN if unknown   </summary>
+        [Units("")]
+        [Description("Current tracked rectangle bottom y value if CAMERA_TRACKING_MODE_RECTANGLE (normalized 0..1, 0 is top, 1 is bottom), NAN if unknown")]
+        public  float rec_bottom_y;
+            /// <summary>Current tracking status CAMERA_TRACKING_STATUS_FLAGS  </summary>
+        [Units("")]
+        [Description("Current tracking status")]
+        public  /*CAMERA_TRACKING_STATUS_FLAGS*/byte tracking_status;
+            /// <summary>Current tracking mode CAMERA_TRACKING_MODE  </summary>
+        [Units("")]
+        [Description("Current tracking mode")]
+        public  /*CAMERA_TRACKING_MODE*/byte tracking_mode;
+            /// <summary>Defines location of target data CAMERA_TRACKING_TARGET_DATA  </summary>
+        [Units("")]
+        [Description("Defines location of target data")]
+        public  /*CAMERA_TRACKING_TARGET_DATA*/byte target_data;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=49)]
+    ///<summary> Camera tracking status, sent while in active tracking. Use MAV_CMD_SET_MESSAGE_INTERVAL to define message interval. </summary>
+    public struct CAMERA_TRACKING_GEO_STATUS_MSG
+    {
+        public CAMERA_TRACKING_GEO_STATUS_MSG(int lat,int lon,float alt,float h_acc,float v_acc,float vel_n,float vel_e,float vel_d,float vel_acc,float dist,float hdg,float hdg_acc,/*CAMERA_TRACKING_STATUS_FLAGS*/byte tracking_status) 
+        {
+              this.lat = lat;
+              this.lon = lon;
+              this.alt = alt;
+              this.h_acc = h_acc;
+              this.v_acc = v_acc;
+              this.vel_n = vel_n;
+              this.vel_e = vel_e;
+              this.vel_d = vel_d;
+              this.vel_acc = vel_acc;
+              this.dist = dist;
+              this.hdg = hdg;
+              this.hdg_acc = hdg_acc;
+              this.tracking_status = tracking_status;
+            
+        }
+        /// <summary>Latitude of tracked object  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Latitude of tracked object")]
+        public  int lat;
+            /// <summary>Longitude of tracked object  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Longitude of tracked object")]
+        public  int lon;
+            /// <summary>Altitude of tracked object(AMSL, WGS84)  [m] </summary>
+        [Units("[m]")]
+        [Description("Altitude of tracked object(AMSL, WGS84)")]
+        public  float alt;
+            /// <summary>Horizontal accuracy. NAN if unknown  [m] </summary>
+        [Units("[m]")]
+        [Description("Horizontal accuracy. NAN if unknown")]
+        public  float h_acc;
+            /// <summary>Vertical accuracy. NAN if unknown  [m] </summary>
+        [Units("[m]")]
+        [Description("Vertical accuracy. NAN if unknown")]
+        public  float v_acc;
+            /// <summary>North velocity of tracked object. NAN if unknown  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("North velocity of tracked object. NAN if unknown")]
+        public  float vel_n;
+            /// <summary>East velocity of tracked object. NAN if unknown  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("East velocity of tracked object. NAN if unknown")]
+        public  float vel_e;
+            /// <summary>Down velocity of tracked object. NAN if unknown  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("Down velocity of tracked object. NAN if unknown")]
+        public  float vel_d;
+            /// <summary>Velocity accuracy. NAN if unknown  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("Velocity accuracy. NAN if unknown")]
+        public  float vel_acc;
+            /// <summary>Distance between camera and tracked object. NAN if unknown  [m] </summary>
+        [Units("[m]")]
+        [Description("Distance between camera and tracked object. NAN if unknown")]
+        public  float dist;
+            /// <summary>Heading in radians, in NED. NAN if unknown  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Heading in radians, in NED. NAN if unknown")]
+        public  float hdg;
+            /// <summary>Accuracy of heading, in NED. NAN if unknown  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Accuracy of heading, in NED. NAN if unknown")]
+        public  float hdg_acc;
+            /// <summary>Current tracking status CAMERA_TRACKING_STATUS_FLAGS  </summary>
+        [Units("")]
+        [Description("Current tracking status")]
+        public  /*CAMERA_TRACKING_STATUS_FLAGS*/byte tracking_status;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=33)]
+    ///<summary> Information about a high level gimbal manager. This message should be requested by a ground station using MAV_CMD_REQUEST_MESSAGE. </summary>
+    public struct GIMBAL_MANAGER_INFORMATION_MSG
+    {
+        public GIMBAL_MANAGER_INFORMATION_MSG(uint time_boot_ms,/*GIMBAL_MANAGER_CAP_FLAGS*/uint cap_flags,float roll_min,float roll_max,float pitch_min,float pitch_max,float yaw_min,float yaw_max,byte gimbal_device_id) 
+        {
+              this.time_boot_ms = time_boot_ms;
+              this.cap_flags = cap_flags;
+              this.roll_min = roll_min;
+              this.roll_max = roll_max;
+              this.pitch_min = pitch_min;
+              this.pitch_max = pitch_max;
+              this.yaw_min = yaw_min;
+              this.yaw_max = yaw_max;
+              this.gimbal_device_id = gimbal_device_id;
+            
+        }
+        /// <summary>Timestamp (time since system boot).  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Timestamp (time since system boot).")]
+        public  uint time_boot_ms;
+            /// <summary>Bitmap of gimbal capability flags. GIMBAL_MANAGER_CAP_FLAGS  bitmask</summary>
+        [Units("")]
+        [Description("Bitmap of gimbal capability flags.")]
+        public  /*GIMBAL_MANAGER_CAP_FLAGS*/uint cap_flags;
+            /// <summary>Minimum hardware roll angle (positive: rolling to the right, negative: rolling to the left)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Minimum hardware roll angle (positive: rolling to the right, negative: rolling to the left)")]
+        public  float roll_min;
+            /// <summary>Maximum hardware roll angle (positive: rolling to the right, negative: rolling to the left)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Maximum hardware roll angle (positive: rolling to the right, negative: rolling to the left)")]
+        public  float roll_max;
+            /// <summary>Minimum pitch angle (positive: up, negative: down)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Minimum pitch angle (positive: up, negative: down)")]
+        public  float pitch_min;
+            /// <summary>Maximum pitch angle (positive: up, negative: down)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Maximum pitch angle (positive: up, negative: down)")]
+        public  float pitch_max;
+            /// <summary>Minimum yaw angle (positive: to the right, negative: to the left)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Minimum yaw angle (positive: to the right, negative: to the left)")]
+        public  float yaw_min;
+            /// <summary>Maximum yaw angle (positive: to the right, negative: to the left)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Maximum yaw angle (positive: to the right, negative: to the left)")]
+        public  float yaw_max;
+            /// <summary>Gimbal device ID that this gimbal manager is responsible for.   </summary>
+        [Units("")]
+        [Description("Gimbal device ID that this gimbal manager is responsible for.")]
+        public  byte gimbal_device_id;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=13)]
+    ///<summary> Current status about a high level gimbal manager. This message should be broadcast at a low regular rate (e.g. 5Hz). </summary>
+    public struct GIMBAL_MANAGER_STATUS_MSG
+    {
+        public GIMBAL_MANAGER_STATUS_MSG(uint time_boot_ms,/*GIMBAL_MANAGER_FLAGS*/uint flags,byte gimbal_device_id,byte primary_control_sysid,byte primary_control_compid,byte secondary_control_sysid,byte secondary_control_compid) 
+        {
+              this.time_boot_ms = time_boot_ms;
+              this.flags = flags;
+              this.gimbal_device_id = gimbal_device_id;
+              this.primary_control_sysid = primary_control_sysid;
+              this.primary_control_compid = primary_control_compid;
+              this.secondary_control_sysid = secondary_control_sysid;
+              this.secondary_control_compid = secondary_control_compid;
+            
+        }
+        /// <summary>Timestamp (time since system boot).  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Timestamp (time since system boot).")]
+        public  uint time_boot_ms;
+            /// <summary>High level gimbal manager flags currently applied. GIMBAL_MANAGER_FLAGS  </summary>
+        [Units("")]
+        [Description("High level gimbal manager flags currently applied.")]
+        public  /*GIMBAL_MANAGER_FLAGS*/uint flags;
+            /// <summary>Gimbal device ID that this gimbal manager is responsible for.   </summary>
+        [Units("")]
+        [Description("Gimbal device ID that this gimbal manager is responsible for.")]
+        public  byte gimbal_device_id;
+            /// <summary>System ID of MAVLink component with primary control, 0 for none.   </summary>
+        [Units("")]
+        [Description("System ID of MAVLink component with primary control, 0 for none.")]
+        public  byte primary_control_sysid;
+            /// <summary>Component ID of MAVLink component with primary control, 0 for none.   </summary>
+        [Units("")]
+        [Description("Component ID of MAVLink component with primary control, 0 for none.")]
+        public  byte primary_control_compid;
+            /// <summary>System ID of MAVLink component with secondary control, 0 for none.   </summary>
+        [Units("")]
+        [Description("System ID of MAVLink component with secondary control, 0 for none.")]
+        public  byte secondary_control_sysid;
+            /// <summary>Component ID of MAVLink component with secondary control, 0 for none.   </summary>
+        [Units("")]
+        [Description("Component ID of MAVLink component with secondary control, 0 for none.")]
+        public  byte secondary_control_compid;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=35)]
+    ///<summary> High level message to control a gimbal's attitude. This message is to be sent to the gimbal manager (e.g. from a ground station). Angles and rates can be set to NaN according to use case. </summary>
+    public struct GIMBAL_MANAGER_SET_ATTITUDE_MSG
+    {
+        public GIMBAL_MANAGER_SET_ATTITUDE_MSG(/*GIMBAL_MANAGER_FLAGS*/uint flags,float[] q,float angular_velocity_x,float angular_velocity_y,float angular_velocity_z,byte target_system,byte target_component,byte gimbal_device_id) 
+        {
+              this.flags = flags;
+              this.q = q;
+              this.angular_velocity_x = angular_velocity_x;
+              this.angular_velocity_y = angular_velocity_y;
+              this.angular_velocity_z = angular_velocity_z;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.gimbal_device_id = gimbal_device_id;
+            
+        }
+        /// <summary>High level gimbal manager flags to use. GIMBAL_MANAGER_FLAGS  </summary>
+        [Units("")]
+        [Description("High level gimbal manager flags to use.")]
+        public  /*GIMBAL_MANAGER_FLAGS*/uint flags;
+            /// <summary>Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the flag GIMBAL_MANAGER_FLAGS_YAW_LOCK is set)   </summary>
+        [Units("")]
+        [Description("Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the flag GIMBAL_MANAGER_FLAGS_YAW_LOCK is set)")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public float[] q;
+            /// <summary>X component of angular velocity, positive is rolling to the right, NaN to be ignored.  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("X component of angular velocity, positive is rolling to the right, NaN to be ignored.")]
+        public  float angular_velocity_x;
+            /// <summary>Y component of angular velocity, positive is pitching up, NaN to be ignored.  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Y component of angular velocity, positive is pitching up, NaN to be ignored.")]
+        public  float angular_velocity_y;
+            /// <summary>Z component of angular velocity, positive is yawing to the right, NaN to be ignored.  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Z component of angular velocity, positive is yawing to the right, NaN to be ignored.")]
+        public  float angular_velocity_z;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+            /// <summary>Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).   </summary>
+        [Units("")]
+        [Description("Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).")]
+        public  byte gimbal_device_id;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=144)]
+    ///<summary> Information about a low level gimbal. This message should be requested by the gimbal manager or a ground station using MAV_CMD_REQUEST_MESSAGE. The maximum angles and rates are the limits by hardware. However, the limits by software used are likely different/smaller and dependent on mode/settings/etc.. </summary>
+    public struct GIMBAL_DEVICE_INFORMATION_MSG
+    {
+        public GIMBAL_DEVICE_INFORMATION_MSG(ulong uid,uint time_boot_ms,uint firmware_version,uint hardware_version,float roll_min,float roll_max,float pitch_min,float pitch_max,float yaw_min,float yaw_max,/*GIMBAL_DEVICE_CAP_FLAGS*/ushort cap_flags,ushort custom_cap_flags,byte[] vendor_name,byte[] model_name,byte[] custom_name) 
+        {
+              this.uid = uid;
+              this.time_boot_ms = time_boot_ms;
+              this.firmware_version = firmware_version;
+              this.hardware_version = hardware_version;
+              this.roll_min = roll_min;
+              this.roll_max = roll_max;
+              this.pitch_min = pitch_min;
+              this.pitch_max = pitch_max;
+              this.yaw_min = yaw_min;
+              this.yaw_max = yaw_max;
+              this.cap_flags = cap_flags;
+              this.custom_cap_flags = custom_cap_flags;
+              this.vendor_name = vendor_name;
+              this.model_name = model_name;
+              this.custom_name = custom_name;
+            
+        }
+        /// <summary>UID of gimbal hardware (0 if unknown).   </summary>
+        [Units("")]
+        [Description("UID of gimbal hardware (0 if unknown).")]
+        public  ulong uid;
+            /// <summary>Timestamp (time since system boot).  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Timestamp (time since system boot).")]
+        public  uint time_boot_ms;
+            /// <summary>Version of the gimbal firmware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor & 0xff) << 8 | (Major & 0xff).   </summary>
+        [Units("")]
+        [Description("Version of the gimbal firmware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor & 0xff) << 8 | (Major & 0xff).")]
+        public  uint firmware_version;
+            /// <summary>Version of the gimbal hardware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor & 0xff) << 8 | (Major & 0xff).   </summary>
+        [Units("")]
+        [Description("Version of the gimbal hardware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor & 0xff) << 8 | (Major & 0xff).")]
+        public  uint hardware_version;
+            /// <summary>Minimum hardware roll angle (positive: rolling to the right, negative: rolling to the left)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Minimum hardware roll angle (positive: rolling to the right, negative: rolling to the left)")]
+        public  float roll_min;
+            /// <summary>Maximum hardware roll angle (positive: rolling to the right, negative: rolling to the left)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Maximum hardware roll angle (positive: rolling to the right, negative: rolling to the left)")]
+        public  float roll_max;
+            /// <summary>Minimum hardware pitch angle (positive: up, negative: down)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Minimum hardware pitch angle (positive: up, negative: down)")]
+        public  float pitch_min;
+            /// <summary>Maximum hardware pitch angle (positive: up, negative: down)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Maximum hardware pitch angle (positive: up, negative: down)")]
+        public  float pitch_max;
+            /// <summary>Minimum hardware yaw angle (positive: to the right, negative: to the left)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Minimum hardware yaw angle (positive: to the right, negative: to the left)")]
+        public  float yaw_min;
+            /// <summary>Maximum hardware yaw angle (positive: to the right, negative: to the left)  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Maximum hardware yaw angle (positive: to the right, negative: to the left)")]
+        public  float yaw_max;
+            /// <summary>Bitmap of gimbal capability flags. GIMBAL_DEVICE_CAP_FLAGS  bitmask</summary>
+        [Units("")]
+        [Description("Bitmap of gimbal capability flags.")]
+        public  /*GIMBAL_DEVICE_CAP_FLAGS*/ushort cap_flags;
+            /// <summary>Bitmap for use for gimbal-specific capability flags.   bitmask</summary>
+        [Units("")]
+        [Description("Bitmap for use for gimbal-specific capability flags.")]
+        public  ushort custom_cap_flags;
+            /// <summary>Name of the gimbal vendor.   </summary>
+        [Units("")]
+        [Description("Name of the gimbal vendor.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=32)]
+		public byte[] vendor_name;
+            /// <summary>Name of the gimbal model.   </summary>
+        [Units("")]
+        [Description("Name of the gimbal model.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=32)]
+		public byte[] model_name;
+            /// <summary>Custom name of the gimbal given to it by the user.   </summary>
+        [Units("")]
+        [Description("Custom name of the gimbal given to it by the user.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=32)]
+		public byte[] custom_name;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=32)]
+    ///<summary> Low level message to control a gimbal device's attitude. This message is to be sent from the gimbal manager to the gimbal device component. Angles and rates can be set to NaN according to use case. </summary>
+    public struct GIMBAL_DEVICE_SET_ATTITUDE_MSG
+    {
+        public GIMBAL_DEVICE_SET_ATTITUDE_MSG(float[] q,float angular_velocity_x,float angular_velocity_y,float angular_velocity_z,/*GIMBAL_DEVICE_FLAGS*/ushort flags,byte target_system,byte target_component) 
+        {
+              this.q = q;
+              this.angular_velocity_x = angular_velocity_x;
+              this.angular_velocity_y = angular_velocity_y;
+              this.angular_velocity_z = angular_velocity_z;
+              this.flags = flags;
+              this.target_system = target_system;
+              this.target_component = target_component;
+            
+        }
+        /// <summary>Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set, set all fields to NaN if only angular velocity should be used)   </summary>
+        [Units("")]
+        [Description("Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set, set all fields to NaN if only angular velocity should be used)")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public float[] q;
+            /// <summary>X component of angular velocity, positive is rolling to the right, NaN to be ignored.  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("X component of angular velocity, positive is rolling to the right, NaN to be ignored.")]
+        public  float angular_velocity_x;
+            /// <summary>Y component of angular velocity, positive is pitching up, NaN to be ignored.  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Y component of angular velocity, positive is pitching up, NaN to be ignored.")]
+        public  float angular_velocity_y;
+            /// <summary>Z component of angular velocity, positive is yawing to the right, NaN to be ignored.  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Z component of angular velocity, positive is yawing to the right, NaN to be ignored.")]
+        public  float angular_velocity_z;
+            /// <summary>Low level gimbal flags. GIMBAL_DEVICE_FLAGS  </summary>
+        [Units("")]
+        [Description("Low level gimbal flags.")]
+        public  /*GIMBAL_DEVICE_FLAGS*/ushort flags;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=40)]
+    ///<summary> Message reporting the status of a gimbal device. This message should be broadcasted by a gimbal device component. The angles encoded in the quaternion are relative to absolute North if the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set (roll: positive is rolling to the right, pitch: positive is pitching up, yaw is turn to the right) or relative to the vehicle heading if the flag is not set. This message should be broadcast at a low regular rate (e.g. 10Hz). </summary>
+    public struct GIMBAL_DEVICE_ATTITUDE_STATUS_MSG
+    {
+        public GIMBAL_DEVICE_ATTITUDE_STATUS_MSG(uint time_boot_ms,float[] q,float angular_velocity_x,float angular_velocity_y,float angular_velocity_z,/*GIMBAL_DEVICE_ERROR_FLAGS*/uint failure_flags,/*GIMBAL_DEVICE_FLAGS*/ushort flags,byte target_system,byte target_component) 
+        {
+              this.time_boot_ms = time_boot_ms;
+              this.q = q;
+              this.angular_velocity_x = angular_velocity_x;
+              this.angular_velocity_y = angular_velocity_y;
+              this.angular_velocity_z = angular_velocity_z;
+              this.failure_flags = failure_flags;
+              this.flags = flags;
+              this.target_system = target_system;
+              this.target_component = target_component;
+            
+        }
+        /// <summary>Timestamp (time since system boot).  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Timestamp (time since system boot).")]
+        public  uint time_boot_ms;
+            /// <summary>Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set)   </summary>
+        [Units("")]
+        [Description("Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation, the frame is depends on whether the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set)")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public float[] q;
+            /// <summary>X component of angular velocity (NaN if unknown)  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("X component of angular velocity (NaN if unknown)")]
+        public  float angular_velocity_x;
+            /// <summary>Y component of angular velocity (NaN if unknown)  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Y component of angular velocity (NaN if unknown)")]
+        public  float angular_velocity_y;
+            /// <summary>Z component of angular velocity (NaN if unknown)  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Z component of angular velocity (NaN if unknown)")]
+        public  float angular_velocity_z;
+            /// <summary>Failure flags (0 for no failure) GIMBAL_DEVICE_ERROR_FLAGS  bitmask</summary>
+        [Units("")]
+        [Description("Failure flags (0 for no failure)")]
+        public  /*GIMBAL_DEVICE_ERROR_FLAGS*/uint failure_flags;
+            /// <summary>Current gimbal flags set. GIMBAL_DEVICE_FLAGS  </summary>
+        [Units("")]
+        [Description("Current gimbal flags set.")]
+        public  /*GIMBAL_DEVICE_FLAGS*/ushort flags;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=53)]
+    ///<summary> Low level message containing autopilot state relevant for a gimbal device. This message is to be sent from the gimbal manager to the gimbal device component. The data of this message server for the gimbal's estimator corrections in particular horizon compensation, as well as the autopilot's control intention e.g. feed forward angular control in z-axis. </summary>
+    public struct AUTOPILOT_STATE_FOR_GIMBAL_DEVICE_MSG
+    {
+        public AUTOPILOT_STATE_FOR_GIMBAL_DEVICE_MSG(ulong time_boot_us,float[] q,uint q_estimated_delay_us,float vx,float vy,float vz,uint v_estimated_delay_us,float feed_forward_angular_velocity_z,/*ESTIMATOR_STATUS_FLAGS*/ushort estimator_status,byte target_system,byte target_component,/*MAV_LANDED_STATE*/byte landed_state) 
+        {
+              this.time_boot_us = time_boot_us;
+              this.q = q;
+              this.q_estimated_delay_us = q_estimated_delay_us;
+              this.vx = vx;
+              this.vy = vy;
+              this.vz = vz;
+              this.v_estimated_delay_us = v_estimated_delay_us;
+              this.feed_forward_angular_velocity_z = feed_forward_angular_velocity_z;
+              this.estimator_status = estimator_status;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.landed_state = landed_state;
+            
+        }
+        /// <summary>Timestamp (time since system boot).  [us] </summary>
+        [Units("[us]")]
+        [Description("Timestamp (time since system boot).")]
+        public  ulong time_boot_us;
+            /// <summary>Quaternion components of autopilot attitude: w, x, y, z (1 0 0 0 is the null-rotation, Hamilton convention).   </summary>
+        [Units("")]
+        [Description("Quaternion components of autopilot attitude: w, x, y, z (1 0 0 0 is the null-rotation, Hamilton convention).")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public float[] q;
+            /// <summary>Estimated delay of the attitude data.  [us] </summary>
+        [Units("[us]")]
+        [Description("Estimated delay of the attitude data.")]
+        public  uint q_estimated_delay_us;
+            /// <summary>X Speed in NED (North, East, Down).  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("X Speed in NED (North, East, Down).")]
+        public  float vx;
+            /// <summary>Y Speed in NED (North, East, Down).  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("Y Speed in NED (North, East, Down).")]
+        public  float vy;
+            /// <summary>Z Speed in NED (North, East, Down).  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("Z Speed in NED (North, East, Down).")]
+        public  float vz;
+            /// <summary>Estimated delay of the speed data.  [us] </summary>
+        [Units("[us]")]
+        [Description("Estimated delay of the speed data.")]
+        public  uint v_estimated_delay_us;
+            /// <summary>Feed forward Z component of angular velocity, positive is yawing to the right, NaN to be ignored. This is to indicate if the autopilot is actively yawing.  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Feed forward Z component of angular velocity, positive is yawing to the right, NaN to be ignored. This is to indicate if the autopilot is actively yawing.")]
+        public  float feed_forward_angular_velocity_z;
+            /// <summary>Bitmap indicating which estimator outputs are valid. ESTIMATOR_STATUS_FLAGS  bitmask</summary>
+        [Units("")]
+        [Description("Bitmap indicating which estimator outputs are valid.")]
+        public  /*ESTIMATOR_STATUS_FLAGS*/ushort estimator_status;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+            /// <summary>The landed state. Is set to MAV_LANDED_STATE_UNDEFINED if landed state is unknown. MAV_LANDED_STATE  </summary>
+        [Units("")]
+        [Description("The landed state. Is set to MAV_LANDED_STATE_UNDEFINED if landed state is unknown.")]
+        public  /*MAV_LANDED_STATE*/byte landed_state;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=23)]
+    ///<summary> High level message to control a gimbal's pitch and yaw angles. This message is to be sent to the gimbal manager (e.g. from a ground station). Angles and rates can be set to NaN according to use case. </summary>
+    public struct GIMBAL_MANAGER_SET_PITCHYAW_MSG
+    {
+        public GIMBAL_MANAGER_SET_PITCHYAW_MSG(/*GIMBAL_MANAGER_FLAGS*/uint flags,float pitch,float yaw,float pitch_rate,float yaw_rate,byte target_system,byte target_component,byte gimbal_device_id) 
+        {
+              this.flags = flags;
+              this.pitch = pitch;
+              this.yaw = yaw;
+              this.pitch_rate = pitch_rate;
+              this.yaw_rate = yaw_rate;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.gimbal_device_id = gimbal_device_id;
+            
+        }
+        /// <summary>High level gimbal manager flags to use. GIMBAL_MANAGER_FLAGS  </summary>
+        [Units("")]
+        [Description("High level gimbal manager flags to use.")]
+        public  /*GIMBAL_MANAGER_FLAGS*/uint flags;
+            /// <summary>Pitch angle (positive: up, negative: down, NaN to be ignored).  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Pitch angle (positive: up, negative: down, NaN to be ignored).")]
+        public  float pitch;
+            /// <summary>Yaw angle (positive: to the right, negative: to the left, NaN to be ignored).  [rad] </summary>
+        [Units("[rad]")]
+        [Description("Yaw angle (positive: to the right, negative: to the left, NaN to be ignored).")]
+        public  float yaw;
+            /// <summary>Pitch angular rate (positive: up, negative: down, NaN to be ignored).  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Pitch angular rate (positive: up, negative: down, NaN to be ignored).")]
+        public  float pitch_rate;
+            /// <summary>Yaw angular rate (positive: to the right, negative: to the left, NaN to be ignored).  [rad/s] </summary>
+        [Units("[rad/s]")]
+        [Description("Yaw angular rate (positive: to the right, negative: to the left, NaN to be ignored).")]
+        public  float yaw_rate;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+            /// <summary>Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).   </summary>
+        [Units("")]
+        [Description("Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).")]
+        public  byte gimbal_device_id;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=23)]
+    ///<summary> High level message to control a gimbal manually. The angles or angular rates are unitless; the actual rates will depend on internal gimbal manager settings/configuration (e.g. set by parameters). This message is to be sent to the gimbal manager (e.g. from a ground station). Angles and rates can be set to NaN according to use case. </summary>
+    public struct GIMBAL_MANAGER_SET_MANUAL_CONTROL_MSG
+    {
+        public GIMBAL_MANAGER_SET_MANUAL_CONTROL_MSG(/*GIMBAL_MANAGER_FLAGS*/uint flags,float pitch,float yaw,float pitch_rate,float yaw_rate,byte target_system,byte target_component,byte gimbal_device_id) 
+        {
+              this.flags = flags;
+              this.pitch = pitch;
+              this.yaw = yaw;
+              this.pitch_rate = pitch_rate;
+              this.yaw_rate = yaw_rate;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.gimbal_device_id = gimbal_device_id;
+            
+        }
+        /// <summary>High level gimbal manager flags. GIMBAL_MANAGER_FLAGS  </summary>
+        [Units("")]
+        [Description("High level gimbal manager flags.")]
+        public  /*GIMBAL_MANAGER_FLAGS*/uint flags;
+            /// <summary>Pitch angle unitless (-1..1, positive: up, negative: down, NaN to be ignored).   </summary>
+        [Units("")]
+        [Description("Pitch angle unitless (-1..1, positive: up, negative: down, NaN to be ignored).")]
+        public  float pitch;
+            /// <summary>Yaw angle unitless (-1..1, positive: to the right, negative: to the left, NaN to be ignored).   </summary>
+        [Units("")]
+        [Description("Yaw angle unitless (-1..1, positive: to the right, negative: to the left, NaN to be ignored).")]
+        public  float yaw;
+            /// <summary>Pitch angular rate unitless (-1..1, positive: up, negative: down, NaN to be ignored).   </summary>
+        [Units("")]
+        [Description("Pitch angular rate unitless (-1..1, positive: up, negative: down, NaN to be ignored).")]
+        public  float pitch_rate;
+            /// <summary>Yaw angular rate unitless (-1..1, positive: to the right, negative: to the left, NaN to be ignored).   </summary>
+        [Units("")]
+        [Description("Yaw angular rate unitless (-1..1, positive: to the right, negative: to the left, NaN to be ignored).")]
+        public  float yaw_rate;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+            /// <summary>Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).   </summary>
+        [Units("")]
+        [Description("Component ID of gimbal device to address (or 1-6 for non-MAVLink gimbal), 0 for all gimbal device components. Send command multiple times for more than one gimbal (but not all gimbals).")]
+        public  byte gimbal_device_id;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=46)]
+    ///<summary> ESC information for lower rate streaming. Recommended streaming rate 1Hz. See ESC_STATUS for higher-rate ESC data. </summary>
+    public struct ESC_INFO_MSG
+    {
+        public ESC_INFO_MSG(ulong time_usec,uint[] error_count,ushort counter,ushort[] failure_flags,short[] temperature,byte index,byte count,/*ESC_CONNECTION_TYPE*/byte connection_type,byte info) 
+        {
+              this.time_usec = time_usec;
+              this.error_count = error_count;
+              this.counter = counter;
+              this.failure_flags = failure_flags;
+              this.temperature = temperature;
+              this.index = index;
+              this.count = count;
+              this.connection_type = connection_type;
+              this.info = info;
+            
+        }
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        [Units("[us]")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        public  ulong time_usec;
+            /// <summary>Number of reported errors by each ESC since boot.   </summary>
+        [Units("")]
+        [Description("Number of reported errors by each ESC since boot.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public uint[] error_count;
+            /// <summary>Counter of data packets received.   </summary>
+        [Units("")]
+        [Description("Counter of data packets received.")]
+        public  ushort counter;
+            /// <summary>Bitmap of ESC failure flags. ESC_FAILURE_FLAGS  bitmask</summary>
+        [Units("")]
+        [Description("Bitmap of ESC failure flags.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public ushort[] failure_flags;
+            /// <summary>Temperature of each ESC. INT16_MAX: if data not supplied by ESC.  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Temperature of each ESC. INT16_MAX: if data not supplied by ESC.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public short[] temperature;
+            /// <summary>Index of the first ESC in this message. minValue = 0, maxValue = 60, increment = 4.   </summary>
+        [Units("")]
+        [Description("Index of the first ESC in this message. minValue = 0, maxValue = 60, increment = 4.")]
+        public  byte index;
+            /// <summary>Total number of ESCs in all messages of this type. Message fields with an index higher than this should be ignored because they contain invalid data.   </summary>
+        [Units("")]
+        [Description("Total number of ESCs in all messages of this type. Message fields with an index higher than this should be ignored because they contain invalid data.")]
+        public  byte count;
+            /// <summary>Connection type protocol for all ESC. ESC_CONNECTION_TYPE  </summary>
+        [Units("")]
+        [Description("Connection type protocol for all ESC.")]
+        public  /*ESC_CONNECTION_TYPE*/byte connection_type;
+            /// <summary>Information regarding online/offline status of each ESC.   bitmask</summary>
+        [Units("")]
+        [Description("Information regarding online/offline status of each ESC.")]
+        public  byte info;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=57)]
+    ///<summary> ESC information for higher rate streaming. Recommended streaming rate is ~10 Hz. Information that changes more slowly is sent in ESC_INFO. It should typically only be streamed on high-bandwidth links (i.e. to a companion computer). </summary>
+    public struct ESC_STATUS_MSG
+    {
+        public ESC_STATUS_MSG(ulong time_usec,int[] rpm,float[] voltage,float[] current,byte index) 
+        {
+              this.time_usec = time_usec;
+              this.rpm = rpm;
+              this.voltage = voltage;
+              this.current = current;
+              this.index = index;
+            
+        }
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        [Units("[us]")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        public  ulong time_usec;
+            /// <summary>Reported motor RPM from each ESC (negative for reverse rotation).  [rpm] </summary>
+        [Units("[rpm]")]
+        [Description("Reported motor RPM from each ESC (negative for reverse rotation).")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public int[] rpm;
+            /// <summary>Voltage measured from each ESC.  [V] </summary>
+        [Units("[V]")]
+        [Description("Voltage measured from each ESC.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public float[] voltage;
+            /// <summary>Current measured from each ESC.  [A] </summary>
+        [Units("[A]")]
+        [Description("Current measured from each ESC.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+		public float[] current;
+            /// <summary>Index of the first ESC in this message. minValue = 0, maxValue = 60, increment = 4.   </summary>
+        [Units("")]
+        [Description("Index of the first ESC in this message. minValue = 0, maxValue = 60, increment = 4.")]
+        public  byte index;
+    
+    };
+
+    
+    /// extensions_start 2
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=98)]
+    ///<summary> Configure WiFi AP SSID, password, and mode. This message is re-emitted as an acknowledgement by the AP. The message may also be explicitly requested using MAV_CMD_REQUEST_MESSAGE </summary>
+    public struct WIFI_CONFIG_AP_MSG
+    {
+        public WIFI_CONFIG_AP_MSG(byte[] ssid,byte[] password,/*WIFI_CONFIG_AP_MODE*/sbyte mode,/*WIFI_CONFIG_AP_RESPONSE*/sbyte response) 
+        {
+              this.ssid = ssid;
+              this.password = password;
+              this.mode = mode;
+              this.response = response;
+            
+        }
+        /// <summary>Name of Wi-Fi network (SSID). Blank to leave it unchanged when setting. Current SSID when sent back as a response.   </summary>
+        [Units("")]
+        [Description("Name of Wi-Fi network (SSID). Blank to leave it unchanged when setting. Current SSID when sent back as a response.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=32)]
+		public byte[] ssid;
+            /// <summary>Password. Blank for an open AP. MD5 hash when message is sent back as a response.   </summary>
+        [Units("")]
+        [Description("Password. Blank for an open AP. MD5 hash when message is sent back as a response.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=64)]
+		public byte[] password;
+            /// <summary>WiFi Mode. WIFI_CONFIG_AP_MODE  </summary>
+        [Units("")]
+        [Description("WiFi Mode.")]
+        public  /*WIFI_CONFIG_AP_MODE*/sbyte mode;
+            /// <summary>Message acceptance response (sent back to GS). WIFI_CONFIG_AP_RESPONSE  </summary>
+        [Units("")]
+        [Description("Message acceptance response (sent back to GS).")]
+        public  /*WIFI_CONFIG_AP_RESPONSE*/sbyte response;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=58)]
+    ///<summary> The location and information of an AIS vessel </summary>
+    public struct AIS_VESSEL_MSG
+    {
+        public AIS_VESSEL_MSG(uint MMSI,int lat,int lon,ushort COG,ushort heading,ushort velocity,ushort dimension_bow,ushort dimension_stern,ushort tslc,/*AIS_FLAGS*/ushort flags,sbyte turn_rate,/*AIS_NAV_STATUS*/byte navigational_status,/*AIS_TYPE*/byte type,byte dimension_port,byte dimension_starboard,byte[] callsign,byte[] name) 
+        {
+              this.MMSI = MMSI;
+              this.lat = lat;
+              this.lon = lon;
+              this.COG = COG;
+              this.heading = heading;
+              this.velocity = velocity;
+              this.dimension_bow = dimension_bow;
+              this.dimension_stern = dimension_stern;
+              this.tslc = tslc;
+              this.flags = flags;
+              this.turn_rate = turn_rate;
+              this.navigational_status = navigational_status;
+              this.type = type;
+              this.dimension_port = dimension_port;
+              this.dimension_starboard = dimension_starboard;
+              this.callsign = callsign;
+              this.name = name;
+            
+        }
+        /// <summary>Mobile Marine Service Identifier, 9 decimal digits   </summary>
+        [Units("")]
+        [Description("Mobile Marine Service Identifier, 9 decimal digits")]
+        public  uint MMSI;
+            /// <summary>Latitude  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Latitude")]
+        public  int lat;
+            /// <summary>Longitude  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Longitude")]
+        public  int lon;
+            /// <summary>Course over ground  [cdeg] </summary>
+        [Units("[cdeg]")]
+        [Description("Course over ground")]
+        public  ushort COG;
+            /// <summary>True heading  [cdeg] </summary>
+        [Units("[cdeg]")]
+        [Description("True heading")]
+        public  ushort heading;
+            /// <summary>Speed over ground  [cm/s] </summary>
+        [Units("[cm/s]")]
+        [Description("Speed over ground")]
+        public  ushort velocity;
+            /// <summary>Distance from lat/lon location to bow  [m] </summary>
+        [Units("[m]")]
+        [Description("Distance from lat/lon location to bow")]
+        public  ushort dimension_bow;
+            /// <summary>Distance from lat/lon location to stern  [m] </summary>
+        [Units("[m]")]
+        [Description("Distance from lat/lon location to stern")]
+        public  ushort dimension_stern;
+            /// <summary>Time since last communication in seconds  [s] </summary>
+        [Units("[s]")]
+        [Description("Time since last communication in seconds")]
+        public  ushort tslc;
+            /// <summary>Bitmask to indicate various statuses including valid data fields AIS_FLAGS  bitmask</summary>
+        [Units("")]
+        [Description("Bitmask to indicate various statuses including valid data fields")]
+        public  /*AIS_FLAGS*/ushort flags;
+            /// <summary>Turn rate  [cdeg/s] </summary>
+        [Units("[cdeg/s]")]
+        [Description("Turn rate")]
+        public  sbyte turn_rate;
+            /// <summary>Navigational status AIS_NAV_STATUS  </summary>
+        [Units("")]
+        [Description("Navigational status")]
+        public  /*AIS_NAV_STATUS*/byte navigational_status;
+            /// <summary>Type of vessels AIS_TYPE  </summary>
+        [Units("")]
+        [Description("Type of vessels")]
+        public  /*AIS_TYPE*/byte type;
+            /// <summary>Distance from lat/lon location to port side  [m] </summary>
+        [Units("[m]")]
+        [Description("Distance from lat/lon location to port side")]
+        public  byte dimension_port;
+            /// <summary>Distance from lat/lon location to starboard side  [m] </summary>
+        [Units("[m]")]
+        [Description("Distance from lat/lon location to starboard side")]
+        public  byte dimension_starboard;
+            /// <summary>The vessel callsign   </summary>
+        [Units("")]
+        [Description("The vessel callsign")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=7)]
+		public byte[] callsign;
+            /// <summary>The vessel name   </summary>
+        [Units("")]
+        [Description("The vessel name")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] name;
     
     };
 
@@ -11347,9 +15289,9 @@ public partial class MAVLink
               this.sub_mode = sub_mode;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Time since the start-up of the node.  [s] </summary>
         [Units("[s]")]
@@ -11393,17 +15335,17 @@ public partial class MAVLink
               this.sw_version_minor = sw_version_minor;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Time since the start-up of the node.  [s] </summary>
         [Units("[s]")]
         [Description("Time since the start-up of the node.")]
         public  uint uptime_sec;
-            /// <summary>Version control system (VCS) revision identifier (e.g. git short commit hash). Zero if unknown.   </summary>
+            /// <summary>Version control system (VCS) revision identifier (e.g. git short commit hash). 0 if unknown.   </summary>
         [Units("")]
-        [Description("Version control system (VCS) revision identifier (e.g. git short commit hash). Zero if unknown.")]
+        [Description("Version control system (VCS) revision identifier (e.g. git short commit hash). 0 if unknown.")]
         public  uint sw_vcs_commit;
             /// <summary>Node name string. For example, 'sapog.px4.io'.   </summary>
         [Units("")]
@@ -11437,7 +15379,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=20)]
-    ///<summary> Request to read the value of a parameter with the either the param_id string id or param_index. </summary>
+    ///<summary> Request to read the value of a parameter with either the param_id string id or param_index. PARAM_EXT_VALUE should be emitted in response. </summary>
     public struct PARAM_EXT_REQUEST_READ_MSG
     {
         public PARAM_EXT_REQUEST_READ_MSG(short param_index,byte target_system,byte target_component,byte[] param_id) 
@@ -11471,7 +15413,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=2)]
-    ///<summary> Request all parameters of this component. After this request, all parameters are emitted. </summary>
+    ///<summary> Request all parameters of this component. All parameters should be emitted in response as PARAM_EXT_VALUE. </summary>
     public struct PARAM_EXT_REQUEST_LIST_MSG
     {
         public PARAM_EXT_REQUEST_LIST_MSG(byte target_system,byte target_component) 
@@ -11608,11 +15550,11 @@ public partial class MAVLink
 
     
     /// extensions_start 6
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=166)]
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=167)]
     ///<summary> Obstacle distances in front of the sensor, starting from the left in increment degrees to the right </summary>
     public struct OBSTACLE_DISTANCE_MSG
     {
-        public OBSTACLE_DISTANCE_MSG(ulong time_usec,ushort[] distances,ushort min_distance,ushort max_distance,/*MAV_DISTANCE_SENSOR*/byte sensor_type,byte increment,float increment_f,float angle_offset) 
+        public OBSTACLE_DISTANCE_MSG(ulong time_usec,ushort[] distances,ushort min_distance,ushort max_distance,/*MAV_DISTANCE_SENSOR*/byte sensor_type,byte increment,float increment_f,float angle_offset,/*MAV_FRAME*/byte frame) 
         {
               this.time_usec = time_usec;
               this.distances = distances;
@@ -11622,15 +15564,16 @@ public partial class MAVLink
               this.increment = increment;
               this.increment_f = increment_f;
               this.angle_offset = angle_offset;
+              this.frame = frame;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
-            /// <summary>Distance of obstacles around the UAV with index 0 corresponding to local forward + angle_offset. A value of 0 means that the obstacle is right in front of the sensor. A value of max_distance +1 means no obstacle is present. A value of UINT16_MAX for unknown/not used. In a array element, one unit corresponds to 1cm.  [cm] </summary>
+            /// <summary>Distance of obstacles around the vehicle with index 0 corresponding to north + angle_offset, unless otherwise specified in the frame. A value of 0 is valid and means that the obstacle is practically touching the sensor. A value of max_distance +1 means no obstacle is present. A value of UINT16_MAX for unknown/not used. In a array element, one unit corresponds to 1cm.  [cm] </summary>
         [Units("[cm]")]
-        [Description("Distance of obstacles around the UAV with index 0 corresponding to local forward + angle_offset. A value of 0 means that the obstacle is right in front of the sensor. A value of max_distance +1 means no obstacle is present. A value of UINT16_MAX for unknown/not used. In a array element, one unit corresponds to 1cm.")]
+        [Description("Distance of obstacles around the vehicle with index 0 corresponding to north + angle_offset, unless otherwise specified in the frame. A value of 0 is valid and means that the obstacle is practically touching the sensor. A value of max_distance +1 means no obstacle is present. A value of UINT16_MAX for unknown/not used. In a array element, one unit corresponds to 1cm.")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=72)]
 		public ushort[] distances;
             /// <summary>Minimum distance the sensor can measure.  [cm] </summary>
@@ -11645,28 +15588,32 @@ public partial class MAVLink
         [Units("")]
         [Description("Class id of the distance sensor type.")]
         public  /*MAV_DISTANCE_SENSOR*/byte sensor_type;
-            /// <summary>Angular width in degrees of each array element. (Ignored if increment_f greater than 0).  [deg] </summary>
+            /// <summary>Angular width in degrees of each array element. Increment direction is clockwise. This field is ignored if increment_f is non-zero.  [deg] </summary>
         [Units("[deg]")]
-        [Description("Angular width in degrees of each array element. (Ignored if increment_f greater than 0).")]
+        [Description("Angular width in degrees of each array element. Increment direction is clockwise. This field is ignored if increment_f is non-zero.")]
         public  byte increment;
-            /// <summary>Angular width in degrees of each array element as a float. If greater than 0 then this value is used instead of the uint8_t increment field.  [deg] </summary>
+            /// <summary>Angular width in degrees of each array element as a float. If non-zero then this value is used instead of the uint8_t increment field. Positive is clockwise direction, negative is counter-clockwise.  [deg] </summary>
         [Units("[deg]")]
-        [Description("Angular width in degrees of each array element as a float. If greater than 0 then this value is used instead of the uint8_t increment field.")]
+        [Description("Angular width in degrees of each array element as a float. If non-zero then this value is used instead of the uint8_t increment field. Positive is clockwise direction, negative is counter-clockwise.")]
         public  float increment_f;
-            /// <summary>Relative angle offset of the 0-index element in the distances array. Value of 0 corresponds to forward. Positive values are offsets to the right.  [deg] </summary>
+            /// <summary>Relative angle offset of the 0-index element in the distances array. Value of 0 corresponds to forward. Positive is clockwise direction, negative is counter-clockwise.  [deg] </summary>
         [Units("[deg]")]
-        [Description("Relative angle offset of the 0-index element in the distances array. Value of 0 corresponds to forward. Positive values are offsets to the right.")]
+        [Description("Relative angle offset of the 0-index element in the distances array. Value of 0 corresponds to forward. Positive is clockwise direction, negative is counter-clockwise.")]
         public  float angle_offset;
+            /// <summary>Coordinate frame of reference for the yaw rotation and offset of the sensor data. Defaults to MAV_FRAME_GLOBAL, which is north aligned. For body-mounted sensors use MAV_FRAME_BODY_FRD, which is vehicle front aligned. MAV_FRAME  </summary>
+        [Units("")]
+        [Description("Coordinate frame of reference for the yaw rotation and offset of the sensor data. Defaults to MAV_FRAME_GLOBAL, which is north aligned. For body-mounted sensors use MAV_FRAME_BODY_FRD, which is vehicle front aligned.")]
+        public  /*MAV_FRAME*/byte frame;
     
     };
 
     
     /// extensions_start 15
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=231)]
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=233)]
     ///<summary> Odometry message to communicate odometry information with an external interface. Fits ROS REP 147 standard for aerial vehicles (http://www.ros.org/reps/rep-0147.html). </summary>
     public struct ODOMETRY_MSG
     {
-        public ODOMETRY_MSG(ulong time_usec,float x,float y,float z,float[] q,float vx,float vy,float vz,float rollspeed,float pitchspeed,float yawspeed,float[] pose_covariance,float[] velocity_covariance,/*MAV_FRAME*/byte frame_id,/*MAV_FRAME*/byte child_frame_id,byte reset_counter) 
+        public ODOMETRY_MSG(ulong time_usec,float x,float y,float z,float[] q,float vx,float vy,float vz,float rollspeed,float pitchspeed,float yawspeed,float[] pose_covariance,float[] velocity_covariance,/*MAV_FRAME*/byte frame_id,/*MAV_FRAME*/byte child_frame_id,byte reset_counter,/*MAV_ESTIMATOR_TYPE*/byte estimator_type,sbyte quality) 
         {
               this.time_usec = time_usec;
               this.x = x;
@@ -11684,11 +15631,13 @@ public partial class MAVLink
               this.frame_id = frame_id;
               this.child_frame_id = child_frame_id;
               this.reset_counter = reset_counter;
+              this.estimator_type = estimator_type;
+              this.quality = quality;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>X Position  [m] </summary>
         [Units("[m]")]
@@ -11753,16 +15702,24 @@ public partial class MAVLink
         [Units("")]
         [Description("Estimate reset counter. This should be incremented when the estimate resets in any of the dimensions (position, velocity, attitude, angular speed). This is designed to be used when e.g an external SLAM system detects a loop-closure and the estimate jumps.")]
         public  byte reset_counter;
+            /// <summary>Type of estimator that is providing the odometry. MAV_ESTIMATOR_TYPE  </summary>
+        [Units("")]
+        [Description("Type of estimator that is providing the odometry.")]
+        public  /*MAV_ESTIMATOR_TYPE*/byte estimator_type;
+            /// <summary>Optional odometry quality metric as a percentage. -1 = odometry has failed, 0 = unknown/unset quality, 1 = worst quality, 100 = best quality  [%] </summary>
+        [Units("[%]")]
+        [Description("Optional odometry quality metric as a percentage. -1 = odometry has failed, 0 = unknown/unset quality, 1 = worst quality, 100 = best quality")]
+        public  sbyte quality;
     
     };
 
     
     /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=229)]
-    ///<summary> Describe a trajectory using an array of up-to 5 waypoints in the local frame. </summary>
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=239)]
+    ///<summary> Describe a trajectory using an array of up-to 5 waypoints in the local frame (MAV_FRAME_LOCAL_NED). </summary>
     public struct TRAJECTORY_REPRESENTATION_WAYPOINTS_MSG
     {
-        public TRAJECTORY_REPRESENTATION_WAYPOINTS_MSG(ulong time_usec,float[] pos_x,float[] pos_y,float[] pos_z,float[] vel_x,float[] vel_y,float[] vel_z,float[] acc_x,float[] acc_y,float[] acc_z,float[] pos_yaw,float[] vel_yaw,byte valid_points) 
+        public TRAJECTORY_REPRESENTATION_WAYPOINTS_MSG(ulong time_usec,float[] pos_x,float[] pos_y,float[] pos_z,float[] vel_x,float[] vel_y,float[] vel_z,float[] acc_x,float[] acc_y,float[] acc_z,float[] pos_yaw,float[] vel_yaw,ushort[] command,byte valid_points) 
         {
               this.time_usec = time_usec;
               this.pos_x = pos_x;
@@ -11776,12 +15733,13 @@ public partial class MAVLink
               this.acc_z = acc_z;
               this.pos_yaw = pos_yaw;
               this.vel_yaw = vel_yaw;
+              this.command = command;
               this.valid_points = valid_points;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>X-coordinate of waypoint, set to NaN if not being used  [m] </summary>
         [Units("[m]")]
@@ -11838,6 +15796,11 @@ public partial class MAVLink
         [Description("Yaw rate, set to NaN if not being used")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=5)]
 		public float[] vel_yaw;
+            /// <summary>MAV_CMD command id of waypoint, set to UINT16_MAX if not being used. MAV_CMD  </summary>
+        [Units("")]
+        [Description("MAV_CMD command id of waypoint, set to UINT16_MAX if not being used.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=5)]
+		public ushort[] command;
             /// <summary>Number of valid points (up-to 5 waypoints are possible)   </summary>
         [Units("")]
         [Description("Number of valid points (up-to 5 waypoints are possible)")]
@@ -11848,7 +15811,7 @@ public partial class MAVLink
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=109)]
-    ///<summary> Describe a trajectory using an array of up-to 5 bezier points in the local frame. </summary>
+    ///<summary> Describe a trajectory using an array of up-to 5 bezier control points in the local frame (MAV_FRAME_LOCAL_NED). </summary>
     public struct TRAJECTORY_REPRESENTATION_BEZIER_MSG
     {
         public TRAJECTORY_REPRESENTATION_BEZIER_MSG(ulong time_usec,float[] pos_x,float[] pos_y,float[] pos_z,float[] delta,float[] pos_yaw,byte valid_points) 
@@ -11862,87 +15825,220 @@ public partial class MAVLink
               this.valid_points = valid_points;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
-            /// <summary>X-coordinate of starting bezier point, set to NaN if not being used  [m] </summary>
+            /// <summary>X-coordinate of bezier control points. Set to NaN if not being used  [m] </summary>
         [Units("[m]")]
-        [Description("X-coordinate of starting bezier point, set to NaN if not being used")]
+        [Description("X-coordinate of bezier control points. Set to NaN if not being used")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=5)]
 		public float[] pos_x;
-            /// <summary>Y-coordinate of starting bezier point, set to NaN if not being used  [m] </summary>
+            /// <summary>Y-coordinate of bezier control points. Set to NaN if not being used  [m] </summary>
         [Units("[m]")]
-        [Description("Y-coordinate of starting bezier point, set to NaN if not being used")]
+        [Description("Y-coordinate of bezier control points. Set to NaN if not being used")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=5)]
 		public float[] pos_y;
-            /// <summary>Z-coordinate of starting bezier point, set to NaN if not being used  [m] </summary>
+            /// <summary>Z-coordinate of bezier control points. Set to NaN if not being used  [m] </summary>
         [Units("[m]")]
-        [Description("Z-coordinate of starting bezier point, set to NaN if not being used")]
+        [Description("Z-coordinate of bezier control points. Set to NaN if not being used")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=5)]
 		public float[] pos_z;
-            /// <summary>Bezier time horizon, set to NaN if velocity/acceleration should not be incorporated  [s] </summary>
+            /// <summary>Bezier time horizon. Set to NaN if velocity/acceleration should not be incorporated  [s] </summary>
         [Units("[s]")]
-        [Description("Bezier time horizon, set to NaN if velocity/acceleration should not be incorporated")]
+        [Description("Bezier time horizon. Set to NaN if velocity/acceleration should not be incorporated")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=5)]
 		public float[] delta;
-            /// <summary>Yaw, set to NaN for unchanged  [rad] </summary>
+            /// <summary>Yaw. Set to NaN for unchanged  [rad] </summary>
         [Units("[rad]")]
-        [Description("Yaw, set to NaN for unchanged")]
+        [Description("Yaw. Set to NaN for unchanged")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=5)]
 		public float[] pos_yaw;
-            /// <summary>Number of valid points (up-to 5 waypoints are possible)   </summary>
+            /// <summary>Number of valid control points (up-to 5 points are possible)   </summary>
         [Units("")]
-        [Description("Number of valid points (up-to 5 waypoints are possible)")]
+        [Description("Number of valid control points (up-to 5 points are possible)")]
         public  byte valid_points;
     
     };
 
     
     /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=14)]
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=10)]
     ///<summary> Report current used cellular network status </summary>
     public struct CELLULAR_STATUS_MSG
     {
-        public CELLULAR_STATUS_MSG(uint cid,/*CELLULAR_NETWORK_STATUS_FLAG*/ushort status,ushort mcc,ushort mnc,ushort lac,/*CELLULAR_NETWORK_RADIO_TYPE*/byte type,byte quality) 
+        public CELLULAR_STATUS_MSG(ushort mcc,ushort mnc,ushort lac,/*CELLULAR_STATUS_FLAG*/byte status,/*CELLULAR_NETWORK_FAILED_REASON*/byte failure_reason,/*CELLULAR_NETWORK_RADIO_TYPE*/byte type,byte quality) 
         {
-              this.cid = cid;
-              this.status = status;
               this.mcc = mcc;
               this.mnc = mnc;
               this.lac = lac;
+              this.status = status;
+              this.failure_reason = failure_reason;
               this.type = type;
               this.quality = quality;
             
         }
-        /// <summary>Cell ID. If unknown, set to: UINT32_MAX   </summary>
+        /// <summary>Mobile country code. If unknown, set to UINT16_MAX   </summary>
         [Units("")]
-        [Description("Cell ID. If unknown, set to: UINT32_MAX")]
-        public  uint cid;
-            /// <summary>Status bitmap CELLULAR_NETWORK_STATUS_FLAG  bitmask</summary>
-        [Units("")]
-        [Description("Status bitmap")]
-        public  /*CELLULAR_NETWORK_STATUS_FLAG*/ushort status;
-            /// <summary>Mobile country code. If unknown, set to: UINT16_MAX   </summary>
-        [Units("")]
-        [Description("Mobile country code. If unknown, set to: UINT16_MAX")]
+        [Description("Mobile country code. If unknown, set to UINT16_MAX")]
         public  ushort mcc;
-            /// <summary>Mobile network code. If unknown, set to: UINT16_MAX   </summary>
+            /// <summary>Mobile network code. If unknown, set to UINT16_MAX   </summary>
         [Units("")]
-        [Description("Mobile network code. If unknown, set to: UINT16_MAX")]
+        [Description("Mobile network code. If unknown, set to UINT16_MAX")]
         public  ushort mnc;
-            /// <summary>Location area code. If unknown, set to: 0   </summary>
+            /// <summary>Location area code. If unknown, set to 0   </summary>
         [Units("")]
-        [Description("Location area code. If unknown, set to: 0")]
+        [Description("Location area code. If unknown, set to 0")]
         public  ushort lac;
+            /// <summary>Cellular modem status CELLULAR_STATUS_FLAG  </summary>
+        [Units("")]
+        [Description("Cellular modem status")]
+        public  /*CELLULAR_STATUS_FLAG*/byte status;
+            /// <summary>Failure reason when status in in CELLUAR_STATUS_FAILED CELLULAR_NETWORK_FAILED_REASON  </summary>
+        [Units("")]
+        [Description("Failure reason when status in in CELLUAR_STATUS_FAILED")]
+        public  /*CELLULAR_NETWORK_FAILED_REASON*/byte failure_reason;
             /// <summary>Cellular network radio type: gsm, cdma, lte... CELLULAR_NETWORK_RADIO_TYPE  </summary>
         [Units("")]
         [Description("Cellular network radio type: gsm, cdma, lte...")]
         public  /*CELLULAR_NETWORK_RADIO_TYPE*/byte type;
-            /// <summary>Cellular network RSSI/RSRP in dBm, absolute value   </summary>
+            /// <summary>Signal quality in percent. If unknown, set to UINT8_MAX   </summary>
         [Units("")]
-        [Description("Cellular network RSSI/RSRP in dBm, absolute value")]
+        [Description("Signal quality in percent. If unknown, set to UINT8_MAX")]
         public  byte quality;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=24)]
+    ///<summary> Status of the Iridium SBD link. </summary>
+    public struct ISBD_LINK_STATUS_MSG
+    {
+        public ISBD_LINK_STATUS_MSG(ulong timestamp,ulong last_heartbeat,ushort failed_sessions,ushort successful_sessions,byte signal_quality,byte ring_pending,byte tx_session_pending,byte rx_session_pending) 
+        {
+              this.timestamp = timestamp;
+              this.last_heartbeat = last_heartbeat;
+              this.failed_sessions = failed_sessions;
+              this.successful_sessions = successful_sessions;
+              this.signal_quality = signal_quality;
+              this.ring_pending = ring_pending;
+              this.tx_session_pending = tx_session_pending;
+              this.rx_session_pending = rx_session_pending;
+            
+        }
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
+        [Units("[us]")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
+        public  ulong timestamp;
+            /// <summary>Timestamp of the last successful sbd session. The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
+        [Units("[us]")]
+        [Description("Timestamp of the last successful sbd session. The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
+        public  ulong last_heartbeat;
+            /// <summary>Number of failed SBD sessions.   </summary>
+        [Units("")]
+        [Description("Number of failed SBD sessions.")]
+        public  ushort failed_sessions;
+            /// <summary>Number of successful SBD sessions.   </summary>
+        [Units("")]
+        [Description("Number of successful SBD sessions.")]
+        public  ushort successful_sessions;
+            /// <summary>Signal quality equal to the number of bars displayed on the ISU signal strength indicator. Range is 0 to 5, where 0 indicates no signal and 5 indicates maximum signal strength.   </summary>
+        [Units("")]
+        [Description("Signal quality equal to the number of bars displayed on the ISU signal strength indicator. Range is 0 to 5, where 0 indicates no signal and 5 indicates maximum signal strength.")]
+        public  byte signal_quality;
+            /// <summary>1: Ring call pending, 0: No call pending.   </summary>
+        [Units("")]
+        [Description("1: Ring call pending, 0: No call pending.")]
+        public  byte ring_pending;
+            /// <summary>1: Transmission session pending, 0: No transmission session pending.   </summary>
+        [Units("")]
+        [Description("1: Transmission session pending, 0: No transmission session pending.")]
+        public  byte tx_session_pending;
+            /// <summary>1: Receiving session pending, 0: No receiving session pending.   </summary>
+        [Units("")]
+        [Description("1: Receiving session pending, 0: No receiving session pending.")]
+        public  byte rx_session_pending;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=84)]
+    ///<summary> Configure cellular modems.         This message is re-emitted as an acknowledgement by the modem.         The message may also be explicitly requested using MAV_CMD_REQUEST_MESSAGE. </summary>
+    public struct CELLULAR_CONFIG_MSG
+    {
+        public CELLULAR_CONFIG_MSG(byte enable_lte,byte enable_pin,byte[] pin,byte[] new_pin,byte[] apn,byte[] puk,byte roaming,/*CELLULAR_CONFIG_RESPONSE*/byte response) 
+        {
+              this.enable_lte = enable_lte;
+              this.enable_pin = enable_pin;
+              this.pin = pin;
+              this.new_pin = new_pin;
+              this.apn = apn;
+              this.puk = puk;
+              this.roaming = roaming;
+              this.response = response;
+            
+        }
+        /// <summary>Enable/disable LTE. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent back as a response.   </summary>
+        [Units("")]
+        [Description("Enable/disable LTE. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent back as a response.")]
+        public  byte enable_lte;
+            /// <summary>Enable/disable PIN on the SIM card. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent back as a response.   </summary>
+        [Units("")]
+        [Description("Enable/disable PIN on the SIM card. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent back as a response.")]
+        public  byte enable_pin;
+            /// <summary>PIN sent to the SIM card. Blank when PIN is disabled. Empty when message is sent back as a response.   </summary>
+        [Units("")]
+        [Description("PIN sent to the SIM card. Blank when PIN is disabled. Empty when message is sent back as a response.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
+		public byte[] pin;
+            /// <summary>New PIN when changing the PIN. Blank to leave it unchanged. Empty when message is sent back as a response.   </summary>
+        [Units("")]
+        [Description("New PIN when changing the PIN. Blank to leave it unchanged. Empty when message is sent back as a response.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
+		public byte[] new_pin;
+            /// <summary>Name of the cellular APN. Blank to leave it unchanged. Current APN when sent back as a response.   </summary>
+        [Units("")]
+        [Description("Name of the cellular APN. Blank to leave it unchanged. Current APN when sent back as a response.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=32)]
+		public byte[] apn;
+            /// <summary>Required PUK code in case the user failed to authenticate 3 times with the PIN. Empty when message is sent back as a response.   </summary>
+        [Units("")]
+        [Description("Required PUK code in case the user failed to authenticate 3 times with the PIN. Empty when message is sent back as a response.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
+		public byte[] puk;
+            /// <summary>Enable/disable roaming. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent back as a response.   </summary>
+        [Units("")]
+        [Description("Enable/disable roaming. 0: setting unchanged, 1: disabled, 2: enabled. Current setting when sent back as a response.")]
+        public  byte roaming;
+            /// <summary>Message acceptance response (sent back to GS). CELLULAR_CONFIG_RESPONSE  </summary>
+        [Units("")]
+        [Description("Message acceptance response (sent back to GS).")]
+        public  /*CELLULAR_CONFIG_RESPONSE*/byte response;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=5)]
+    ///<summary> RPM sensor data message. </summary>
+    public struct RAW_RPM_MSG
+    {
+        public RAW_RPM_MSG(float frequency,byte index) 
+        {
+              this.frequency = frequency;
+              this.index = index;
+            
+        }
+        /// <summary>Indicated rate  [rpm] </summary>
+        [Units("[rpm]")]
+        [Description("Indicated rate")]
+        public  float frequency;
+            /// <summary>Index of this RPM sensor (0-indexed)   </summary>
+        [Units("")]
+        [Description("Index of this RPM sensor (0-indexed)")]
+        public  byte index;
     
     };
 
@@ -12064,9 +16160,9 @@ public partial class MAVLink
               this.data = data;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Unique ID used to discriminate between arrays   </summary>
         [Units("")]
@@ -12101,9 +16197,9 @@ public partial class MAVLink
               this.frame = frame;
             
         }
-        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.  [us] </summary>
+        /// <summary>Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.  [us] </summary>
         [Units("[us]")]
-        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.")]
+        [Description("Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.")]
         public  ulong time_usec;
             /// <summary>Radius of the orbit circle. Positive values orbit clockwise, negative values orbit counter-clockwise.  [m] </summary>
         [Units("[m]")]
@@ -12129,47 +16225,30 @@ public partial class MAVLink
     };
 
     
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=255)]
-    ///<summary> Status text message (use only for important status and error messages). The full message payload can be used for status text, but we recommend that updates be kept concise. Note: The message is intended as a less restrictive replacement for STATUSTEXT. </summary>
-    public struct STATUSTEXT_LONG_MSG
-    {
-        public STATUSTEXT_LONG_MSG(/*MAV_SEVERITY*/byte severity,byte[] text) 
-        {
-              this.severity = severity;
-              this.text = text;
-            
-        }
-        /// <summary>Severity of status. Relies on the definitions within RFC-5424. MAV_SEVERITY  </summary>
-        [Units("")]
-        [Description("Severity of status. Relies on the definitions within RFC-5424.")]
-        public  /*MAV_SEVERITY*/byte severity;
-            /// <summary>Status text message, without null termination character.   </summary>
-        [Units("")]
-        [Description("Status text message, without null termination character.")]
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=254)]
-		public byte[] text;
-    
-    };
-
-    
-    /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=73)]
-    ///<summary> Smart Battery information (static/infrequent update). Use for updates from: smart battery to flight stack, flight stack to GCS. Use instead of BATTERY_STATUS for smart batteries. </summary>
+    /// extensions_start 12
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=109)]
+    ///<summary> Smart Battery information (static/infrequent update). Use for updates from: smart battery to flight stack, flight stack to GCS. Use BATTERY_STATUS for smart battery frequent updates. </summary>
     public struct SMART_BATTERY_INFO_MSG
     {
-        public SMART_BATTERY_INFO_MSG(int capacity_full_specification,int capacity_full,int serial_number,ushort cycle_count,ushort weight,ushort discharge_minimum_voltage,ushort charging_minimum_voltage,ushort resting_minimum_voltage,byte id,byte[] device_name) 
+        public SMART_BATTERY_INFO_MSG(int capacity_full_specification,int capacity_full,ushort cycle_count,ushort weight,ushort discharge_minimum_voltage,ushort charging_minimum_voltage,ushort resting_minimum_voltage,byte id,/*MAV_BATTERY_FUNCTION*/byte battery_function,/*MAV_BATTERY_TYPE*/byte type,byte[] serial_number,byte[] device_name,ushort charging_maximum_voltage,byte cells_in_series,uint discharge_maximum_current,uint discharge_maximum_burst_current,byte[] manufacture_date) 
         {
               this.capacity_full_specification = capacity_full_specification;
               this.capacity_full = capacity_full;
-              this.serial_number = serial_number;
               this.cycle_count = cycle_count;
               this.weight = weight;
               this.discharge_minimum_voltage = discharge_minimum_voltage;
               this.charging_minimum_voltage = charging_minimum_voltage;
               this.resting_minimum_voltage = resting_minimum_voltage;
               this.id = id;
+              this.battery_function = battery_function;
+              this.type = type;
+              this.serial_number = serial_number;
               this.device_name = device_name;
+              this.charging_maximum_voltage = charging_maximum_voltage;
+              this.cells_in_series = cells_in_series;
+              this.discharge_maximum_current = discharge_maximum_current;
+              this.discharge_maximum_burst_current = discharge_maximum_burst_current;
+              this.manufacture_date = manufacture_date;
             
         }
         /// <summary>Capacity when full according to manufacturer, -1: field not provided.  [mAh] </summary>
@@ -12180,13 +16259,9 @@ public partial class MAVLink
         [Units("[mAh]")]
         [Description("Capacity when full (accounting for battery degradation), -1: field not provided.")]
         public  int capacity_full;
-            /// <summary>Serial number. -1: field not provided.   </summary>
+            /// <summary>Charge/discharge cycle count. UINT16_MAX: field not provided.   </summary>
         [Units("")]
-        [Description("Serial number. -1: field not provided.")]
-        public  int serial_number;
-            /// <summary>Charge/discharge cycle count. -1: field not provided.   </summary>
-        [Units("")]
-        [Description("Charge/discharge cycle count. -1: field not provided.")]
+        [Description("Charge/discharge cycle count. UINT16_MAX: field not provided.")]
         public  ushort cycle_count;
             /// <summary>Battery weight. 0: field not provided.  [g] </summary>
         [Units("[g]")]
@@ -12208,72 +16283,120 @@ public partial class MAVLink
         [Units("")]
         [Description("Battery ID")]
         public  byte id;
-            /// <summary>Static device name. Encode as manufacturer and product names separated using an underscore.   </summary>
+            /// <summary>Function of the battery MAV_BATTERY_FUNCTION  </summary>
         [Units("")]
-        [Description("Static device name. Encode as manufacturer and product names separated using an underscore.")]
+        [Description("Function of the battery")]
+        public  /*MAV_BATTERY_FUNCTION*/byte battery_function;
+            /// <summary>Type (chemistry) of the battery MAV_BATTERY_TYPE  </summary>
+        [Units("")]
+        [Description("Type (chemistry) of the battery")]
+        public  /*MAV_BATTERY_TYPE*/byte type;
+            /// <summary>Serial number in ASCII characters, 0 terminated. All 0: field not provided.   </summary>
+        [Units("")]
+        [Description("Serial number in ASCII characters, 0 terminated. All 0: field not provided.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
+		public byte[] serial_number;
+            /// <summary>Static device name in ASCII characters, 0 terminated. All 0: field not provided. Encode as manufacturer name then product name separated using an underscore.   </summary>
+        [Units("")]
+        [Description("Static device name in ASCII characters, 0 terminated. All 0: field not provided. Encode as manufacturer name then product name separated using an underscore.")]
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=50)]
 		public byte[] device_name;
+            /// <summary>Maximum per-cell voltage when charged. 0: field not provided.  [mV] </summary>
+        [Units("[mV]")]
+        [Description("Maximum per-cell voltage when charged. 0: field not provided.")]
+        public  ushort charging_maximum_voltage;
+            /// <summary>Number of battery cells in series. 0: field not provided.   </summary>
+        [Units("")]
+        [Description("Number of battery cells in series. 0: field not provided.")]
+        public  byte cells_in_series;
+            /// <summary>Maximum pack discharge current. 0: field not provided.  [mA] </summary>
+        [Units("[mA]")]
+        [Description("Maximum pack discharge current. 0: field not provided.")]
+        public  uint discharge_maximum_current;
+            /// <summary>Maximum pack discharge burst current. 0: field not provided.  [mA] </summary>
+        [Units("[mA]")]
+        [Description("Maximum pack discharge burst current. 0: field not provided.")]
+        public  uint discharge_maximum_burst_current;
+            /// <summary>Manufacture date (DD/MM/YYYY) in ASCII characters, 0 terminated. All 0: field not provided.   </summary>
+        [Units("")]
+        [Description("Manufacture date (DD/MM/YYYY) in ASCII characters, 0 terminated. All 0: field not provided.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=11)]
+		public byte[] manufacture_date;
     
     };
 
     
     /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=50)]
-    ///<summary> Smart Battery information (dynamic). Use for updates from: smart battery to flight stack, flight stack to GCS. Use instead of BATTERY_STATUS for smart batteries. </summary>
-    public struct SMART_BATTERY_STATUS_MSG
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=42)]
+    ///<summary> Telemetry of power generation system. Alternator or mechanical generator. </summary>
+    public struct GENERATOR_STATUS_MSG
     {
-        public SMART_BATTERY_STATUS_MSG(/*MAV_SMART_BATTERY_FAULT*/int fault_bitmask,int time_remaining,ushort id,short capacity_remaining,short current,short temperature,ushort cell_offset,ushort[] voltages) 
+        public GENERATOR_STATUS_MSG(/*MAV_GENERATOR_STATUS_FLAG*/ulong status,float battery_current,float load_current,float power_generated,float bus_voltage,float bat_current_setpoint,uint runtime,int time_until_maintenance,ushort generator_speed,short rectifier_temperature,short generator_temperature) 
         {
-              this.fault_bitmask = fault_bitmask;
-              this.time_remaining = time_remaining;
-              this.id = id;
-              this.capacity_remaining = capacity_remaining;
-              this.current = current;
-              this.temperature = temperature;
-              this.cell_offset = cell_offset;
-              this.voltages = voltages;
+              this.status = status;
+              this.battery_current = battery_current;
+              this.load_current = load_current;
+              this.power_generated = power_generated;
+              this.bus_voltage = bus_voltage;
+              this.bat_current_setpoint = bat_current_setpoint;
+              this.runtime = runtime;
+              this.time_until_maintenance = time_until_maintenance;
+              this.generator_speed = generator_speed;
+              this.rectifier_temperature = rectifier_temperature;
+              this.generator_temperature = generator_temperature;
             
         }
-        /// <summary>Fault/health indications. MAV_SMART_BATTERY_FAULT  bitmask</summary>
+        /// <summary>Status flags. MAV_GENERATOR_STATUS_FLAG  bitmask</summary>
         [Units("")]
-        [Description("Fault/health indications.")]
-        public  /*MAV_SMART_BATTERY_FAULT*/int fault_bitmask;
-            /// <summary>Estimated remaining battery time. -1: field not provided.  [s] </summary>
+        [Description("Status flags.")]
+        public  /*MAV_GENERATOR_STATUS_FLAG*/ulong status;
+            /// <summary>Current into/out of battery. Positive for out. Negative for in. NaN: field not provided.  [A] </summary>
+        [Units("[A]")]
+        [Description("Current into/out of battery. Positive for out. Negative for in. NaN: field not provided.")]
+        public  float battery_current;
+            /// <summary>Current going to the UAV. If battery current not available this is the DC current from the generator. Positive for out. Negative for in. NaN: field not provided  [A] </summary>
+        [Units("[A]")]
+        [Description("Current going to the UAV. If battery current not available this is the DC current from the generator. Positive for out. Negative for in. NaN: field not provided")]
+        public  float load_current;
+            /// <summary>The power being generated. NaN: field not provided  [W] </summary>
+        [Units("[W]")]
+        [Description("The power being generated. NaN: field not provided")]
+        public  float power_generated;
+            /// <summary>Voltage of the bus seen at the generator, or battery bus if battery bus is controlled by generator and at a different voltage to main bus.  [V] </summary>
+        [Units("[V]")]
+        [Description("Voltage of the bus seen at the generator, or battery bus if battery bus is controlled by generator and at a different voltage to main bus.")]
+        public  float bus_voltage;
+            /// <summary>The target battery current. Positive for out. Negative for in. NaN: field not provided  [A] </summary>
+        [Units("[A]")]
+        [Description("The target battery current. Positive for out. Negative for in. NaN: field not provided")]
+        public  float bat_current_setpoint;
+            /// <summary>Seconds this generator has run since it was rebooted. UINT32_MAX: field not provided.  [s] </summary>
         [Units("[s]")]
-        [Description("Estimated remaining battery time. -1: field not provided.")]
-        public  int time_remaining;
-            /// <summary>Battery ID   </summary>
-        [Units("")]
-        [Description("Battery ID")]
-        public  ushort id;
-            /// <summary>Remaining battery energy. Values: [0-100], -1: field not provided.  [%] </summary>
-        [Units("[%]")]
-        [Description("Remaining battery energy. Values: [0-100], -1: field not provided.")]
-        public  short capacity_remaining;
-            /// <summary>Battery current (through all cells/loads). Positive if discharging, negative if charging. UINT16_MAX: field not provided.  [cA] </summary>
-        [Units("[cA]")]
-        [Description("Battery current (through all cells/loads). Positive if discharging, negative if charging. UINT16_MAX: field not provided.")]
-        public  short current;
-            /// <summary>Battery temperature. -1: field not provided.  [cdegC] </summary>
-        [Units("[cdegC]")]
-        [Description("Battery temperature. -1: field not provided.")]
-        public  short temperature;
-            /// <summary>The cell number of the first index in the 'voltages' array field. Using this field allows you to specify cell voltages for batteries with more than 16 cells.   </summary>
-        [Units("")]
-        [Description("The cell number of the first index in the 'voltages' array field. Using this field allows you to specify cell voltages for batteries with more than 16 cells.")]
-        public  ushort cell_offset;
-            /// <summary>Individual cell voltages. Batteries with more 16 cells can use the cell_offset field to specify the cell offset for the array specified in the current message . Index values above the valid cell count for this battery should have the UINT16_MAX value.  [mV] </summary>
-        [Units("[mV]")]
-        [Description("Individual cell voltages. Batteries with more 16 cells can use the cell_offset field to specify the cell offset for the array specified in the current message . Index values above the valid cell count for this battery should have the UINT16_MAX value.")]
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
-		public ushort[] voltages;
+        [Description("Seconds this generator has run since it was rebooted. UINT32_MAX: field not provided.")]
+        public  uint runtime;
+            /// <summary>Seconds until this generator requires maintenance.  A negative value indicates maintenance is past-due. INT32_MAX: field not provided.  [s] </summary>
+        [Units("[s]")]
+        [Description("Seconds until this generator requires maintenance.  A negative value indicates maintenance is past-due. INT32_MAX: field not provided.")]
+        public  int time_until_maintenance;
+            /// <summary>Speed of electrical generator or alternator. UINT16_MAX: field not provided.  [rpm] </summary>
+        [Units("[rpm]")]
+        [Description("Speed of electrical generator or alternator. UINT16_MAX: field not provided.")]
+        public  ushort generator_speed;
+            /// <summary>The temperature of the rectifier or power converter. INT16_MAX: field not provided.  [degC] </summary>
+        [Units("[degC]")]
+        [Description("The temperature of the rectifier or power converter. INT16_MAX: field not provided.")]
+        public  short rectifier_temperature;
+            /// <summary>The temperature of the mechanical motor, fuel cell core or generator. INT16_MAX: field not provided.  [degC] </summary>
+        [Units("[degC]")]
+        [Description("The temperature of the mechanical motor, fuel cell core or generator. INT16_MAX: field not provided.")]
+        public  short generator_temperature;
     
     };
 
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=140)]
-    ///<summary> The raw values of the actuator outputs. </summary>
+    ///<summary> The raw values of the actuator outputs (e.g. on Pixhawk, from MAIN, AUX ports). This message supersedes SERVO_OUTPUT_RAW. </summary>
     public struct ACTUATOR_OUTPUT_STATUS_MSG
     {
         public ACTUATOR_OUTPUT_STATUS_MSG(ulong time_usec,uint active,float[] actuator) 
@@ -12339,41 +16462,94 @@ public partial class MAVLink
 
     
     /// extensions_start 0
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=137)]
-    ///<summary> Cumulative distance traveled for each reported wheel. </summary>
-    public struct WHEEL_DISTANCE_MSG
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=133)]
+    ///<summary> Message for transporting 'arbitrary' variable-length data from one component to another (broadcast is not forbidden, but discouraged). The encoding of the data is usually extension specific, i.e. determined by the source, and is usually not documented as part of the MAVLink specification. </summary>
+    public struct TUNNEL_MSG
     {
-        public WHEEL_DISTANCE_MSG(ulong time_usec,double[] distance,byte count) 
+        public TUNNEL_MSG(/*MAV_TUNNEL_PAYLOAD_TYPE*/ushort payload_type,byte target_system,byte target_component,byte payload_length,byte[] payload) 
         {
-              this.time_usec = time_usec;
-              this.distance = distance;
-              this.count = count;
+              this.payload_type = payload_type;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.payload_length = payload_length;
+              this.payload = payload;
             
         }
-        /// <summary>Timestamp (synced to UNIX time or since system boot).  [us] </summary>
-        [Units("[us]")]
-        [Description("Timestamp (synced to UNIX time or since system boot).")]
-        public  ulong time_usec;
-            /// <summary>Distance reported by individual wheel encoders. Forward rotations increase values, reverse rotations decrease them. Not all wheels will necessarily have wheel encoders; the mapping of encoders to wheel positions must be agreed/understood by the endpoints.  [m] </summary>
-        [Units("[m]")]
-        [Description("Distance reported by individual wheel encoders. Forward rotations increase values, reverse rotations decrease them. Not all wheels will necessarily have wheel encoders; the mapping of encoders to wheel positions must be agreed/understood by the endpoints.")]
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
-		public double[] distance;
-            /// <summary>Number of wheels reported.   </summary>
+        /// <summary>A code that identifies the content of the payload (0 for unknown, which is the default). If this code is less than 32768, it is a 'registered' payload type and the corresponding code should be added to the MAV_TUNNEL_PAYLOAD_TYPE enum. Software creators can register blocks of types as needed. Codes greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase. MAV_TUNNEL_PAYLOAD_TYPE  </summary>
         [Units("")]
-        [Description("Number of wheels reported.")]
-        public  byte count;
+        [Description("A code that identifies the content of the payload (0 for unknown, which is the default). If this code is less than 32768, it is a 'registered' payload type and the corresponding code should be added to the MAV_TUNNEL_PAYLOAD_TYPE enum. Software creators can register blocks of types as needed. Codes greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.")]
+        public  /*MAV_TUNNEL_PAYLOAD_TYPE*/ushort payload_type;
+            /// <summary>System ID (can be 0 for broadcast, but this is discouraged)   </summary>
+        [Units("")]
+        [Description("System ID (can be 0 for broadcast, but this is discouraged)")]
+        public  byte target_system;
+            /// <summary>Component ID (can be 0 for broadcast, but this is discouraged)   </summary>
+        [Units("")]
+        [Description("Component ID (can be 0 for broadcast, but this is discouraged)")]
+        public  byte target_component;
+            /// <summary>Length of the data transported in payload   </summary>
+        [Units("")]
+        [Description("Length of the data transported in payload")]
+        public  byte payload_length;
+            /// <summary>Variable length payload. The payload length is defined by payload_length. The entire content of this block is opaque unless you understand the encoding specified by payload_type.   </summary>
+        [Units("")]
+        [Description("Variable length payload. The payload length is defined by payload_length. The entire content of this block is opaque unless you understand the encoding specified by payload_type.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=128)]
+		public byte[] payload;
     
     };
 
     
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=16)]
+    ///<summary> A forwarded CAN frame as requested by MAV_CMD_CAN_FORWARD. </summary>
+    public struct CAN_FRAME_MSG
+    {
+        public CAN_FRAME_MSG(uint id,byte target_system,byte target_component,byte bus,byte len,byte[] data) 
+        {
+              this.id = id;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.bus = bus;
+              this.len = len;
+              this.data = data;
+            
+        }
+        /// <summary>Frame ID   </summary>
+        [Units("")]
+        [Description("Frame ID")]
+        public  uint id;
+            /// <summary>System ID.   </summary>
+        [Units("")]
+        [Description("System ID.")]
+        public  byte target_system;
+            /// <summary>Component ID.   </summary>
+        [Units("")]
+        [Description("Component ID.")]
+        public  byte target_component;
+            /// <summary>Bus number   </summary>
+        [Units("")]
+        [Description("Bus number")]
+        public  byte bus;
+            /// <summary>Frame length   </summary>
+        [Units("")]
+        [Description("Frame length")]
+        public  byte len;
+            /// <summary>Frame data   </summary>
+        [Units("")]
+        [Description("Frame data")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
+		public byte[] data;
+    
+    };
+
     
     /// extensions_start 0
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=238)]
     ///<summary> Hardware status sent by an onboard computer. </summary>
-    public struct MAVLINK_ONBOARD_COMPUTER_STATUS_MSG
+    public struct ONBOARD_COMPUTER_STATUS_MSG
     {
-        public MAVLINK_ONBOARD_COMPUTER_STATUS_MSG(ulong time_usec,uint uptime,uint ram_usage,uint ram_total,uint[] storage_type,uint[] storage_usage,uint[] storage_total,uint[] link_type,uint[] link_tx_rate,uint[] link_rx_rate,uint[] link_tx_max,uint[] link_rx_max,short[] fan_speed,byte type,byte[] cpu_cores,byte[] cpu_combined,byte[] gpu_cores,byte[] gpu_combined,sbyte temperature_board,sbyte[] temperature_core) 
+        public ONBOARD_COMPUTER_STATUS_MSG(ulong time_usec,uint uptime,uint ram_usage,uint ram_total,uint[] storage_type,uint[] storage_usage,uint[] storage_total,uint[] link_type,uint[] link_tx_rate,uint[] link_rx_rate,uint[] link_tx_max,uint[] link_rx_max,short[] fan_speed,byte type,byte[] cpu_cores,byte[] cpu_combined,byte[] gpu_cores,byte[] gpu_combined,sbyte temperature_board,sbyte[] temperature_core) 
         {
               this.time_usec = time_usec;
               this.uptime = uptime;
@@ -12494,6 +16670,1079 @@ public partial class MAVLink
     
     };
 
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=212)]
+    ///<summary>          Component information message, which may be requested using MAV_CMD_REQUEST_MESSAGE.        </summary>
+    public struct COMPONENT_INFORMATION_MSG
+    {
+        public COMPONENT_INFORMATION_MSG(uint time_boot_ms,uint general_metadata_file_crc,uint peripherals_metadata_file_crc,byte[] general_metadata_uri,byte[] peripherals_metadata_uri) 
+        {
+              this.time_boot_ms = time_boot_ms;
+              this.general_metadata_file_crc = general_metadata_file_crc;
+              this.peripherals_metadata_file_crc = peripherals_metadata_file_crc;
+              this.general_metadata_uri = general_metadata_uri;
+              this.peripherals_metadata_uri = peripherals_metadata_uri;
+            
+        }
+        /// <summary>Timestamp (time since system boot).  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Timestamp (time since system boot).")]
+        public  uint time_boot_ms;
+            /// <summary>CRC32 of the general metadata file (general_metadata_uri).   </summary>
+        [Units("")]
+        [Description("CRC32 of the general metadata file (general_metadata_uri).")]
+        public  uint general_metadata_file_crc;
+            /// <summary>CRC32 of peripherals metadata file (peripherals_metadata_uri).   </summary>
+        [Units("")]
+        [Description("CRC32 of peripherals metadata file (peripherals_metadata_uri).")]
+        public  uint peripherals_metadata_file_crc;
+            /// <summary>MAVLink FTP URI for the general metadata file (COMP_METADATA_TYPE_GENERAL), which may be compressed with xz. The file contains general component metadata, and may contain URI links for additional metadata (see COMP_METADATA_TYPE). The information is static from boot, and may be generated at compile time. The string needs to be zero terminated.   </summary>
+        [Units("")]
+        [Description("MAVLink FTP URI for the general metadata file (COMP_METADATA_TYPE_GENERAL), which may be compressed with xz. The file contains general component metadata, and may contain URI links for additional metadata (see COMP_METADATA_TYPE). The information is static from boot, and may be generated at compile time. The string needs to be zero terminated.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=100)]
+		public byte[] general_metadata_uri;
+            /// <summary>(Optional) MAVLink FTP URI for the peripherals metadata file (COMP_METADATA_TYPE_PERIPHERALS), which may be compressed with xz. This contains data about 'attached components' such as UAVCAN nodes. The peripherals are in a separate file because the information must be generated dynamically at runtime. The string needs to be zero terminated.   </summary>
+        [Units("")]
+        [Description("(Optional) MAVLink FTP URI for the peripherals metadata file (COMP_METADATA_TYPE_PERIPHERALS), which may be compressed with xz. This contains data about 'attached components' such as UAVCAN nodes. The peripherals are in a separate file because the information must be generated dynamically at runtime. The string needs to be zero terminated.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=100)]
+		public byte[] peripherals_metadata_uri;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=108)]
+    ///<summary>          Component metadata message, which may be requested using MAV_CMD_REQUEST_MESSAGE.                  This contains the MAVLink FTP URI and CRC for the component's general metadata file.         The file must be hosted on the component, and may be xz compressed.         The file CRC can be used for file caching.                  The general metadata file can be read to get the locations of other metadata files (COMP_METADATA_TYPE) and translations, which may be hosted either on the vehicle or the internet.         For more information see: https://mavlink.io/en/services/component_information.html.                  Note: Camera components should use CAMERA_INFORMATION instead, and autopilots may use both this message and AUTOPILOT_VERSION.        </summary>
+    public struct COMPONENT_METADATA_MSG
+    {
+        public COMPONENT_METADATA_MSG(uint time_boot_ms,uint file_crc,byte[] uri) 
+        {
+              this.time_boot_ms = time_boot_ms;
+              this.file_crc = file_crc;
+              this.uri = uri;
+            
+        }
+        /// <summary>Timestamp (time since system boot).  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Timestamp (time since system boot).")]
+        public  uint time_boot_ms;
+            /// <summary>CRC32 of the general metadata file.   </summary>
+        [Units("")]
+        [Description("CRC32 of the general metadata file.")]
+        public  uint file_crc;
+            /// <summary>MAVLink FTP URI for the general metadata file (COMP_METADATA_TYPE_GENERAL), which may be compressed with xz. The file contains general component metadata, and may contain URI links for additional metadata (see COMP_METADATA_TYPE). The information is static from boot, and may be generated at compile time. The string needs to be zero terminated.   </summary>
+        [Units("")]
+        [Description("MAVLink FTP URI for the general metadata file (COMP_METADATA_TYPE_GENERAL), which may be compressed with xz. The file contains general component metadata, and may contain URI links for additional metadata (see COMP_METADATA_TYPE). The information is static from boot, and may be generated at compile time. The string needs to be zero terminated.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=100)]
+		public byte[] uri;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=254)]
+    ///<summary> Play vehicle tone/tune (buzzer). Supersedes message PLAY_TUNE. </summary>
+    public struct PLAY_TUNE_V2_MSG
+    {
+        public PLAY_TUNE_V2_MSG(/*TUNE_FORMAT*/uint format,byte target_system,byte target_component,byte[] tune) 
+        {
+              this.format = format;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.tune = tune;
+            
+        }
+        /// <summary>Tune format TUNE_FORMAT  bitmask</summary>
+        [Units("")]
+        [Description("Tune format")]
+        public  /*TUNE_FORMAT*/uint format;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+            /// <summary>Tune definition as a NULL-terminated string.   </summary>
+        [Units("")]
+        [Description("Tune definition as a NULL-terminated string.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=248)]
+		public byte[] tune;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=6)]
+    ///<summary> Tune formats supported by vehicle. This should be emitted as response to MAV_CMD_REQUEST_MESSAGE. </summary>
+    public struct SUPPORTED_TUNES_MSG
+    {
+        public SUPPORTED_TUNES_MSG(/*TUNE_FORMAT*/uint format,byte target_system,byte target_component) 
+        {
+              this.format = format;
+              this.target_system = target_system;
+              this.target_component = target_component;
+            
+        }
+        /// <summary>Bitfield of supported tune formats. TUNE_FORMAT  bitmask</summary>
+        [Units("")]
+        [Description("Bitfield of supported tune formats.")]
+        public  /*TUNE_FORMAT*/uint format;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=53)]
+    ///<summary> Event message. Each new event from a particular component gets a new sequence number. The same message might be sent multiple times if (re-)requested. Most events are broadcast, some can be specific to a target component (as receivers keep track of the sequence for missed events, all events need to be broadcast. Thus we use destination_component instead of target_component). </summary>
+    public struct EVENT_MSG
+    {
+        public EVENT_MSG(uint id,uint event_time_boot_ms,ushort sequence,byte destination_component,byte destination_system,byte log_levels,byte[] arguments) 
+        {
+              this.id = id;
+              this.event_time_boot_ms = event_time_boot_ms;
+              this.sequence = sequence;
+              this.destination_component = destination_component;
+              this.destination_system = destination_system;
+              this.log_levels = log_levels;
+              this.arguments = arguments;
+            
+        }
+        /// <summary>Event ID (as defined in the component metadata)   </summary>
+        [Units("")]
+        [Description("Event ID (as defined in the component metadata)")]
+        public  uint id;
+            /// <summary>Timestamp (time since system boot when the event happened).  [ms] </summary>
+        [Units("[ms]")]
+        [Description("Timestamp (time since system boot when the event happened).")]
+        public  uint event_time_boot_ms;
+            /// <summary>Sequence number.   </summary>
+        [Units("")]
+        [Description("Sequence number.")]
+        public  ushort sequence;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte destination_component;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte destination_system;
+            /// <summary>Log levels: 4 bits MSB: internal (for logging purposes), 4 bits LSB: external. Levels: Emergency = 0, Alert = 1, Critical = 2, Error = 3, Warning = 4, Notice = 5, Info = 6, Debug = 7, Protocol = 8, Disabled = 9   </summary>
+        [Units("")]
+        [Description("Log levels: 4 bits MSB: internal (for logging purposes), 4 bits LSB: external. Levels: Emergency = 0, Alert = 1, Critical = 2, Error = 3, Warning = 4, Notice = 5, Info = 6, Debug = 7, Protocol = 8, Disabled = 9")]
+        public  byte log_levels;
+            /// <summary>Arguments (depend on event ID).   </summary>
+        [Units("")]
+        [Description("Arguments (depend on event ID).")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=40)]
+		public byte[] arguments;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=3)]
+    ///<summary> Regular broadcast for the current latest event sequence number for a component. This is used to check for dropped events. </summary>
+    public struct CURRENT_EVENT_SEQUENCE_MSG
+    {
+        public CURRENT_EVENT_SEQUENCE_MSG(ushort sequence,/*MAV_EVENT_CURRENT_SEQUENCE_FLAGS*/byte flags) 
+        {
+              this.sequence = sequence;
+              this.flags = flags;
+            
+        }
+        /// <summary>Sequence number.   </summary>
+        [Units("")]
+        [Description("Sequence number.")]
+        public  ushort sequence;
+            /// <summary>Flag bitset. MAV_EVENT_CURRENT_SEQUENCE_FLAGS  bitmask</summary>
+        [Units("")]
+        [Description("Flag bitset.")]
+        public  /*MAV_EVENT_CURRENT_SEQUENCE_FLAGS*/byte flags;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=6)]
+    ///<summary> Request one or more events to be (re-)sent. If first_sequence==last_sequence, only a single event is requested. Note that first_sequence can be larger than last_sequence (because the sequence number can wrap). Each sequence will trigger an EVENT or EVENT_ERROR response. </summary>
+    public struct REQUEST_EVENT_MSG
+    {
+        public REQUEST_EVENT_MSG(ushort first_sequence,ushort last_sequence,byte target_system,byte target_component) 
+        {
+              this.first_sequence = first_sequence;
+              this.last_sequence = last_sequence;
+              this.target_system = target_system;
+              this.target_component = target_component;
+            
+        }
+        /// <summary>First sequence number of the requested event.   </summary>
+        [Units("")]
+        [Description("First sequence number of the requested event.")]
+        public  ushort first_sequence;
+            /// <summary>Last sequence number of the requested event.   </summary>
+        [Units("")]
+        [Description("Last sequence number of the requested event.")]
+        public  ushort last_sequence;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=7)]
+    ///<summary> Response to a REQUEST_EVENT in case of an error (e.g. the event is not available anymore). </summary>
+    public struct RESPONSE_EVENT_ERROR_MSG
+    {
+        public RESPONSE_EVENT_ERROR_MSG(ushort sequence,ushort sequence_oldest_available,byte target_system,byte target_component,/*MAV_EVENT_ERROR_REASON*/byte reason) 
+        {
+              this.sequence = sequence;
+              this.sequence_oldest_available = sequence_oldest_available;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.reason = reason;
+            
+        }
+        /// <summary>Sequence number.   </summary>
+        [Units("")]
+        [Description("Sequence number.")]
+        public  ushort sequence;
+            /// <summary>Oldest Sequence number that is still available after the sequence set in REQUEST_EVENT.   </summary>
+        [Units("")]
+        [Description("Oldest Sequence number that is still available after the sequence set in REQUEST_EVENT.")]
+        public  ushort sequence_oldest_available;
+            /// <summary>System ID   </summary>
+        [Units("")]
+        [Description("System ID")]
+        public  byte target_system;
+            /// <summary>Component ID   </summary>
+        [Units("")]
+        [Description("Component ID")]
+        public  byte target_component;
+            /// <summary>Error reason. MAV_EVENT_ERROR_REASON  </summary>
+        [Units("")]
+        [Description("Error reason.")]
+        public  /*MAV_EVENT_ERROR_REASON*/byte reason;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=72)]
+    ///<summary> A forwarded CANFD frame as requested by MAV_CMD_CAN_FORWARD. These are separated from CAN_FRAME as they need different handling (eg. TAO handling) </summary>
+    public struct CANFD_FRAME_MSG
+    {
+        public CANFD_FRAME_MSG(uint id,byte target_system,byte target_component,byte bus,byte len,byte[] data) 
+        {
+              this.id = id;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.bus = bus;
+              this.len = len;
+              this.data = data;
+            
+        }
+        /// <summary>Frame ID   </summary>
+        [Units("")]
+        [Description("Frame ID")]
+        public  uint id;
+            /// <summary>System ID.   </summary>
+        [Units("")]
+        [Description("System ID.")]
+        public  byte target_system;
+            /// <summary>Component ID.   </summary>
+        [Units("")]
+        [Description("Component ID.")]
+        public  byte target_component;
+            /// <summary>bus number   </summary>
+        [Units("")]
+        [Description("bus number")]
+        public  byte bus;
+            /// <summary>Frame length   </summary>
+        [Units("")]
+        [Description("Frame length")]
+        public  byte len;
+            /// <summary>Frame data   </summary>
+        [Units("")]
+        [Description("Frame data")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=64)]
+		public byte[] data;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=37)]
+    ///<summary> Modify the filter of what CAN messages to forward over the mavlink. This can be used to make CAN forwarding work well on low bandwidth links. The filtering is applied on bits 8 to 24 of the CAN id (2nd and 3rd bytes) which corresponds to the DroneCAN message ID for DroneCAN. Filters with more than 16 IDs can be constructed by sending multiple CAN_FILTER_MODIFY messages. </summary>
+    public struct CAN_FILTER_MODIFY_MSG
+    {
+        public CAN_FILTER_MODIFY_MSG(ushort[] ids,byte target_system,byte target_component,byte bus,/*CAN_FILTER_OP*/byte operation,byte num_ids) 
+        {
+              this.ids = ids;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.bus = bus;
+              this.operation = operation;
+              this.num_ids = num_ids;
+            
+        }
+        /// <summary>filter IDs, length num_ids   </summary>
+        [Units("")]
+        [Description("filter IDs, length num_ids")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
+		public ushort[] ids;
+            /// <summary>System ID.   </summary>
+        [Units("")]
+        [Description("System ID.")]
+        public  byte target_system;
+            /// <summary>Component ID.   </summary>
+        [Units("")]
+        [Description("Component ID.")]
+        public  byte target_component;
+            /// <summary>bus number   </summary>
+        [Units("")]
+        [Description("bus number")]
+        public  byte bus;
+            /// <summary>what operation to perform on the filter list. See CAN_FILTER_OP enum. CAN_FILTER_OP  </summary>
+        [Units("")]
+        [Description("what operation to perform on the filter list. See CAN_FILTER_OP enum.")]
+        public  /*CAN_FILTER_OP*/byte operation;
+            /// <summary>number of IDs in filter list   </summary>
+        [Units("")]
+        [Description("number of IDs in filter list")]
+        public  byte num_ids;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=137)]
+    ///<summary> Cumulative distance traveled for each reported wheel. </summary>
+    public struct WHEEL_DISTANCE_MSG
+    {
+        public WHEEL_DISTANCE_MSG(ulong time_usec,double[] distance,byte count) 
+        {
+              this.time_usec = time_usec;
+              this.distance = distance;
+              this.count = count;
+            
+        }
+        /// <summary>Timestamp (synced to UNIX time or since system boot).  [us] </summary>
+        [Units("[us]")]
+        [Description("Timestamp (synced to UNIX time or since system boot).")]
+        public  ulong time_usec;
+            /// <summary>Distance reported by individual wheel encoders. Forward rotations increase values, reverse rotations decrease them. Not all wheels will necessarily have wheel encoders; the mapping of encoders to wheel positions must be agreed/understood by the endpoints.  [m] </summary>
+        [Units("[m]")]
+        [Description("Distance reported by individual wheel encoders. Forward rotations increase values, reverse rotations decrease them. Not all wheels will necessarily have wheel encoders; the mapping of encoders to wheel positions must be agreed/understood by the endpoints.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
+		public double[] distance;
+            /// <summary>Number of wheels reported.   </summary>
+        [Units("")]
+        [Description("Number of wheels reported.")]
+        public  byte count;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=34)]
+    ///<summary> Winch status. </summary>
+    public struct WINCH_STATUS_MSG
+    {
+        public WINCH_STATUS_MSG(ulong time_usec,float line_length,float speed,float tension,float voltage,float current,/*MAV_WINCH_STATUS_FLAG*/uint status,short temperature) 
+        {
+              this.time_usec = time_usec;
+              this.line_length = line_length;
+              this.speed = speed;
+              this.tension = tension;
+              this.voltage = voltage;
+              this.current = current;
+              this.status = status;
+              this.temperature = temperature;
+            
+        }
+        /// <summary>Timestamp (synced to UNIX time or since system boot).  [us] </summary>
+        [Units("[us]")]
+        [Description("Timestamp (synced to UNIX time or since system boot).")]
+        public  ulong time_usec;
+            /// <summary>Length of line released. NaN if unknown  [m] </summary>
+        [Units("[m]")]
+        [Description("Length of line released. NaN if unknown")]
+        public  float line_length;
+            /// <summary>Speed line is being released or retracted. Positive values if being released, negative values if being retracted, NaN if unknown  [m/s] </summary>
+        [Units("[m/s]")]
+        [Description("Speed line is being released or retracted. Positive values if being released, negative values if being retracted, NaN if unknown")]
+        public  float speed;
+            /// <summary>Tension on the line. NaN if unknown  [kg] </summary>
+        [Units("[kg]")]
+        [Description("Tension on the line. NaN if unknown")]
+        public  float tension;
+            /// <summary>Voltage of the battery supplying the winch. NaN if unknown  [V] </summary>
+        [Units("[V]")]
+        [Description("Voltage of the battery supplying the winch. NaN if unknown")]
+        public  float voltage;
+            /// <summary>Current draw from the winch. NaN if unknown  [A] </summary>
+        [Units("[A]")]
+        [Description("Current draw from the winch. NaN if unknown")]
+        public  float current;
+            /// <summary>Status flags MAV_WINCH_STATUS_FLAG  bitmask</summary>
+        [Units("")]
+        [Description("Status flags")]
+        public  /*MAV_WINCH_STATUS_FLAG*/uint status;
+            /// <summary>Temperature of the motor. INT16_MAX if unknown  [degC] </summary>
+        [Units("[degC]")]
+        [Description("Temperature of the motor. INT16_MAX if unknown")]
+        public  short temperature;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=44)]
+    ///<summary> Data for filling the OpenDroneID Basic ID message. This and the below messages are primarily meant for feeding data to/from an OpenDroneID implementation. E.g. https://github.com/opendroneid/opendroneid-core-c. These messages are compatible with the ASTM F3411 Remote ID standard and the ASD-STAN prEN 4709-002 Direct Remote ID standard. Additional information and usage of these messages is documented at https://mavlink.io/en/services/opendroneid.html. </summary>
+    public struct OPEN_DRONE_ID_BASIC_ID_MSG
+    {
+        public OPEN_DRONE_ID_BASIC_ID_MSG(byte target_system,byte target_component,byte[] id_or_mac,/*MAV_ODID_ID_TYPE*/byte id_type,/*MAV_ODID_UA_TYPE*/byte ua_type,byte[] uas_id) 
+        {
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.id_or_mac = id_or_mac;
+              this.id_type = id_type;
+              this.ua_type = ua_type;
+              this.uas_id = uas_id;
+            
+        }
+        /// <summary>System ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("System ID (0 for broadcast).")]
+        public  byte target_system;
+            /// <summary>Component ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("Component ID (0 for broadcast).")]
+        public  byte target_component;
+            /// <summary>Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html.    </summary>
+        [Units("")]
+        [Description("Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html. ")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] id_or_mac;
+            /// <summary>Indicates the format for the uas_id field of this message. MAV_ODID_ID_TYPE  </summary>
+        [Units("")]
+        [Description("Indicates the format for the uas_id field of this message.")]
+        public  /*MAV_ODID_ID_TYPE*/byte id_type;
+            /// <summary>Indicates the type of UA (Unmanned Aircraft). MAV_ODID_UA_TYPE  </summary>
+        [Units("")]
+        [Description("Indicates the type of UA (Unmanned Aircraft).")]
+        public  /*MAV_ODID_UA_TYPE*/byte ua_type;
+            /// <summary>UAS (Unmanned Aircraft System) ID following the format specified by id_type. Shall be filled with nulls in the unused portion of the field.   </summary>
+        [Units("")]
+        [Description("UAS (Unmanned Aircraft System) ID following the format specified by id_type. Shall be filled with nulls in the unused portion of the field.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] uas_id;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=59)]
+    ///<summary> Data for filling the OpenDroneID Location message. The float data types are 32-bit IEEE 754. The Location message provides the location, altitude, direction and speed of the aircraft. </summary>
+    public struct OPEN_DRONE_ID_LOCATION_MSG
+    {
+        public OPEN_DRONE_ID_LOCATION_MSG(int latitude,int longitude,float altitude_barometric,float altitude_geodetic,float height,float timestamp,ushort direction,ushort speed_horizontal,short speed_vertical,byte target_system,byte target_component,byte[] id_or_mac,/*MAV_ODID_STATUS*/byte status,/*MAV_ODID_HEIGHT_REF*/byte height_reference,/*MAV_ODID_HOR_ACC*/byte horizontal_accuracy,/*MAV_ODID_VER_ACC*/byte vertical_accuracy,/*MAV_ODID_VER_ACC*/byte barometer_accuracy,/*MAV_ODID_SPEED_ACC*/byte speed_accuracy,/*MAV_ODID_TIME_ACC*/byte timestamp_accuracy) 
+        {
+              this.latitude = latitude;
+              this.longitude = longitude;
+              this.altitude_barometric = altitude_barometric;
+              this.altitude_geodetic = altitude_geodetic;
+              this.height = height;
+              this.timestamp = timestamp;
+              this.direction = direction;
+              this.speed_horizontal = speed_horizontal;
+              this.speed_vertical = speed_vertical;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.id_or_mac = id_or_mac;
+              this.status = status;
+              this.height_reference = height_reference;
+              this.horizontal_accuracy = horizontal_accuracy;
+              this.vertical_accuracy = vertical_accuracy;
+              this.barometer_accuracy = barometer_accuracy;
+              this.speed_accuracy = speed_accuracy;
+              this.timestamp_accuracy = timestamp_accuracy;
+            
+        }
+        /// <summary>Current latitude of the unmanned aircraft. If unknown: 0 (both Lat/Lon).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Current latitude of the unmanned aircraft. If unknown: 0 (both Lat/Lon).")]
+        public  int latitude;
+            /// <summary>Current longitude of the unmanned aircraft. If unknown: 0 (both Lat/Lon).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Current longitude of the unmanned aircraft. If unknown: 0 (both Lat/Lon).")]
+        public  int longitude;
+            /// <summary>The altitude calculated from the barometric pressue. Reference is against 29.92inHg or 1013.2mb. If unknown: -1000 m.  [m] </summary>
+        [Units("[m]")]
+        [Description("The altitude calculated from the barometric pressue. Reference is against 29.92inHg or 1013.2mb. If unknown: -1000 m.")]
+        public  float altitude_barometric;
+            /// <summary>The geodetic altitude as defined by WGS84. If unknown: -1000 m.  [m] </summary>
+        [Units("[m]")]
+        [Description("The geodetic altitude as defined by WGS84. If unknown: -1000 m.")]
+        public  float altitude_geodetic;
+            /// <summary>The current height of the unmanned aircraft above the take-off location or the ground as indicated by height_reference. If unknown: -1000 m.  [m] </summary>
+        [Units("[m]")]
+        [Description("The current height of the unmanned aircraft above the take-off location or the ground as indicated by height_reference. If unknown: -1000 m.")]
+        public  float height;
+            /// <summary>Seconds after the full hour with reference to UTC time. Typically the GPS outputs a time-of-week value in milliseconds. First convert that to UTC and then convert for this field using ((float) (time_week_ms % (60*60*1000))) / 1000. If unknown: 0xFFFF.  [s] </summary>
+        [Units("[s]")]
+        [Description("Seconds after the full hour with reference to UTC time. Typically the GPS outputs a time-of-week value in milliseconds. First convert that to UTC and then convert for this field using ((float) (time_week_ms % (60*60*1000))) / 1000. If unknown: 0xFFFF.")]
+        public  float timestamp;
+            /// <summary>Direction over ground (not heading, but direction of movement) measured clockwise from true North: 0 - 35999 centi-degrees. If unknown: 36100 centi-degrees.  [cdeg] </summary>
+        [Units("[cdeg]")]
+        [Description("Direction over ground (not heading, but direction of movement) measured clockwise from true North: 0 - 35999 centi-degrees. If unknown: 36100 centi-degrees.")]
+        public  ushort direction;
+            /// <summary>Ground speed. Positive only. If unknown: 25500 cm/s. If speed is larger than 25425 cm/s, use 25425 cm/s.  [cm/s] </summary>
+        [Units("[cm/s]")]
+        [Description("Ground speed. Positive only. If unknown: 25500 cm/s. If speed is larger than 25425 cm/s, use 25425 cm/s.")]
+        public  ushort speed_horizontal;
+            /// <summary>The vertical speed. Up is positive. If unknown: 6300 cm/s. If speed is larger than 6200 cm/s, use 6200 cm/s. If lower than -6200 cm/s, use -6200 cm/s.  [cm/s] </summary>
+        [Units("[cm/s]")]
+        [Description("The vertical speed. Up is positive. If unknown: 6300 cm/s. If speed is larger than 6200 cm/s, use 6200 cm/s. If lower than -6200 cm/s, use -6200 cm/s.")]
+        public  short speed_vertical;
+            /// <summary>System ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("System ID (0 for broadcast).")]
+        public  byte target_system;
+            /// <summary>Component ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("Component ID (0 for broadcast).")]
+        public  byte target_component;
+            /// <summary>Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html.    </summary>
+        [Units("")]
+        [Description("Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html. ")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] id_or_mac;
+            /// <summary>Indicates whether the unmanned aircraft is on the ground or in the air. MAV_ODID_STATUS  </summary>
+        [Units("")]
+        [Description("Indicates whether the unmanned aircraft is on the ground or in the air.")]
+        public  /*MAV_ODID_STATUS*/byte status;
+            /// <summary>Indicates the reference point for the height field. MAV_ODID_HEIGHT_REF  </summary>
+        [Units("")]
+        [Description("Indicates the reference point for the height field.")]
+        public  /*MAV_ODID_HEIGHT_REF*/byte height_reference;
+            /// <summary>The accuracy of the horizontal position. MAV_ODID_HOR_ACC  </summary>
+        [Units("")]
+        [Description("The accuracy of the horizontal position.")]
+        public  /*MAV_ODID_HOR_ACC*/byte horizontal_accuracy;
+            /// <summary>The accuracy of the vertical position. MAV_ODID_VER_ACC  </summary>
+        [Units("")]
+        [Description("The accuracy of the vertical position.")]
+        public  /*MAV_ODID_VER_ACC*/byte vertical_accuracy;
+            /// <summary>The accuracy of the barometric altitude. MAV_ODID_VER_ACC  </summary>
+        [Units("")]
+        [Description("The accuracy of the barometric altitude.")]
+        public  /*MAV_ODID_VER_ACC*/byte barometer_accuracy;
+            /// <summary>The accuracy of the horizontal and vertical speed. MAV_ODID_SPEED_ACC  </summary>
+        [Units("")]
+        [Description("The accuracy of the horizontal and vertical speed.")]
+        public  /*MAV_ODID_SPEED_ACC*/byte speed_accuracy;
+            /// <summary>The accuracy of the timestamps. MAV_ODID_TIME_ACC  </summary>
+        [Units("")]
+        [Description("The accuracy of the timestamps.")]
+        public  /*MAV_ODID_TIME_ACC*/byte timestamp_accuracy;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=53)]
+    ///<summary> Data for filling the OpenDroneID Authentication message. The Authentication Message defines a field that can provide a means of authenticity for the identity of the UAS (Unmanned Aircraft System). The Authentication message can have two different formats. For data page 0, the fields PageCount, Length and TimeStamp are present and AuthData is only 17 bytes. For data page 1 through 15, PageCount, Length and TimeStamp are not present and the size of AuthData is 23 bytes. </summary>
+    public struct OPEN_DRONE_ID_AUTHENTICATION_MSG
+    {
+        public OPEN_DRONE_ID_AUTHENTICATION_MSG(uint timestamp,byte target_system,byte target_component,byte[] id_or_mac,/*MAV_ODID_AUTH_TYPE*/byte authentication_type,byte data_page,byte last_page_index,byte length,byte[] authentication_data) 
+        {
+              this.timestamp = timestamp;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.id_or_mac = id_or_mac;
+              this.authentication_type = authentication_type;
+              this.data_page = data_page;
+              this.last_page_index = last_page_index;
+              this.length = length;
+              this.authentication_data = authentication_data;
+            
+        }
+        /// <summary>This field is only present for page 0. 32 bit Unix Timestamp in seconds since 00:00:00 01/01/2019.  [s] </summary>
+        [Units("[s]")]
+        [Description("This field is only present for page 0. 32 bit Unix Timestamp in seconds since 00:00:00 01/01/2019.")]
+        public  uint timestamp;
+            /// <summary>System ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("System ID (0 for broadcast).")]
+        public  byte target_system;
+            /// <summary>Component ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("Component ID (0 for broadcast).")]
+        public  byte target_component;
+            /// <summary>Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html.    </summary>
+        [Units("")]
+        [Description("Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html. ")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] id_or_mac;
+            /// <summary>Indicates the type of authentication. MAV_ODID_AUTH_TYPE  </summary>
+        [Units("")]
+        [Description("Indicates the type of authentication.")]
+        public  /*MAV_ODID_AUTH_TYPE*/byte authentication_type;
+            /// <summary>Allowed range is 0 - 15.   </summary>
+        [Units("")]
+        [Description("Allowed range is 0 - 15.")]
+        public  byte data_page;
+            /// <summary>This field is only present for page 0. Allowed range is 0 - 15. See the description of struct ODID_Auth_data at https://github.com/opendroneid/opendroneid-core-c/blob/master/libopendroneid/opendroneid.h.   </summary>
+        [Units("")]
+        [Description("This field is only present for page 0. Allowed range is 0 - 15. See the description of struct ODID_Auth_data at https://github.com/opendroneid/opendroneid-core-c/blob/master/libopendroneid/opendroneid.h.")]
+        public  byte last_page_index;
+            /// <summary>This field is only present for page 0. Total bytes of authentication_data from all data pages. See the description of struct ODID_Auth_data at https://github.com/opendroneid/opendroneid-core-c/blob/master/libopendroneid/opendroneid.h.  [bytes] </summary>
+        [Units("[bytes]")]
+        [Description("This field is only present for page 0. Total bytes of authentication_data from all data pages. See the description of struct ODID_Auth_data at https://github.com/opendroneid/opendroneid-core-c/blob/master/libopendroneid/opendroneid.h.")]
+        public  byte length;
+            /// <summary>Opaque authentication data. For page 0, the size is only 17 bytes. For other pages, the size is 23 bytes. Shall be filled with nulls in the unused portion of the field.   </summary>
+        [Units("")]
+        [Description("Opaque authentication data. For page 0, the size is only 17 bytes. For other pages, the size is 23 bytes. Shall be filled with nulls in the unused portion of the field.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=23)]
+		public byte[] authentication_data;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=46)]
+    ///<summary> Data for filling the OpenDroneID Self ID message. The Self ID Message is an opportunity for the operator to (optionally) declare their identity and purpose of the flight. This message can provide additional information that could reduce the threat profile of a UA (Unmanned Aircraft) flying in a particular area or manner. This message can also be used to provide optional additional clarification in an emergency/remote ID system failure situation. </summary>
+    public struct OPEN_DRONE_ID_SELF_ID_MSG
+    {
+        public OPEN_DRONE_ID_SELF_ID_MSG(byte target_system,byte target_component,byte[] id_or_mac,/*MAV_ODID_DESC_TYPE*/byte description_type,byte[] description) 
+        {
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.id_or_mac = id_or_mac;
+              this.description_type = description_type;
+              this.description = description;
+            
+        }
+        /// <summary>System ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("System ID (0 for broadcast).")]
+        public  byte target_system;
+            /// <summary>Component ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("Component ID (0 for broadcast).")]
+        public  byte target_component;
+            /// <summary>Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html.    </summary>
+        [Units("")]
+        [Description("Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html. ")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] id_or_mac;
+            /// <summary>Indicates the type of the description field. MAV_ODID_DESC_TYPE  </summary>
+        [Units("")]
+        [Description("Indicates the type of the description field.")]
+        public  /*MAV_ODID_DESC_TYPE*/byte description_type;
+            /// <summary>Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in the unused portion of the field.   </summary>
+        [Units("")]
+        [Description("Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in the unused portion of the field.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=23)]
+		public byte[] description;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=54)]
+    ///<summary> Data for filling the OpenDroneID System message. The System Message contains general system information including the operator location/altitude and possible aircraft group and/or category/class information. </summary>
+    public struct OPEN_DRONE_ID_SYSTEM_MSG
+    {
+        public OPEN_DRONE_ID_SYSTEM_MSG(int operator_latitude,int operator_longitude,float area_ceiling,float area_floor,float operator_altitude_geo,uint timestamp,ushort area_count,ushort area_radius,byte target_system,byte target_component,byte[] id_or_mac,/*MAV_ODID_OPERATOR_LOCATION_TYPE*/byte operator_location_type,/*MAV_ODID_CLASSIFICATION_TYPE*/byte classification_type,/*MAV_ODID_CATEGORY_EU*/byte category_eu,/*MAV_ODID_CLASS_EU*/byte class_eu) 
+        {
+              this.operator_latitude = operator_latitude;
+              this.operator_longitude = operator_longitude;
+              this.area_ceiling = area_ceiling;
+              this.area_floor = area_floor;
+              this.operator_altitude_geo = operator_altitude_geo;
+              this.timestamp = timestamp;
+              this.area_count = area_count;
+              this.area_radius = area_radius;
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.id_or_mac = id_or_mac;
+              this.operator_location_type = operator_location_type;
+              this.classification_type = classification_type;
+              this.category_eu = category_eu;
+              this.class_eu = class_eu;
+            
+        }
+        /// <summary>Latitude of the operator. If unknown: 0 (both Lat/Lon).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Latitude of the operator. If unknown: 0 (both Lat/Lon).")]
+        public  int operator_latitude;
+            /// <summary>Longitude of the operator. If unknown: 0 (both Lat/Lon).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Longitude of the operator. If unknown: 0 (both Lat/Lon).")]
+        public  int operator_longitude;
+            /// <summary>Area Operations Ceiling relative to WGS84. If unknown: -1000 m.  [m] </summary>
+        [Units("[m]")]
+        [Description("Area Operations Ceiling relative to WGS84. If unknown: -1000 m.")]
+        public  float area_ceiling;
+            /// <summary>Area Operations Floor relative to WGS84. If unknown: -1000 m.  [m] </summary>
+        [Units("[m]")]
+        [Description("Area Operations Floor relative to WGS84. If unknown: -1000 m.")]
+        public  float area_floor;
+            /// <summary>Geodetic altitude of the operator relative to WGS84. If unknown: -1000 m.  [m] </summary>
+        [Units("[m]")]
+        [Description("Geodetic altitude of the operator relative to WGS84. If unknown: -1000 m.")]
+        public  float operator_altitude_geo;
+            /// <summary>32 bit Unix Timestamp in seconds since 00:00:00 01/01/2019.  [s] </summary>
+        [Units("[s]")]
+        [Description("32 bit Unix Timestamp in seconds since 00:00:00 01/01/2019.")]
+        public  uint timestamp;
+            /// <summary>Number of aircraft in the area, group or formation (default 1).   </summary>
+        [Units("")]
+        [Description("Number of aircraft in the area, group or formation (default 1).")]
+        public  ushort area_count;
+            /// <summary>Radius of the cylindrical area of the group or formation (default 0).  [m] </summary>
+        [Units("[m]")]
+        [Description("Radius of the cylindrical area of the group or formation (default 0).")]
+        public  ushort area_radius;
+            /// <summary>System ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("System ID (0 for broadcast).")]
+        public  byte target_system;
+            /// <summary>Component ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("Component ID (0 for broadcast).")]
+        public  byte target_component;
+            /// <summary>Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html.    </summary>
+        [Units("")]
+        [Description("Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html. ")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] id_or_mac;
+            /// <summary>Specifies the operator location type. MAV_ODID_OPERATOR_LOCATION_TYPE  </summary>
+        [Units("")]
+        [Description("Specifies the operator location type.")]
+        public  /*MAV_ODID_OPERATOR_LOCATION_TYPE*/byte operator_location_type;
+            /// <summary>Specifies the classification type of the UA. MAV_ODID_CLASSIFICATION_TYPE  </summary>
+        [Units("")]
+        [Description("Specifies the classification type of the UA.")]
+        public  /*MAV_ODID_CLASSIFICATION_TYPE*/byte classification_type;
+            /// <summary>When classification_type is MAV_ODID_CLASSIFICATION_TYPE_EU, specifies the category of the UA. MAV_ODID_CATEGORY_EU  </summary>
+        [Units("")]
+        [Description("When classification_type is MAV_ODID_CLASSIFICATION_TYPE_EU, specifies the category of the UA.")]
+        public  /*MAV_ODID_CATEGORY_EU*/byte category_eu;
+            /// <summary>When classification_type is MAV_ODID_CLASSIFICATION_TYPE_EU, specifies the class of the UA. MAV_ODID_CLASS_EU  </summary>
+        [Units("")]
+        [Description("When classification_type is MAV_ODID_CLASSIFICATION_TYPE_EU, specifies the class of the UA.")]
+        public  /*MAV_ODID_CLASS_EU*/byte class_eu;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=43)]
+    ///<summary> Data for filling the OpenDroneID Operator ID message, which contains the CAA (Civil Aviation Authority) issued operator ID. </summary>
+    public struct OPEN_DRONE_ID_OPERATOR_ID_MSG
+    {
+        public OPEN_DRONE_ID_OPERATOR_ID_MSG(byte target_system,byte target_component,byte[] id_or_mac,/*MAV_ODID_OPERATOR_ID_TYPE*/byte operator_id_type,byte[] operator_id) 
+        {
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.id_or_mac = id_or_mac;
+              this.operator_id_type = operator_id_type;
+              this.operator_id = operator_id;
+            
+        }
+        /// <summary>System ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("System ID (0 for broadcast).")]
+        public  byte target_system;
+            /// <summary>Component ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("Component ID (0 for broadcast).")]
+        public  byte target_component;
+            /// <summary>Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html.    </summary>
+        [Units("")]
+        [Description("Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html. ")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] id_or_mac;
+            /// <summary>Indicates the type of the operator_id field. MAV_ODID_OPERATOR_ID_TYPE  </summary>
+        [Units("")]
+        [Description("Indicates the type of the operator_id field.")]
+        public  /*MAV_ODID_OPERATOR_ID_TYPE*/byte operator_id_type;
+            /// <summary>Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in the unused portion of the field.   </summary>
+        [Units("")]
+        [Description("Text description or numeric value expressed as ASCII characters. Shall be filled with nulls in the unused portion of the field.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] operator_id;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=249)]
+    ///<summary> An OpenDroneID message pack is a container for multiple encoded OpenDroneID messages (i.e. not in the format given for the above message descriptions but after encoding into the compressed OpenDroneID byte format). Used e.g. when transmitting on Bluetooth 5.0 Long Range/Extended Advertising or on WiFi Neighbor Aware Networking or on WiFi Beacon. </summary>
+    public struct OPEN_DRONE_ID_MESSAGE_PACK_MSG
+    {
+        public OPEN_DRONE_ID_MESSAGE_PACK_MSG(byte target_system,byte target_component,byte[] id_or_mac,byte single_message_size,byte msg_pack_size,byte[] messages) 
+        {
+              this.target_system = target_system;
+              this.target_component = target_component;
+              this.id_or_mac = id_or_mac;
+              this.single_message_size = single_message_size;
+              this.msg_pack_size = msg_pack_size;
+              this.messages = messages;
+            
+        }
+        /// <summary>System ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("System ID (0 for broadcast).")]
+        public  byte target_system;
+            /// <summary>Component ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("Component ID (0 for broadcast).")]
+        public  byte target_component;
+            /// <summary>Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html.    </summary>
+        [Units("")]
+        [Description("Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html. ")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=20)]
+		public byte[] id_or_mac;
+            /// <summary>This field must currently always be equal to 25 (bytes), since all encoded OpenDroneID messages are specified to have this length.  [bytes] </summary>
+        [Units("[bytes]")]
+        [Description("This field must currently always be equal to 25 (bytes), since all encoded OpenDroneID messages are specified to have this length.")]
+        public  byte single_message_size;
+            /// <summary>Number of encoded messages in the pack (not the number of bytes). Allowed range is 1 - 9.   </summary>
+        [Units("")]
+        [Description("Number of encoded messages in the pack (not the number of bytes). Allowed range is 1 - 9.")]
+        public  byte msg_pack_size;
+            /// <summary>Concatenation of encoded OpenDroneID messages. Shall be filled with nulls in the unused portion of the field.   </summary>
+        [Units("")]
+        [Description("Concatenation of encoded OpenDroneID messages. Shall be filled with nulls in the unused portion of the field.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=225)]
+		public byte[] messages;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=51)]
+    ///<summary> Transmitter (remote ID system) is enabled and ready to start sending location and other required information. This is streamed by transmitter. A flight controller uses it as a condition to arm. </summary>
+    public struct OPEN_DRONE_ID_ARM_STATUS_MSG
+    {
+        public OPEN_DRONE_ID_ARM_STATUS_MSG(/*MAV_ODID_ARM_STATUS*/byte status,byte[] error) 
+        {
+              this.status = status;
+              this.error = error;
+            
+        }
+        /// <summary>Status level indicating if arming is allowed. MAV_ODID_ARM_STATUS  </summary>
+        [Units("")]
+        [Description("Status level indicating if arming is allowed.")]
+        public  /*MAV_ODID_ARM_STATUS*/byte status;
+            /// <summary>Text error message, should be empty if status is good to arm. Fill with nulls in unused portion.   </summary>
+        [Units("")]
+        [Description("Text error message, should be empty if status is good to arm. Fill with nulls in unused portion.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=50)]
+		public byte[] error;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=18)]
+    ///<summary> Update the data in the OPEN_DRONE_ID_SYSTEM message with new location information. This can be sent to update the location information for the operator when no other information in the SYSTEM message has changed. This message allows for efficient operation on radio links which have limited uplink bandwidth while meeting requirements for update frequency of the operator location. </summary>
+    public struct OPEN_DRONE_ID_SYSTEM_UPDATE_MSG
+    {
+        public OPEN_DRONE_ID_SYSTEM_UPDATE_MSG(int operator_latitude,int operator_longitude,float operator_altitude_geo,uint timestamp,byte target_system,byte target_component) 
+        {
+              this.operator_latitude = operator_latitude;
+              this.operator_longitude = operator_longitude;
+              this.operator_altitude_geo = operator_altitude_geo;
+              this.timestamp = timestamp;
+              this.target_system = target_system;
+              this.target_component = target_component;
+            
+        }
+        /// <summary>Latitude of the operator. If unknown: 0 (both Lat/Lon).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Latitude of the operator. If unknown: 0 (both Lat/Lon).")]
+        public  int operator_latitude;
+            /// <summary>Longitude of the operator. If unknown: 0 (both Lat/Lon).  [degE7] </summary>
+        [Units("[degE7]")]
+        [Description("Longitude of the operator. If unknown: 0 (both Lat/Lon).")]
+        public  int operator_longitude;
+            /// <summary>Geodetic altitude of the operator relative to WGS84. If unknown: -1000 m.  [m] </summary>
+        [Units("[m]")]
+        [Description("Geodetic altitude of the operator relative to WGS84. If unknown: -1000 m.")]
+        public  float operator_altitude_geo;
+            /// <summary>32 bit Unix Timestamp in seconds since 00:00:00 01/01/2019.  [s] </summary>
+        [Units("[s]")]
+        [Description("32 bit Unix Timestamp in seconds since 00:00:00 01/01/2019.")]
+        public  uint timestamp;
+            /// <summary>System ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("System ID (0 for broadcast).")]
+        public  byte target_system;
+            /// <summary>Component ID (0 for broadcast).   </summary>
+        [Units("")]
+        [Description("Component ID (0 for broadcast).")]
+        public  byte target_component;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=5)]
+    ///<summary> Temperature and humidity from hygrometer. </summary>
+    public struct HYGROMETER_SENSOR_MSG
+    {
+        public HYGROMETER_SENSOR_MSG(short temperature,ushort humidity,byte id) 
+        {
+              this.temperature = temperature;
+              this.humidity = humidity;
+              this.id = id;
+            
+        }
+        /// <summary>Temperature  [cdegC] </summary>
+        [Units("[cdegC]")]
+        [Description("Temperature")]
+        public  short temperature;
+            /// <summary>Humidity  [c%] </summary>
+        [Units("[c%]")]
+        [Description("Humidity")]
+        public  ushort humidity;
+            /// <summary>Hygrometer ID   </summary>
+        [Units("")]
+        [Description("Hygrometer ID")]
+        public  byte id;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=9)]
+    ///<summary> The heartbeat message shows that a system or component is present and responding. The type and autopilot fields (along with the message component id), allow the receiving system to treat further messages from this system appropriately (e.g. by laying out the user interface based on the autopilot). This microservice is documented at https://mavlink.io/en/services/heartbeat.html </summary>
+    public struct HEARTBEAT_MSG
+    {
+        public HEARTBEAT_MSG(uint custom_mode,/*MAV_TYPE*/byte type,/*MAV_AUTOPILOT*/byte autopilot,/*MAV_MODE_FLAG*/byte base_mode,/*MAV_STATE*/byte system_status,byte mavlink_version) 
+        {
+              this.custom_mode = custom_mode;
+              this.type = type;
+              this.autopilot = autopilot;
+              this.base_mode = base_mode;
+              this.system_status = system_status;
+              this.mavlink_version = mavlink_version;
+            
+        }
+        /// <summary>A bitfield for use for autopilot-specific flags   </summary>
+        [Units("")]
+        [Description("A bitfield for use for autopilot-specific flags")]
+        public  uint custom_mode;
+            /// <summary>Vehicle or component type. For a flight controller component the vehicle type (quadrotor, helicopter, etc.). For other components the component type (e.g. camera, gimbal, etc.). This should be used in preference to component id for identifying the component type. MAV_TYPE  </summary>
+        [Units("")]
+        [Description("Vehicle or component type. For a flight controller component the vehicle type (quadrotor, helicopter, etc.). For other components the component type (e.g. camera, gimbal, etc.). This should be used in preference to component id for identifying the component type.")]
+        public  /*MAV_TYPE*/byte type;
+            /// <summary>Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight controllers. MAV_AUTOPILOT  </summary>
+        [Units("")]
+        [Description("Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight controllers.")]
+        public  /*MAV_AUTOPILOT*/byte autopilot;
+            /// <summary>System mode bitmap. MAV_MODE_FLAG  bitmask</summary>
+        [Units("")]
+        [Description("System mode bitmap.")]
+        public  /*MAV_MODE_FLAG*/byte base_mode;
+            /// <summary>System status flag. MAV_STATE  </summary>
+        [Units("")]
+        [Description("System status flag.")]
+        public  /*MAV_STATE*/byte system_status;
+            /// <summary>MAVLink version, not writable by user, gets added by protocol because of magic data type: uint8_t_mavlink_version   </summary>
+        [Units("")]
+        [Description("MAVLink version, not writable by user, gets added by protocol because of magic data type: uint8_t_mavlink_version")]
+        public  byte mavlink_version;
+    
+    };
+
+    
+    /// extensions_start 0
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=22)]
+    ///<summary> Version and capability of protocol version. This message can be requested with MAV_CMD_REQUEST_MESSAGE and is used as part of the handshaking to establish which MAVLink version should be used on the network. Every node should respond to a request for PROTOCOL_VERSION to enable the handshaking. Library implementers should consider adding this into the default decoding state machine to allow the protocol core to respond directly. </summary>
+    public struct PROTOCOL_VERSION_MSG
+    {
+        public PROTOCOL_VERSION_MSG(ushort version,ushort min_version,ushort max_version,byte[] spec_version_hash,byte[] library_version_hash) 
+        {
+              this.version = version;
+              this.min_version = min_version;
+              this.max_version = max_version;
+              this.spec_version_hash = spec_version_hash;
+              this.library_version_hash = library_version_hash;
+            
+        }
+        /// <summary>Currently active MAVLink version number * 100: v1.0 is 100, v2.0 is 200, etc.   </summary>
+        [Units("")]
+        [Description("Currently active MAVLink version number * 100: v1.0 is 100, v2.0 is 200, etc.")]
+        public  ushort version;
+            /// <summary>Minimum MAVLink version supported   </summary>
+        [Units("")]
+        [Description("Minimum MAVLink version supported")]
+        public  ushort min_version;
+            /// <summary>Maximum MAVLink version supported (set to the same value as version by default)   </summary>
+        [Units("")]
+        [Description("Maximum MAVLink version supported (set to the same value as version by default)")]
+        public  ushort max_version;
+            /// <summary>The first 8 bytes (not characters printed in hex!) of the git hash.   </summary>
+        [Units("")]
+        [Description("The first 8 bytes (not characters printed in hex!) of the git hash.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
+		public byte[] spec_version_hash;
+            /// <summary>The first 8 bytes (not characters printed in hex!) of the git hash.   </summary>
+        [Units("")]
+        [Description("The first 8 bytes (not characters printed in hex!) of the git hash.")]
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
+		public byte[] library_version_hash;
+    
+    };
+
+///<summary>  </summary>
+    [Flags]
+    public enum HIL_SENSORS_UPDATED : uint /*default*/
+    {
+        NONE            = 0,
+        XACC            = (1 << 0 ),
+        YACC            = (1 << 1 ),
+        ZACC            = (1 << 2 ),
+        XGYRO           = (1 << 3 ),
+        YGYRO           = (1 << 4 ),
+        ZGYRO           = (1 << 5 ),
+        XMAG            = (1 << 6 ),
+        YMAG            = (1 << 7 ),
+        ZMAG            = (1 << 8 ),
+        ABS_PRESSURE    = (1 << 9 ),
+        DIFF_PRESSURE   = (1 << 10),
+        PRESSURE_ALT    = (1 << 11),
+        TEMPERATURE     = (1 << 12),
+        RESET           = unchecked((uint)(1 << 31))
+    };
 
 
 }
+
+
+

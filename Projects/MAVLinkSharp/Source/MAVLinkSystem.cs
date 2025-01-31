@@ -851,26 +851,6 @@ namespace MAVLinkSharp {
                 }
                 break;
 
-                case MSG_ID.SMART_BATTERY_INFO: {
-                    SMART_BATTERY_INFO_MSG msg_d = (SMART_BATTERY_INFO_MSG)p_msg.data;
-                    //UnityEngine.Debug.Log($"MAVLinkSystem> [{name}] [{msg_id}] #{msg_d.id} | {msg_d.capacity_full}mAh");
-                }
-                break;
-
-                case MSG_ID.SMART_BATTERY_STATUS: {
-                    SMART_BATTERY_STATUS_MSG msg_d = (SMART_BATTERY_STATUS_MSG )p_msg.data;
-                    //UnityEngine.Debug.Log($"MAVLinkSystem> [{name}] [{msg_id}] #{msg_d.id} | {msg_d.time_remaining} seconds");
-                }
-                break;
-
-                /*
-                //TODO: This snippet CRASHES ANDROID - Most possibly related to failures in .data Marshaling 
-                case MSG_ID.BATTERY_STATUS: {
-                    BATTERY_STATUS_MSG msg_d = (BATTERY_STATUS_MSG)p_msg.data;                    
-                    //UnityEngine.Debug.Log($"MAVLinkSystem> [{name}] [{msg_id}] #{msg_d.id} | {(MAV_BATTERY_FUNCTION)msg_d.battery_function} | charge: {msg_d.battery_remaining}% | cells: [{string.Join(',',msg_d.voltages)}] {msg_d.time_remaining} seconds");
-                }
-                break;
-                //*/
             }
 
             //Check msg sysid and skip if not matching
