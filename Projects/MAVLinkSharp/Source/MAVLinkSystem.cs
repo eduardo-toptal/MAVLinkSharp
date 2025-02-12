@@ -4,9 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MAVLink;
+
+#if UNITY_ENGINE
 using UnityEditor;
 using UnityEngine;
-using static MAVLink;
+#endif
 
 #pragma warning disable CS8600
 #pragma warning disable CS8602
@@ -15,6 +18,7 @@ using static MAVLink;
 #pragma warning disable CS8618
 #pragma warning disable CS8625
 #pragma warning disable CS0162
+#pragma warning disable CS0649
 
 namespace MAVLinkSharp {
 
@@ -392,9 +396,9 @@ namespace MAVLinkSharp {
             if(sc>0f) v_dt    /= sc;
 
             //Too high speed means degree wrapping
-            if(Mathf.Abs(v_yaw  )>90f) return;
-            if(Mathf.Abs(v_pitch)>90f) return;
-            if(Mathf.Abs(v_roll )>90f) return;
+            if(Math.Abs(v_yaw  )>90f) return;
+            if(Math.Abs(v_pitch)>90f) return;
+            if(Math.Abs(v_roll )>90f) return;
 
             m_mount_ctrl_speed = new MountControlSample() {
                 time  = v_dt,
@@ -428,16 +432,16 @@ namespace MAVLinkSharp {
 
             MountControlSample s = m_mount_ctrl_speed;
 
-            int idx;
+            #if UNITY_ENGINE
+            int idx;            
             idx = (int)MAVLinkInputField.MountControlYaw;   axis[idx] = Mathf.Lerp((float)axis[idx],s.yaw  ,0.2f);
             idx = (int)MAVLinkInputField.MountControlPitch; axis[idx] = Mathf.Lerp((float)axis[idx],s.pitch,0.2f);
             idx = (int)MAVLinkInputField.MountControlRoll;  axis[idx] = Mathf.Lerp((float)axis[idx],s.roll ,0.2f);
-
             float v_yaw   = (float)axis[(int)MAVLinkInputField.MountControlYaw  ];
             float v_pitch = (float)axis[(int)MAVLinkInputField.MountControlPitch];
             float v_roll  = (float)axis[(int)MAVLinkInputField.MountControlRoll ];
-
             //UnityEngine.Debug.Log($"MAVLinkSystem> Update Mount CTRL / [T:{t.ToString("0.00")}/{dt_avg.ToString("0.00")} | VY:{v_yaw.ToString("0.0")} | VP:{v_pitch.ToString("0.0")} | VR:{v_roll.ToString("0.0")}]");
+            #endif
 
         }
 
@@ -446,7 +450,7 @@ namespace MAVLinkSharp {
         }
 
     }
-    #endregion
+#endregion
 
     /// <summary>
     /// Class that implements a MAVLink most basic system, made of an id and signals the network its 'alive'

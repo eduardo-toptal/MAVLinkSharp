@@ -107,7 +107,7 @@ namespace MAVLinkSharp {
         /// Callback called for handling this sensor state and data
         /// </summary>
         /// <param name="p_sensor"></param>
-        public void OnSensorPoll(MAVLinkSensor p_sensor);
+        void OnSensorPoll(MAVLinkSensor p_sensor);
 
     }
     #endregion

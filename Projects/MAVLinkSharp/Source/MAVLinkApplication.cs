@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine.Experimental.AI;
 using static MAVLink;
 
 #pragma warning disable CS8600
@@ -209,7 +208,7 @@ namespace MAVLinkSharp {
             string tk = p_address.ToLower();
             tk = tk.Replace("udp://","");
             tk = tk.Replace("tcp://","");
-            string[] tkl = tk.Split(":");
+            string[] tkl = tk.Split(':');
             if (tkl.Length <= 0) return null;
             string ip_s   = tkl[0].Trim();
             string port_s = tkl.Length <= 1 ? "0" : tkl[1].Trim();
@@ -546,13 +545,13 @@ namespace MAVLinkSharp {
                     int gcs_local_port  = settings.GCSLocalPort;
                     int gcs_remote_port = settings.GCSRemotePort;
                     
-                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP / Listen: {px4_local_port} Connect: {px4_ep.Address}:{px4_remote_port}");
+                    //UnityEngine.Debug.Log($"MAVLinkApplication> Creating PX4 UDP / Listen: {px4_local_port} Connect: {px4_ep.Address}:{px4_remote_port}");
                     UdpClient conn_px4 = new UdpClient(px4_local_port);
                     conn_px4.Connect(new IPEndPoint(px4_ep.Address,px4_remote_port));
                     px4 = new MAVLinkUDP(conn_px4,"px4");                    
                     px4.network  = this;
 
-                    UnityEngine.Debug.Log($"MAVLinkApplication> Creating GCS UDP / Listen: {gcs_local_port} Connect: {gcs_ep.Address}:{gcs_remote_port}");
+                    //UnityEngine.Debug.Log($"MAVLinkApplication> Creating GCS UDP / Listen: {gcs_local_port} Connect: {gcs_ep.Address}:{gcs_remote_port}");
                     UdpClient conn_gcs = new UdpClient(gcs_local_port);
                     conn_gcs.Connect(new IPEndPoint(gcs_ep.Address,gcs_remote_port));                    
                     gcs = new MAVLinkUDP(conn_gcs,"gcs");                    

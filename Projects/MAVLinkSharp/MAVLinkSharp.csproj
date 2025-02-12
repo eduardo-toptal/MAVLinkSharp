@@ -41,25 +41,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MAVLinkComponent.cs" />
-    <Compile Include="MAVLinkEntity.cs" />
-    <Compile Include="MAVLinkInterface.cs" />
-    <Compile Include="MAVLinkLiveEntity.cs" />
-    <Compile Include="MAVLinkNetwork.cs" />
-    <Compile Include="MAVLinkSensor.cs" />
-    <Compile Include="MAVLinkSerial.cs" />
-    <Compile Include="MAVLinkStream.cs" />
-    <Compile Include="MAVLinkSystem.cs" />
-    <Compile Include="MAVLinkTCP.cs" />
-    <Compile Include="MAVLinkUDP.cs" />
-    <Compile Include="MAVLinkVehicle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\MAVLinkApplication.cs" />
+    <Compile Include="Source\MAVLinkComponent.cs" />
+    <Compile Include="Source\MAVLinkEntity.cs" />
+    <Compile Include="Source\MAVLinkInterface.cs" />
+    <Compile Include="Source\MAVLinkLiveEntity.cs" />
+    <Compile Include="Source\MAVLinkNetwork.cs" />
+    <Compile Include="Source\MAVLinkSensor.cs" />
+    <Compile Include="Source\MAVLinkSerial.cs" />
+    <Compile Include="Source\MAVLinkStream.cs" />
+    <Compile Include="Source\MAVLinkSystem.cs" />
+    <Compile Include="Source\MAVLinkTCP.cs" />
+    <Compile Include="Source\MAVLinkUDP.cs" />
+    <Compile Include="Source\MAVLinkVehicle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MAVLinkCore\MAVLinkCore.csproj">
       <Project>{4bc3a15f-b3e2-4821-8908-71a4a381a168}</Project>
       <Name>MAVLinkCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\MAVLinkSharp.asmdef" />
+    <None Include="Source\MAVLinkSharp.asmdef.meta" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
