@@ -1,0 +1,193 @@
+        
+using System.IO;
+using System.Runtime.InteropServices;
+
+#pragma warning disable CS0675
+
+namespace MAVLinkBindings {
+
+    /// <summary>
+    /// Status of simulation environment, if used
+    /// </summary>    
+    public struct SimStateData : IMAVLinkMessageData {
+
+        /// <summary>
+        /// Message Id Associated w/ this Struct
+        /// </summary>    
+        public int GetId() { return 108; }
+
+        public float  Q1;              //True attitude quaternion component 1, w (1 in null-rotation)
+        public float  Q2;              //True attitude quaternion component 2, x (0 in null-rotation)
+        public float  Q3;              //True attitude quaternion component 3, y (0 in null-rotation)
+        public float  Q4;              //True attitude quaternion component 4, z (0 in null-rotation)
+        public float  Roll;            //Attitude roll expressed as Euler angles, not recommended except for human-readable outputs
+        public float  Pitch;           //Attitude pitch expressed as Euler angles, not recommended except for human-readable outputs
+        public float  Yaw;             //Attitude yaw expressed as Euler angles, not recommended except for human-readable outputs
+        public float  Xacc;            //X acceleration
+        public float  Yacc;            //Y acceleration
+        public float  Zacc;            //Z acceleration
+        public float  Xgyro;           //Angular speed around X axis
+        public float  Ygyro;           //Angular speed around Y axis
+        public float  Zgyro;           //Angular speed around Z axis
+        public float  Lat;             //Latitude
+        public float  Lon;             //Longitude
+        public float  Alt;             //Altitude
+        public float  StdDevHorz;      //Horizontal position standard deviation
+        public float  StdDevVert;      //Vertical position standard deviation
+        public float  Vn;              //True velocity in north direction in earth-fixed NED frame
+        public float  Ve;              //True velocity in east direction in earth-fixed NED frame
+        public float  Vd;              //True velocity in down direction in earth-fixed NED frame    
+
+        #region CTOR
+        /// <summary>
+        /// Instantiates a new SimStateData
+        /// </summary>    
+        public SimStateData() {
+            Q1                = default(float);
+            Q2                = default(float);
+            Q3                = default(float);
+            Q4                = default(float);
+            Roll              = default(float);
+            Pitch             = default(float);
+            Yaw               = default(float);
+            Xacc              = default(float);
+            Yacc              = default(float);
+            Zacc              = default(float);
+            Xgyro             = default(float);
+            Ygyro             = default(float);
+            Zgyro             = default(float);
+            Lat               = default(float);
+            Lon               = default(float);
+            Alt               = default(float);
+            StdDevHorz        = default(float);
+            StdDevVert        = default(float);
+            Vn                = default(float);
+            Ve                = default(float);
+            Vd                = default(float);
+        }
+        #endregion
+
+        #region Read Buffer
+        /// <summary>
+        /// Reads the data from Buffer into this struct
+        /// </summary>    
+        public int Read(byte[] p_buffer,int p_offset=0) {
+            int    l = 84;
+            //Assert Range
+            if((p_buffer.Length - p_offset) < l) return 0; 
+            //Locals
+            int[]  LS8  = MAVLinkCRC.U8_LSH8, LS16 = MAVLinkCRC.U8_LSH16, LS24 = MAVLinkCRC.U8_LSH24, LS32 = MAVLinkCRC.U8_LSH32, LS40 = MAVLinkCRC.U8_LSH40, LS48 = MAVLinkCRC.U8_LSH48, LS56 = MAVLinkCRC.U8_LSH56;
+            Span<byte> b = p_buffer.AsSpan(p_offset);            
+            int        p = 0;            
+            //byte[] b = p_buffer;
+            //int    p = p_offset;
+            Q1                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Q2                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Q3                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Q4                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Roll              = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Pitch             = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Yaw               = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Xacc              = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Yacc              = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Zacc              = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Xgyro             = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Ygyro             = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Zgyro             = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Lat               = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Lon               = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Alt               = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            StdDevHorz        = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            StdDevVert        = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Vn                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Ve                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Vd                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;            
+            return p;
+        }
+        #endregion
+
+        #region Write Buffer
+        /// <summary>
+        /// Writes the message data into a Buffer
+        /// </summary>    
+        public int Write(byte[] p_buffer,int p_offset=0) {
+            int    l = 84;
+            //Assert Range
+            if((p_buffer.Length - p_offset) < l) return 0; 
+            //Locals            
+            Span<byte> b = p_buffer.AsSpan(p_offset);
+            int        p = 0;            
+            //byte[] b = p_buffer;
+            //int    p = p_offset;
+            MemoryMarshal.Write(b.Slice(p, 4), in Q1               ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Q2               ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Q3               ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Q4               ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Roll             ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Pitch            ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Yaw              ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Xacc             ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Yacc             ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Zacc             ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Xgyro            ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Ygyro            ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Zgyro            ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Lat              ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Lon              ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Alt              ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in StdDevHorz       ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in StdDevVert       ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Vn               ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Ve               ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), in Vd               ); p+=4;
+            return p;
+        }
+        #endregion
+
+        #region Read Stream
+        /// <summary>
+        /// Reads the struct data from a stream
+        /// </summary>
+        /// <param name="p_stream"></param>
+        /// <returns></returns>
+        public int Read(Stream p_stream) {
+            Stream ss = p_stream;
+            if(ss==null) return 0;
+            int l = 84;
+            if(ss.Length - ss.Position < l) return 0;
+            byte[] b;            
+            long p = ss.Position;
+            if(ss is MemoryStream) {
+                MemoryStream ms = ( MemoryStream ) ss;
+                b = ms.GetBuffer();
+            }
+            else {
+                b = new byte[l];
+                p = 0;
+                ss.Read(b,0,l);                
+            }
+            return Read(b,(int)p);
+        }
+        #endregion
+
+        #region Write Stream
+        /// <summary>
+        /// Writes the struct data into a Stream
+        /// </summary>
+        /// <param name="p_stream"></param>
+        /// <returns></returns>
+        public int Write(Stream p_stream) {
+            Stream ss = p_stream;
+            if(ss==null) return 0;
+            MemoryStream ms = new MemoryStream();
+            int c = Read(ms);
+            ms.Position=0;
+            ms.CopyTo(ss);            
+            ms.Close();
+            return c;
+        }
+        #endregion
+
+    }
+
+}

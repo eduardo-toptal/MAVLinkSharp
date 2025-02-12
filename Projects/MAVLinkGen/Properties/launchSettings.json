@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "MAVLinkGen": {
+      "commandName": "Project",
+      "commandLineArgs": "-p D:\\Work\\Misc\\mavlink\\message_definitions\\v1.0\\ -f common.xml",
+      "nativeDebugging": false
+    },
+    "MAVLinkGenProj": {
+      "commandName": "Project",
+      "commandLineArgs": "-p D:\\Work\\Misc\\mavlink\\message_definitions\\v1.0\\ -f common.xml -o D:\\Work\\Misc\\MAVLinkSharp\\Projects\\MAVLinkExamples\\Source\\Bindings -t D:\\Work\\Misc\\MAVLinkSharp\\Projects\\MAVLinkGen\\Runtime"
+    }
+  }
+}
