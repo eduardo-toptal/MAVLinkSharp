@@ -36,11 +36,16 @@ namespace MAVLinkBindings {
         private bool m_is_mem_stream;
         
         /// <summary>
+        /// Flag that tells there are enough bytes to try reading messages.
+        /// </summary>
+        public bool Available { get { return Stream==null ? false : Stream.Length>MAVLinkConsts.MIN_PACKET_LEN;} }
+
+        /// <summary>
         /// Internals
         /// </summary>
         //private BinaryReader m_reader;
         private byte[]       m_buffer;
-        //private byte[]       m_payload;
+        private byte[]       m_payload;
         //private byte[]       m_sign;
         
         /// <summary>
@@ -55,7 +60,7 @@ namespace MAVLinkBindings {
                 m_is_mem_stream   = true;                
             }
             m_buffer  = new byte[MAVLinkConsts.MAX_PACKET_LEN];   
-            //m_payload = new byte[MAVLinkConsts.MAX_PAYLOAD_LEN];  
+            m_payload = new byte[MAVLinkConsts.MAX_PAYLOAD_LEN];  
             //m_sign    = new byte[13];            
         }
 
@@ -74,6 +79,7 @@ namespace MAVLinkBindings {
             long   ss_len = ss.Length;            
             //Buffer needed Length
             byte[] b     = m_buffer;
+            byte[] bpl   = m_payload;
             int    b_len = (int)(ss_len - ss_pos);
             if(b_len > MAVLinkConsts.MAX_PACKET_LEN) b_len=MAVLinkConsts.MAX_PACKET_LEN;
             long   b_pos = 0;
@@ -159,9 +165,10 @@ namespace MAVLinkBindings {
             long msg_total_len = msg_stx_len + msg_header_len + payload_len + msg_crc_len + sign_len;
             //Store payload position
             long payload_pos = b_pos;            
-            //Skip payload
-            b_pos += payload_len;
-            //for(int i=0;i<payload_len;i++) m_payload[i] = b[b_pos++];
+            //Read Payload that might be zero truncated
+            int max_payload_size = MAVLinkMsg.GetMessagePayloadLength(id);
+            for(int i=0;i<max_payload_size;i++) bpl[i] = i<payload_len ? b[b_pos++] : (byte)0;
+            //b_pos += payload_len;            
             //Read CRC           
             crc8_low  = (b[b_pos++]);
             crc8_high = (b[b_pos++]);
@@ -209,7 +216,8 @@ namespace MAVLinkBindings {
             //Parse payload data into desired structure
             IMAVLinkMessageData d = MAVLinkMsg.GetMessageInstance(id);
             if(d==null) throw new InvalidDataException($"Message Id {(MAVLinkMsgId)id} does not have a valid data structure!");
-            d.Read(b,(int)payload_pos);
+            //d.Read(b,(int)payload_pos);
+            d.Read(bpl,0);
             msg.data = d;
             //Increment Stream position
             ss.Position += msg_total_len;            

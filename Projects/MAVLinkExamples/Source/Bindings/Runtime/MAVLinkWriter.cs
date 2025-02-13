@@ -25,9 +25,15 @@ namespace MAVLinkBindings {
         /// Internals
         /// </summary>        
         private byte[] m_buffer;
+
+        /// <summary>
+        /// Returns the next sequence for a given id
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
+        internal byte NextSeq(int p_id) { return m_seq_lut.ContainsKey(p_id) ? m_seq_lut[p_id]++ : (m_seq_lut[p_id] = 0); }
         private Dictionary<int,byte> m_seq_lut;
 
-        
         /// <summary>
         /// CTOR.
         /// </summary>
@@ -88,10 +94,8 @@ namespace MAVLinkBindings {
         /// <param name="p_payload"></param>
         /// <returns></returns>
         public int WriteV1(MAVLinkMsgId p_id,byte p_sys_id,byte p_comp_id,IMAVLinkMessageData p_payload) {
-            byte seq = 0;
-            if(m_seq_lut.ContainsKey((int)p_id)) seq = m_seq_lut[(int)p_id]++;
-            int c = WriteV1(p_id,seq,p_sys_id,p_comp_id,p_payload);
-            m_seq_lut[(int)p_id] = seq;
+            byte seq = NextSeq((int)p_id);            
+            int c = WriteV1(p_id,seq,p_sys_id,p_comp_id,p_payload);            
             return c;
         }
 
@@ -136,7 +140,7 @@ namespace MAVLinkBindings {
             byte         cmp_id = p_message.componentId;
             IMAVLinkMessageData data = p_message.data;
             int c = WriteV1(id,seq, sys_id, cmp_id, data);
-            p_message.sequence++;
+            p_message.sequence = NextSeq((int)id);
             return c;
         }
 
@@ -165,8 +169,10 @@ namespace MAVLinkBindings {
             byte   header_len  = MAVLinkConsts.MAVLINK_V2_HEADER_LEN;
             bool   is_sign     = !string.IsNullOrEmpty(p_secret_key);
             if(is_sign) p_iflags |= 0x1;
+            int payload_len_pos = 0;
             //Write
             b[p++] = MAVLinkConsts.STX_MAVLINK_V2; //V2 Flag            
+            payload_len_pos = p;
             b[p++] = payload_len;                  //Payload Length
             b[p++] = p_iflags;                     //Incompatibility Flags            
             b[p++] = p_cflags;                     //Compatibility Flags            
@@ -177,16 +183,26 @@ namespace MAVLinkBindings {
             b[p++] = (byte)((int)p_id >>  8);      //MessageId Mid Byte            
             b[p++] = (byte)((int)p_id >> 16);      //MessageId High Byte            
             p += p_payload.Write(b,p);             //Payload Data
-            //CRC Calc                        
+            //Zero Value Truncation
+            byte zt=0;
+            for(int i=0;i<255;i++) { 
+                if(b[p-(zt+1)]>0) break;
+                zt++;
+            }
+            //Only adjust indexing if truncation happens 
+            if(zt>0) {
+                p-= zt;
+                b[payload_len_pos] -= zt;
+                if(b[payload_len_pos]<=0) b[payload_len_pos] = 1;
+                payload_len = b[payload_len_pos];
+            }            
+            //CRC Calc
             ushort crc16 = MAVLinkCRC.GetCRC(b,1,header_len+payload_len);
             MAVLinkCRC.Accumulate(ref crc16,MAVLinkCRC.GetMessageCRC((int)p_id));
             b[p++] = (byte)crc16;                  //CRC Low Byte            
             b[p++] = (byte)U16RS8[crc16];          //CRC Hight Byte
             //Signature if any
-            if(is_sign) {
-                //Skip SIGN for now
-                p+=13;
-            }
+            if(is_sign) { /*Skip SIGN for now*/ p+=13; }
             //Writes into stream
             Stream.Write(b,0,p);
             //Return Size Written
@@ -205,10 +221,8 @@ namespace MAVLinkBindings {
         /// <param name="p_secret_key"></param>
         /// <returns></returns>
         public int WriteV2(MAVLinkMsgId p_id,byte p_iflags,byte p_cflags,byte p_sys_id,byte p_comp_id,IMAVLinkMessageData p_payload,string p_secret_key="") {
-            byte seq = 0;
-            if(m_seq_lut.ContainsKey((int)p_id)) seq = m_seq_lut[(int)p_id]++;
-            int c = WriteV2(p_id,p_iflags,p_cflags,seq,p_sys_id,p_comp_id,p_payload,p_secret_key);
-            m_seq_lut[(int)p_id] = seq;
+            byte seq = NextSeq((int)p_id);            
+            int c = WriteV2(p_id,p_iflags,p_cflags,seq,p_sys_id,p_comp_id,p_payload,p_secret_key);            
             return c;
         }
 
@@ -302,7 +316,7 @@ namespace MAVLinkBindings {
             byte         cmp_id = p_message.componentId;
             IMAVLinkMessageData data = p_message.data;            
             int c = WriteV2(id,iflags,cflags,seq, sys_id, cmp_id, data,p_secret_key);            
-            p_message.sequence++;
+            p_message.sequence = NextSeq((int)id);
             return c;
         }
 

@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Intrinsics;
 using System.Text;
@@ -23,6 +24,40 @@ namespace MAVLinkBindings {
     /// Class that describes a MAVLink Message Container
     /// </summary>    
     public class MAVLinkMsg {
+        
+        #region Pool
+        /// <summary>
+        /// Fetch a memory pooled message instance
+        /// </summary>
+        /// <returns></returns>
+        static public MAVLinkMsg GetPool() {            
+            MAVLinkMsg msg = null;
+            lock(m_pool) if(m_pool.Count>0) { msg = m_pool[0]; m_pool.RemoveAt(0); }
+            if(msg==null) msg = new MAVLinkMsg();
+            return msg;
+        }
+
+        /// <summary>
+        /// Returns a memory pooled message instance
+        /// </summary>
+        /// <returns></returns>
+        static public void SetPool(MAVLinkMsg p_instance) {               
+            lock(m_pool) if(!m_pool.Contains(p_instance)) { m_pool.Add(p_instance); }
+        }
+
+        /// <summary>
+        /// Message Pool
+        /// </summary>
+        static public List<MAVLinkMsg> m_pool;
+        #endregion
+
+        /// <summary>
+        /// CTOR.
+        /// </summary>
+        static MAVLinkMsg() {
+            m_pool = new List<MAVLinkMsg>();
+            for(int i=0;i<1000;i++) m_pool.Add(new MAVLinkMsg());
+        }
 
         #region MessageID to PayloadLength
         /// <summary>
@@ -129,8 +164,16 @@ namespace MAVLinkBindings {
 
         /// <summary>
         /// Reference to signature data
-        /// </summary>
+        /// </summary>        
         public Signature signature { get; internal set; }
+
+        /// <summary>
+        /// Return the string representation
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() {
+            return $"MAVLinkMsg.{messageId} | {payloadLength} bytes | sys: {systemId} comp: {componentId}";
+        }
 
     }
 }

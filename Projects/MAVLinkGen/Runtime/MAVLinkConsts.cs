@@ -24,6 +24,7 @@ namespace MAVLinkBindings {
         public const byte   NUM_CHECKSUM_BYTES              = 2;
         public const byte   NUM_NON_PAYLOAD_BYTES           = (NUM_HEADER_BYTES + NUM_CHECKSUM_BYTES);
         public const int    MAX_PACKET_LEN                  = (MAX_PAYLOAD_LEN  + NUM_NON_PAYLOAD_BYTES + SIGNATURE_BLOCK_LEN); //< Maximum packet length
+        public const int    MIN_PACKET_LEN                  = (1 + MAVLINK_V2_HEADER_LEN + 0 + NUM_CHECKSUM_BYTES);
         public const byte   SIGNATURE_BLOCK_LEN             = 13;
         public const int    LITTLE_ENDIAN                   = 1;
         public const int    BIG_ENDIAN                      = 0;
