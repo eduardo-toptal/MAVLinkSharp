@@ -172,7 +172,7 @@ namespace MAVLinkBindings {
         /// </summary>
         /// <returns></returns>
         public override string ToString() {
-            return $"MAVLinkMsg.{messageId} | {payloadLength} bytes | sys: {systemId} comp: {componentId}";
+            return $"MAVLinkMsg.{messageId} | {payloadLength}/{MAVLinkMsg.GetMessagePayloadLength((int)messageId)} bytes | sys: {systemId} comp: {componentId}";
         }
 
     }
