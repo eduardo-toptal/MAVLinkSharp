@@ -307,7 +307,7 @@ namespace MAVLinkBindings {
         /// <returns></returns>
         /// <exception cref="NullReferenceException"></exception>
         public int WriteV2(MAVLinkMsg p_message,string p_secret_key="") {
-            if(p_message==null) throw new NullReferenceException($"Message is Null!");
+            if(p_message==null) return 0;
             MAVLinkMsgId id     = p_message.messageId;
             byte         iflags = p_message.incompatibilityFlags;
             byte         cflags = p_message.compatibilityFlags;
