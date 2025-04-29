@@ -37,6 +37,7 @@ namespace MAVLinkSharp.Bindings {
 
         static string CSstructTemplate = 
 @"        
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using MAVLinkSharp.Runtime;
