@@ -1,6 +1,3 @@
-        
-using System.IO;
-
 namespace MAVLinkSharp.Bindings { }
 
 namespace MAVLinkSharp.Runtime {

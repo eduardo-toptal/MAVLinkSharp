@@ -1,10 +1,4 @@
-
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Intrinsics;
-using System.Text;
-using MAVLinkSharp.Bindings;
 
 #pragma warning disable CS8618
 #pragma warning disable CS8603
