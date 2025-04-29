@@ -30,7 +30,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new NavControllerOutputData
         /// </summary>    
+        /*
         public NavControllerOutputData() {
+            Init();
+        }
+        */
+        public void Init() {
             NavRoll             = default(float );
             NavPitch            = default(float );
             AltError            = default(float );

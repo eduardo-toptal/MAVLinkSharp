@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RequestEventData
         /// </summary>    
+        /*
         public RequestEventData() {
+            Init();
+        }
+        */
+        public void Init() {
             FirstSequence         = default(ushort);
             LastSequence          = default(ushort);
             TargetSystem          = default(byte  );

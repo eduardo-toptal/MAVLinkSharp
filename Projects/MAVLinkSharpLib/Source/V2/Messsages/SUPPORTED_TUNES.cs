@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SupportedTunesData
         /// </summary>    
+        /*
         public SupportedTunesData() {
+            Init();
+        }
+        */
+        public void Init() {
             Format                = default(TuneFormatFlags);
             TargetSystem          = default(byte           );
             TargetComponent       = default(byte           );

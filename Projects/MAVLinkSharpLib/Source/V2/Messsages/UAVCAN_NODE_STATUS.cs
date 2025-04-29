@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new UavcanNodeStatusData
         /// </summary>    
+        /*
         public UavcanNodeStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec                         = default(ulong                );
             UptimeSec                        = default(uint                 );
             VendorSpecificStatusCode         = default(ushort               );

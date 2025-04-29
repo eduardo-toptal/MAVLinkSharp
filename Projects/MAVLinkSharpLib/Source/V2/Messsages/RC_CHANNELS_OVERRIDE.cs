@@ -42,7 +42,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RcChannelsOverrideData
         /// </summary>    
+        /*
         public RcChannelsOverrideData() {
+            Init();
+        }
+        */
+        public void Init() {
             Chan1Raw              = default(ushort);
             Chan2Raw              = default(ushort);
             Chan3Raw              = default(ushort);

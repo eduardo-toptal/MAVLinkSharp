@@ -35,7 +35,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CommandIntData
         /// </summary>    
+        /*
         public CommandIntData() {
+            Init();
+        }
+        */
+        public void Init() {
             Param1                = default(float        );
             Param2                = default(float        );
             Param3                = default(float        );

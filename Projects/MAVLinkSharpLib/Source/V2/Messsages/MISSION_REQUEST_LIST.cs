@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MissionRequestListData
         /// </summary>    
+        /*
         public MissionRequestListData() {
+            Init();
+        }
+        */
+        public void Init() {
             TargetSystem          = default(byte               );
             TargetComponent       = default(byte               );
             MissionType           = default(MAVMissionTypeFlags);

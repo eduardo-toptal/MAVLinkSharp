@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ComponentInformationData
         /// </summary>    
+        /*
         public ComponentInformationData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs                         = default(uint);
             GeneralMetadataFileCrc             = default(uint);
             PeripheralsMetadataFileCrc         = default(uint);

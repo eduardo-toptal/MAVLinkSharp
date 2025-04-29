@@ -33,7 +33,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RcChannelsScaledData
         /// </summary>    
+        /*
         public RcChannelsScaledData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint );
             Chan1Scaled       = default(short);
             Chan2Scaled       = default(short);

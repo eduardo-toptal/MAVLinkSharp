@@ -30,7 +30,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new IsbdLinkStatusData
         /// </summary>    
+        /*
         public IsbdLinkStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             Timestamp                = default(ulong );
             LastHeartbeat            = default(ulong );
             FailedSessions           = default(ushort);

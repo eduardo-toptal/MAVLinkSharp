@@ -12,6 +12,12 @@ namespace MAVLinkSharp.Runtime {
         int GetId();
 
         /// <summary>
+        /// Method to init this data struct.
+        /// </summary>
+        /// <returns></returns>
+        void Init();
+
+        /// <summary>
         /// Copy the messages content into the buffer
         /// </summary>
         /// <param name="ss"></param>

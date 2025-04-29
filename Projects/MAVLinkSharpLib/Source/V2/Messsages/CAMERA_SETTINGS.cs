@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CameraSettingsData
         /// </summary>    
+        /*
         public CameraSettingsData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint           );
             ModeId            = default(CameraModeFlags);
             Zoomlevel         = default(float          );

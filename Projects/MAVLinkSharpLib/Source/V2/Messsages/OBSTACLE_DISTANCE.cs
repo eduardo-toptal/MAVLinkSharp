@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ObstacleDistanceData
         /// </summary>    
+        /*
         public ObstacleDistanceData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec          = default(ulong                 );
             Distances         = new ushort[ 72];
             MinDistance       = default(ushort                );

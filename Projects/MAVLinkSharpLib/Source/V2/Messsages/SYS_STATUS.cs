@@ -38,7 +38,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SysStatusData
         /// </summary>    
+        /*
         public SysStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             OnboardControlSensorsPresent                  = default(MAVSysStatusSensorFlags        );
             OnboardControlSensorsEnabled                  = default(MAVSysStatusSensorFlags        );
             OnboardControlSensorsHealth                   = default(MAVSysStatusSensorFlags        );

@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TerrainCheckData
         /// </summary>    
+        /*
         public TerrainCheckData() {
+            Init();
+        }
+        */
+        public void Init() {
             Lat      = default(int);
             Lon      = default(int);
         }

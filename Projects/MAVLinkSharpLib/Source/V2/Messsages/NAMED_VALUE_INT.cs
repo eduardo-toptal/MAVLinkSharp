@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new NamedValueIntData
         /// </summary>    
+        /*
         public NamedValueIntData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint);
             Value             = default(int );
             Name              = new char[ 10];

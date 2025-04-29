@@ -38,7 +38,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HighresImuData
         /// </summary>    
+        /*
         public HighresImuData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec            = default(ulong                 );
             Xacc                = default(float                 );
             Yacc                = default(float                 );

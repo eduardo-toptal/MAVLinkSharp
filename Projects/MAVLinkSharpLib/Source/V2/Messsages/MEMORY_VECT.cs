@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MemoryVectData
         /// </summary>    
+        /*
         public MemoryVectData() {
+            Init();
+        }
+        */
+        public void Init() {
             Address      = default(ushort);
             Ver          = default(byte  );
             Type         = default(byte  );

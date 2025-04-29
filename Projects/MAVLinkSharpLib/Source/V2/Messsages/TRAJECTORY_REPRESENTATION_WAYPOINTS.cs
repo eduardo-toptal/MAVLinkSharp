@@ -36,7 +36,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TrajectoryRepresentationWaypointsData
         /// </summary>    
+        /*
         public TrajectoryRepresentationWaypointsData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec          = default(ulong      );
             PosX              = new float[  5];
             PosY              = new float[  5];

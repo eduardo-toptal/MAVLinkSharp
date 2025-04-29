@@ -32,7 +32,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CameraTrackingImageStatusData
         /// </summary>    
+        /*
         public CameraTrackingImageStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             PointX               = default(float                        );
             PointY               = default(float                        );
             Radius               = default(float                        );

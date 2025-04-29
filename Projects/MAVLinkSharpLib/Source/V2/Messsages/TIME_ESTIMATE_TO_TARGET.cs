@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TimeEstimateToTargetData
         /// </summary>    
+        /*
         public TimeEstimateToTargetData() {
+            Init();
+        }
+        */
+        public void Init() {
             SafeReturn             = default(int);
             Land                   = default(int);
             MissionNextItem        = default(int);

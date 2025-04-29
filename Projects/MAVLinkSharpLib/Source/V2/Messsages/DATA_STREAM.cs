@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new DataStreamData
         /// </summary>    
+        /*
         public DataStreamData() {
+            Init();
+        }
+        */
+        public void Init() {
             MessageRate       = default(ushort);
             StreamId          = default(byte  );
             OnOff             = default(byte  );

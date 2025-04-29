@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new V2ExtensionData
         /// </summary>    
+        /*
         public V2ExtensionData() {
+            Init();
+        }
+        */
+        public void Init() {
             MessageType           = default(ushort);
             TargetNetwork         = default(byte  );
             TargetSystem          = default(byte  );

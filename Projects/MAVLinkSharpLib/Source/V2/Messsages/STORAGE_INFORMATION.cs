@@ -34,7 +34,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new StorageInformationData
         /// </summary>    
+        /*
         public StorageInformationData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs              = default(uint              );
             TotalCapacity           = default(float             );
             UsedCapacity            = default(float             );

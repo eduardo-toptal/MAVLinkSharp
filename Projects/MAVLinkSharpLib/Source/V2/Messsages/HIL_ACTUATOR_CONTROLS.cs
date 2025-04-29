@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HilActuatorControlsData
         /// </summary>    
+        /*
         public HilActuatorControlsData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec       = default(ulong      );
             Flags          = default(ulong      );
             Controls       = new float[ 16];

@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ButtonChangeData
         /// </summary>    
+        /*
         public ButtonChangeData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs          = default(uint);
             LastChangeMs        = default(uint);
             State               = default(byte);

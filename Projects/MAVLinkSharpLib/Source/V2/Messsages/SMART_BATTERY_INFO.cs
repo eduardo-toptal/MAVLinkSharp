@@ -39,7 +39,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SmartBatteryInfoData
         /// </summary>    
+        /*
         public SmartBatteryInfoData() {
+            Init();
+        }
+        */
+        public void Init() {
             CapacityFullSpecification            = default(int                    );
             CapacityFull                         = default(int                    );
             CycleCount                           = default(ushort                 );

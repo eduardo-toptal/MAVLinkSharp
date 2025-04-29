@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ChangeOperatorControlData
         /// </summary>    
+        /*
         public ChangeOperatorControlData() {
+            Init();
+        }
+        */
+        public void Init() {
             TargetSystem         = default(byte);
             ControlRequest       = default(byte);
             Version              = default(byte);

@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TrajectoryRepresentationBezierData
         /// </summary>    
+        /*
         public TrajectoryRepresentationBezierData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec          = default(ulong);
             PosX              = new float[  5];
             PosY              = new float[  5];

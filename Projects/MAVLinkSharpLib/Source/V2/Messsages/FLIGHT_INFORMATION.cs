@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new FlightInformationData
         /// </summary>    
+        /*
         public FlightInformationData() {
+            Init();
+        }
+        */
+        public void Init() {
             ArmingTimeUtc         = default(ulong);
             TakeoffTimeUtc        = default(ulong);
             FlightUuid            = default(ulong);

@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TerrainDataData
         /// </summary>    
+        /*
         public TerrainDataData() {
+            Init();
+        }
+        */
+        public void Init() {
             Lat               = default(int   );
             Lon               = default(int   );
             GridSpacing       = default(ushort);

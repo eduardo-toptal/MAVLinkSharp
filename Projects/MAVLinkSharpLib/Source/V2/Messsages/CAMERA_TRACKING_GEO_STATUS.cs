@@ -35,7 +35,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CameraTrackingGeoStatusData
         /// </summary>    
+        /*
         public CameraTrackingGeoStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             Lat                  = default(int                      );
             Lon                  = default(int                      );
             Alt                  = default(float                    );

@@ -34,7 +34,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new DistanceSensorData
         /// </summary>    
+        /*
         public DistanceSensorData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs            = default(uint                     );
             MinDistance           = default(ushort                   );
             MaxDistance           = default(ushort                   );

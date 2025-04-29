@@ -40,7 +40,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new UtmGlobalPositionData
         /// </summary>    
+        /*
         public UtmGlobalPositionData() {
+            Init();
+        }
+        */
+        public void Init() {
             Time              = default(ulong              );
             Lat               = default(int                );
             Lon               = default(int                );

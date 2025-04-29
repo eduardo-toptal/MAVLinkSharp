@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new PowerStatusData
         /// </summary>    
+        /*
         public PowerStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             Vcc         = default(ushort             );
             Vservo      = default(ushort             );
             Flags       = default(MAVPowerStatusFlags);

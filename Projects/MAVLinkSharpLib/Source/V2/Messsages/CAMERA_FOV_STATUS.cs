@@ -32,7 +32,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CameraFovStatusData
         /// </summary>    
+        /*
         public CameraFovStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint );
             LatCamera         = default(int  );
             LonCamera         = default(int  );

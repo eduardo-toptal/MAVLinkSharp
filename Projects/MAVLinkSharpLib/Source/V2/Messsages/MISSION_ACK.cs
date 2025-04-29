@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MissionAckData
         /// </summary>    
+        /*
         public MissionAckData() {
+            Init();
+        }
+        */
+        public void Init() {
             TargetSystem          = default(byte                 );
             TargetComponent       = default(byte                 );
             Type                  = default(MAVMissionResultFlags);

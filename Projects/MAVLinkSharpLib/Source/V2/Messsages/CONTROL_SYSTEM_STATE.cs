@@ -39,7 +39,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ControlSystemStateData
         /// </summary>    
+        /*
         public ControlSystemStateData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec          = default(ulong);
             XAcc              = default(float);
             YAcc              = default(float);

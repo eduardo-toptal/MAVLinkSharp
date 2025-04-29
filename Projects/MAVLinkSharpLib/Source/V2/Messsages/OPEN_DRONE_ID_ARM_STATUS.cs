@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OpenDroneIdArmStatusData
         /// </summary>    
+        /*
         public OpenDroneIdArmStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             Status      = default(MAVOdidArmStatusFlags);
             Error       = new char[ 50];
         }

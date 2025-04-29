@@ -33,7 +33,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new LinkNodeStatusData
         /// </summary>    
+        /*
         public LinkNodeStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             Timestamp              = default(ulong );
             TxRate                 = default(uint  );
             RxRate                 = default(uint  );

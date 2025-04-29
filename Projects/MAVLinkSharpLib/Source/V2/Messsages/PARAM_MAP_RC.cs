@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ParamMapRcData
         /// </summary>    
+        /*
         public ParamMapRcData() {
+            Init();
+        }
+        */
+        public void Init() {
             ParamValue0                     = default(float);
             Scale                           = default(float);
             ParamValueMin                   = default(float);

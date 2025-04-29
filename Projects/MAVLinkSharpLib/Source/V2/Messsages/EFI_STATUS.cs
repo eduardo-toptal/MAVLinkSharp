@@ -40,7 +40,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new EfiStatusData
         /// </summary>    
+        /*
         public EfiStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             EcuIndex                         = default(float);
             Rpm                              = default(float);
             FuelConsumed                     = default(float);

@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ActuatorOutputStatusData
         /// </summary>    
+        /*
         public ActuatorOutputStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec       = default(ulong);
             Active         = default(uint );
             Actuator       = new float[ 32];

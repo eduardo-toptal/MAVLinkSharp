@@ -38,7 +38,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HilStateQuaternionData
         /// </summary>    
+        /*
         public HilStateQuaternionData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec                 = default(ulong );
             AttitudeQuaternion       = new float[  4];
             Rollspeed                = default(float );

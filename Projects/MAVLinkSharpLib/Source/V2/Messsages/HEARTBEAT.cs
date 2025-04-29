@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HeartbeatData
         /// </summary>    
+        /*
         public HeartbeatData() {
+            Init();
+        }
+        */
+        public void Init() {
             CustomMode           = default(uint             );
             Type                 = default(MAVTypeFlags     );
             Autopilot            = default(MAVAutopilotFlags);

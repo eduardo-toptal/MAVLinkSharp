@@ -30,7 +30,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new WinchStatusData
         /// </summary>    
+        /*
         public WinchStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec         = default(ulong             );
             LineLength       = default(float             );
             Speed            = default(float             );

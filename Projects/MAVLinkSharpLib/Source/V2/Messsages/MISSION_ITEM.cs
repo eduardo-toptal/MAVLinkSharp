@@ -38,7 +38,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MissionItemData
         /// </summary>    
+        /*
         public MissionItemData() {
+            Init();
+        }
+        */
+        public void Init() {
             Param1                = default(float              );
             Param2                = default(float              );
             Param3                = default(float              );

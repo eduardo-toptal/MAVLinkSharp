@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SystemTimeData
         /// </summary>    
+        /*
         public SystemTimeData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUnixUsec        = default(ulong);
             TimeBootMs          = default(uint );
         }

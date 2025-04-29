@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TerrainReportData
         /// </summary>    
+        /*
         public TerrainReportData() {
+            Init();
+        }
+        */
+        public void Init() {
             Lat                 = default(int   );
             Lon                 = default(int   );
             TerrainHeight       = default(float );

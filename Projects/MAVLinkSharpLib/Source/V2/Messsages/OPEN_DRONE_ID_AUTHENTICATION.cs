@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OpenDroneIdAuthenticationData
         /// </summary>    
+        /*
         public OpenDroneIdAuthenticationData() {
+            Init();
+        }
+        */
+        public void Init() {
             Timestamp                = default(uint                );
             TargetSystem             = default(byte                );
             TargetComponent          = default(byte                );

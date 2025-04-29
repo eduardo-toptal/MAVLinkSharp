@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MissionCountData
         /// </summary>    
+        /*
         public MissionCountData() {
+            Init();
+        }
+        */
+        public void Init() {
             Count                 = default(ushort             );
             TargetSystem          = default(byte               );
             TargetComponent       = default(byte               );

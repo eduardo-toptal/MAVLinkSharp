@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GimbalManagerInformationData
         /// </summary>    
+        /*
         public GimbalManagerInformationData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs            = default(uint                 );
             CapFlags              = default(GimbalManagerCapFlags);
             RollMin               = default(float                );

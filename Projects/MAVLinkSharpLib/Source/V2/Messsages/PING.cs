@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new PingData
         /// </summary>    
+        /*
         public PingData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec              = default(ulong);
             Seq                   = default(uint );
             TargetSystem          = default(byte );

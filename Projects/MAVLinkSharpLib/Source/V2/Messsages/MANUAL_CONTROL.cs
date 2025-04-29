@@ -32,7 +32,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ManualControlData
         /// </summary>    
+        /*
         public ManualControlData() {
+            Init();
+        }
+        */
+        public void Init() {
             X                       = default(short );
             Y                       = default(short );
             Z                       = default(short );

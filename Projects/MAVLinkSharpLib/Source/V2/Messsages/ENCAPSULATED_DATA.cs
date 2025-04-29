@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new EncapsulatedDataData
         /// </summary>    
+        /*
         public EncapsulatedDataData() {
+            Init();
+        }
+        */
+        public void Init() {
             Seqnr      = default(ushort);
             Data       = new byte[253];
         }

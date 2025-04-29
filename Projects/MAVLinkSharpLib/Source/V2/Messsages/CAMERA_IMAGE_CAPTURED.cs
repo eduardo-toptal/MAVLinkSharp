@@ -39,7 +39,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CameraImageCapturedData
         /// </summary>    
+        /*
         public CameraImageCapturedData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUtc             = default(ulong);
             TimeBootMs          = default(uint );
             Lat                 = default(int  );

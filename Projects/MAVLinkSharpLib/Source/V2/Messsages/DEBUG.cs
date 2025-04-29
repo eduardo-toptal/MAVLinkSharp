@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new DebugData
         /// </summary>    
+        /*
         public DebugData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint );
             Value             = default(float);
             Ind               = default(byte );

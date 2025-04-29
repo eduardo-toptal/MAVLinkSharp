@@ -213,6 +213,8 @@ namespace MAVLinkSharp.Runtime {
             //Parse payload data into desired structure
             IMAVLinkMessageData d = MAVLinkMsg.GetMessageInstance(id);
             if(d==null) throw new InvalidDataException($"Message Id {(MAVLinkMsgId)id} does not have a valid data structure!");
+            //C#6 struct init
+            d.Init();
             //d.Read(b,(int)payload_pos);
             d.Read(bpl,0);
             msg.data = d;

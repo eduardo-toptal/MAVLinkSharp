@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ChangeOperatorControlAckData
         /// </summary>    
+        /*
         public ChangeOperatorControlAckData() {
+            Init();
+        }
+        */
+        public void Init() {
             GcsSystemId          = default(byte);
             ControlRequest       = default(byte);
             Ack                  = default(byte);

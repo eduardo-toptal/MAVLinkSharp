@@ -32,7 +32,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OpticalFlowData
         /// </summary>    
+        /*
         public OpticalFlowData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec             = default(ulong);
             FlowCompMX           = default(float);
             FlowCompMY           = default(float);

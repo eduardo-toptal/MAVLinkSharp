@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new PlayTuneV2Data
         /// </summary>    
+        /*
         public PlayTuneV2Data() {
+            Init();
+        }
+        */
+        public void Init() {
             Format                = default(TuneFormatFlags);
             TargetSystem          = default(byte           );
             TargetComponent       = default(byte           );

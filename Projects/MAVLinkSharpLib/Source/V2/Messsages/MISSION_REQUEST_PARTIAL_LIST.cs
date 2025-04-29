@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MissionRequestPartialListData
         /// </summary>    
+        /*
         public MissionRequestPartialListData() {
+            Init();
+        }
+        */
+        public void Init() {
             StartIndex            = default(short              );
             EndIndex              = default(short              );
             TargetSystem          = default(byte               );

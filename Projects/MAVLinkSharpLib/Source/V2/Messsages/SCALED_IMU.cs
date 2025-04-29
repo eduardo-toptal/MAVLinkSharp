@@ -33,7 +33,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ScaledImuData
         /// </summary>    
+        /*
         public ScaledImuData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint );
             Xacc              = default(short);
             Yacc              = default(short);

@@ -33,7 +33,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CommandLongData
         /// </summary>    
+        /*
         public CommandLongData() {
+            Init();
+        }
+        */
+        public void Init() {
             Param1                = default(float      );
             Param2                = default(float      );
             Param3                = default(float      );

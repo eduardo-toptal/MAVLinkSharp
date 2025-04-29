@@ -32,7 +32,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GlobalPositionIntData
         /// </summary>    
+        /*
         public GlobalPositionIntData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint  );
             Lat               = default(int   );
             Lon               = default(int   );

@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AttitudeQuaternionCovData
         /// </summary>    
+        /*
         public AttitudeQuaternionCovData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec        = default(ulong);
             Q               = new float[  4];
             Rollspeed       = default(float);

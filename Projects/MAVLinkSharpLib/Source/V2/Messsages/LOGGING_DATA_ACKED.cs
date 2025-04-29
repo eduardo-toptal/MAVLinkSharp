@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new LoggingDataAckedData
         /// </summary>    
+        /*
         public LoggingDataAckedData() {
+            Init();
+        }
+        */
+        public void Init() {
             Sequence                  = default(ushort);
             TargetSystem              = default(byte  );
             TargetComponent           = default(byte  );

@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MessageIntervalData
         /// </summary>    
+        /*
         public MessageIntervalData() {
+            Init();
+        }
+        */
+        public void Init() {
             IntervalUs       = default(int   );
             MessageId        = default(ushort);
         }

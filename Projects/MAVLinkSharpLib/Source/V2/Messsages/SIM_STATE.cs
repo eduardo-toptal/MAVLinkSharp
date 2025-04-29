@@ -43,7 +43,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SimStateData
         /// </summary>    
+        /*
         public SimStateData() {
+            Init();
+        }
+        */
+        public void Init() {
             Q1                = default(float);
             Q2                = default(float);
             Q3                = default(float);

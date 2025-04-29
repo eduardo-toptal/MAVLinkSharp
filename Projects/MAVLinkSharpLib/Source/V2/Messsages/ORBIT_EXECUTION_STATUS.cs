@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OrbitExecutionStatusData
         /// </summary>    
+        /*
         public OrbitExecutionStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec       = default(ulong        );
             Radius         = default(float        );
             X              = default(int          );

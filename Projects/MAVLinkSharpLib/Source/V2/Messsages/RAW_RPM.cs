@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RawRpmData
         /// </summary>    
+        /*
         public RawRpmData() {
+            Init();
+        }
+        */
+        public void Init() {
             Frequency      = default(float);
             Index          = default(byte );
         }

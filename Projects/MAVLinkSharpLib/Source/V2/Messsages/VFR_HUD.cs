@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new VfrHudData
         /// </summary>    
+        /*
         public VfrHudData() {
+            Init();
+        }
+        */
+        public void Init() {
             Airspeed         = default(float );
             Groundspeed      = default(float );
             Alt              = default(float );

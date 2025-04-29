@@ -42,7 +42,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OnboardComputerStatusData
         /// </summary>    
+        /*
         public OnboardComputerStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec               = default(ulong);
             Uptime                 = default(uint );
             RamUsage               = default(uint );

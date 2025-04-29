@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ParamSetData
         /// </summary>    
+        /*
         public ParamSetData() {
+            Init();
+        }
+        */
+        public void Init() {
             ParamValue            = default(float            );
             TargetSystem          = default(byte             );
             TargetComponent       = default(byte             );

@@ -30,7 +30,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GimbalManagerSetPitchyawData
         /// </summary>    
+        /*
         public GimbalManagerSetPitchyawData() {
+            Init();
+        }
+        */
+        public void Init() {
             Flags                 = default(GimbalManagerFlags);
             Pitch                 = default(float             );
             Yaw                   = default(float             );

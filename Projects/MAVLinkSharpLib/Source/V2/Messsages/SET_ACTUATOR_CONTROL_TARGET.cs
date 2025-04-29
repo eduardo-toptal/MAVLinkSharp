@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SetActuatorControlTargetData
         /// </summary>    
+        /*
         public SetActuatorControlTargetData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec              = default(ulong);
             Controls              = new float[  8];
             GroupMlx              = default(byte );

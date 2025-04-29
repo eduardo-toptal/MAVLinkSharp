@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GpsRtcmDataData
         /// </summary>    
+        /*
         public GpsRtcmDataData() {
+            Init();
+        }
+        */
+        public void Init() {
             Flags      = default(byte);
             Len        = default(byte);
             Data       = new byte[180];

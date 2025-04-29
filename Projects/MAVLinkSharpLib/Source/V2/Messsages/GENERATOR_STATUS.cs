@@ -33,7 +33,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GeneratorStatusData
         /// </summary>    
+        /*
         public GeneratorStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             Status                      = default(MAVGeneratorStatusFlag);
             BatteryCurrent              = default(float                 );
             LoadCurrent                 = default(float                 );

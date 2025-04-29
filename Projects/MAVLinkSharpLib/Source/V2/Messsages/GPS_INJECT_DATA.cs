@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GpsInjectDataData
         /// </summary>    
+        /*
         public GpsInjectDataData() {
+            Init();
+        }
+        */
+        public void Init() {
             TargetSystem          = default(byte);
             TargetComponent       = default(byte);
             Len                   = default(byte);

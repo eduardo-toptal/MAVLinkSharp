@@ -30,7 +30,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ViconPositionEstimateData
         /// </summary>    
+        /*
         public ViconPositionEstimateData() {
+            Init();
+        }
+        */
+        public void Init() {
             Usec            = default(ulong);
             X               = default(float);
             Y               = default(float);

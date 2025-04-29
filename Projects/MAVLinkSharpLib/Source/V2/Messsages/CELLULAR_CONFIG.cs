@@ -32,7 +32,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CellularConfigData
         /// </summary>    
+        /*
         public CellularConfigData() {
+            Init();
+        }
+        */
+        public void Init() {
             EnableLte       = default(byte                       );
             EnablePin       = default(byte                       );
             Pin             = new char[ 16];

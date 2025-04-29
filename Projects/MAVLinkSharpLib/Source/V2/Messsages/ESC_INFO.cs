@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new EscInfoData
         /// </summary>    
+        /*
         public EscInfoData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec             = default(ulong                 );
             ErrorCount           = new uint[  4];
             Counter              = default(ushort                );

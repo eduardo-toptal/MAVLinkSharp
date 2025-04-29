@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SafetyAllowedAreaData
         /// </summary>    
+        /*
         public SafetyAllowedAreaData() {
+            Init();
+        }
+        */
+        public void Init() {
             P1x        = default(float        );
             P1y        = default(float        );
             P1z        = default(float        );

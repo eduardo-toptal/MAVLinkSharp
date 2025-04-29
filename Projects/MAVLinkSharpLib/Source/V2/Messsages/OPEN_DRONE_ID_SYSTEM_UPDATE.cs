@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OpenDroneIdSystemUpdateData
         /// </summary>    
+        /*
         public OpenDroneIdSystemUpdateData() {
+            Init();
+        }
+        */
+        public void Init() {
             OperatorLatitude           = default(int  );
             OperatorLongitude          = default(int  );
             OperatorAltitudeGeo        = default(float);

@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CurrentEventSequenceData
         /// </summary>    
+        /*
         public CurrentEventSequenceData() {
+            Init();
+        }
+        */
+        public void Init() {
             Sequence      = default(ushort                      );
             Flags         = default(MAVEventCurrentSequenceFlags);
         }

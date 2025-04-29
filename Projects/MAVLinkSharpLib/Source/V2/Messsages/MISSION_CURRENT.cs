@@ -23,7 +23,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MissionCurrentData
         /// </summary>    
+        /*
         public MissionCurrentData() {
+            Init();
+        }
+        */
+        public void Init() {
             Seq      = default(ushort);
         }
         #endregion

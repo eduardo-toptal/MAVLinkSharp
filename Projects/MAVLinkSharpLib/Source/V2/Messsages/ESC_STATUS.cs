@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new EscStatusData
         /// </summary>    
+        /*
         public EscStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec       = default(ulong);
             Rpm            = new int[  4];
             Voltage        = new float[  4];

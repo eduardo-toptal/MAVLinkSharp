@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ManualSetpointData
         /// </summary>    
+        /*
         public ManualSetpointData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs                  = default(uint );
             Roll                        = default(float);
             Pitch                       = default(float);

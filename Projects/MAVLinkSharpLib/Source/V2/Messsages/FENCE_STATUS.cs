@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new FenceStatusData
         /// </summary>    
+        /*
         public FenceStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             BreachTime             = default(uint              );
             BreachCount            = default(ushort            );
             BreachStatus           = default(byte              );

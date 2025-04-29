@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new LogEntryData
         /// </summary>    
+        /*
         public LogEntryData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUtc           = default(uint  );
             Size              = default(uint  );
             Id                = default(ushort);

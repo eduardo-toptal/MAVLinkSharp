@@ -34,7 +34,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new LocalPositionNedCovData
         /// </summary>    
+        /*
         public LocalPositionNedCovData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec            = default(ulong                );
             X                   = default(float                );
             Y                   = default(float                );

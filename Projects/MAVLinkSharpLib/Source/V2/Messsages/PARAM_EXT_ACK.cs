@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ParamExtAckData
         /// </summary>    
+        /*
         public ParamExtAckData() {
+            Init();
+        }
+        */
+        public void Init() {
             ParamId           = new char[ 16];
             ParamValue        = new char[128];
             ParamType         = default(MAVParamExtTypeFlags);

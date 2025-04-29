@@ -32,7 +32,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SetAttitudeTargetData
         /// </summary>    
+        /*
         public SetAttitudeTargetData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs            = default(uint                       );
             Q                     = new float[  4];
             BodyRollRate          = default(float                      );

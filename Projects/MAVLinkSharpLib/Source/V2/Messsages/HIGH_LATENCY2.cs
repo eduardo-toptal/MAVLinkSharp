@@ -49,7 +49,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HighLatency2Data
         /// </summary>    
+        /*
         public HighLatency2Data() {
+            Init();
+        }
+        */
+        public void Init() {
             Timestamp            = default(uint             );
             Latitude             = default(int              );
             Longitude            = default(int              );

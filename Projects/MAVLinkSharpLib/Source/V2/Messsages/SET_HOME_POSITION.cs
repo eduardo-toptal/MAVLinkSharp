@@ -42,7 +42,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SetHomePositionData
         /// </summary>    
+        /*
         public SetHomePositionData() {
+            Init();
+        }
+        */
+        public void Init() {
             Latitude           = default(int  );
             Longitude          = default(int  );
             Altitude           = default(int  );

@@ -36,7 +36,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new LandingTargetData
         /// </summary>    
+        /*
         public LandingTargetData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec            = default(ulong                 );
             AngleX              = default(float                 );
             AngleY              = default(float                 );

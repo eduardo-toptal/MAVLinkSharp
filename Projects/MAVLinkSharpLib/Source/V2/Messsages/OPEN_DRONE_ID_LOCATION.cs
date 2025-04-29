@@ -41,7 +41,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OpenDroneIdLocationData
         /// </summary>    
+        /*
         public OpenDroneIdLocationData() {
+            Init();
+        }
+        */
+        public void Init() {
             Latitude                 = default(int                  );
             Longitude                = default(int                  );
             AltitudeBarometric       = default(float                );

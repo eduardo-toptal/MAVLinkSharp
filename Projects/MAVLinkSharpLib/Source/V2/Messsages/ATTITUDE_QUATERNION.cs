@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AttitudeQuaternionData
         /// </summary>    
+        /*
         public AttitudeQuaternionData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs         = default(uint );
             Q1                 = default(float);
             Q2                 = default(float);

@@ -41,7 +41,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GpsInputData
         /// </summary>    
+        /*
         public GpsInputData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec                = default(ulong              );
             TimeWeekMs              = default(uint               );
             Lat                     = default(int                );

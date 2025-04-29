@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GpsStatusData
         /// </summary>    
+        /*
         public GpsStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             SatellitesVisible        = default(byte);
             SatellitePrn             = new byte[ 20];
             SatelliteUsed            = new byte[ 20];

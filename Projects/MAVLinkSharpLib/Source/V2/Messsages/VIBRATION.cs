@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new VibrationData
         /// </summary>    
+        /*
         public VibrationData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec         = default(ulong);
             VibrationX       = default(float);
             VibrationY       = default(float);

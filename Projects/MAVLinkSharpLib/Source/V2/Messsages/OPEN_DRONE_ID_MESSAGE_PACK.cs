@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OpenDroneIdMessagePackData
         /// </summary>    
+        /*
         public OpenDroneIdMessagePackData() {
+            Init();
+        }
+        */
+        public void Init() {
             TargetSystem             = default(byte);
             TargetComponent          = default(byte);
             IdOrMac                  = new byte[ 20];

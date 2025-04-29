@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new StatustextData
         /// </summary>    
+        /*
         public StatustextData() {
+            Init();
+        }
+        */
+        public void Init() {
             Severity       = default(MAVSeverityFlags);
             Text           = new char[ 50];
             Id             = default(ushort          );

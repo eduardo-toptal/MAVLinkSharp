@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new LogDataData
         /// </summary>    
+        /*
         public LogDataData() {
+            Init();
+        }
+        */
+        public void Init() {
             Ofs        = default(uint  );
             Id         = default(ushort);
             Count      = default(byte  );

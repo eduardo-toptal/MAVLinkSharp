@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AltitudeData
         /// </summary>    
+        /*
         public AltitudeData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec                = default(ulong);
             AltitudeMonotonic       = default(float);
             AltitudeAmsl            = default(float);

@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ResourceRequestData
         /// </summary>    
+        /*
         public ResourceRequestData() {
+            Init();
+        }
+        */
+        public void Init() {
             RequestId          = default(byte);
             UriType            = default(byte);
             Uri                = new byte[120];

@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CollisionData
         /// </summary>    
+        /*
         public CollisionData() {
+            Init();
+        }
+        */
+        public void Init() {
             Id                            = default(uint                        );
             TimeToMinimumDelta            = default(float                       );
             AltitudeMinimumDelta          = default(float                       );

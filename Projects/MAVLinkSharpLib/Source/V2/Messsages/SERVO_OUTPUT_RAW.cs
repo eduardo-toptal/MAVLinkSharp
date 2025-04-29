@@ -40,7 +40,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ServoOutputRawData
         /// </summary>    
+        /*
         public ServoOutputRawData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec         = default(uint  );
             Servo1Raw        = default(ushort);
             Servo2Raw        = default(ushort);

@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RequestDataStreamData
         /// </summary>    
+        /*
         public RequestDataStreamData() {
+            Init();
+        }
+        */
+        public void Init() {
             ReqMessageRate        = default(ushort);
             TargetSystem          = default(byte  );
             TargetComponent       = default(byte  );

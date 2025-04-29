@@ -38,7 +38,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HilSensorData
         /// </summary>    
+        /*
         public HilSensorData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec            = default(ulong                );
             Xacc                = default(float                );
             Yacc                = default(float                );

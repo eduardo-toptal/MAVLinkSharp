@@ -36,7 +36,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new BatteryStatusData
         /// </summary>    
+        /*
         public BatteryStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             CurrentConsumed        = default(int                       );
             EnergyConsumed         = default(int                       );
             Temperature            = default(short                     );

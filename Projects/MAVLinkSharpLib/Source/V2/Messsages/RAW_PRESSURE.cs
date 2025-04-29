@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RawPressureData
         /// </summary>    
+        /*
         public RawPressureData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec         = default(ulong);
             PressAbs         = default(short);
             PressDiff1       = default(short);

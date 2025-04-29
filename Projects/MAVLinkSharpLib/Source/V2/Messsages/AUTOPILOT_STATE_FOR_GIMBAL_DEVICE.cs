@@ -34,7 +34,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AutopilotStateForGimbalDeviceData
         /// </summary>    
+        /*
         public AutopilotStateForGimbalDeviceData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootUs                           = default(ulong               );
             Q                                    = new float[  4];
             QEstimatedDelayUs                    = default(uint                );

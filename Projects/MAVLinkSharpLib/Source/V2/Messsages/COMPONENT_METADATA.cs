@@ -36,7 +36,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ComponentMetadataData
         /// </summary>    
+        /*
         public ComponentMetadataData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint);
             FileCrc           = default(uint);
             Uri               = new char[100];

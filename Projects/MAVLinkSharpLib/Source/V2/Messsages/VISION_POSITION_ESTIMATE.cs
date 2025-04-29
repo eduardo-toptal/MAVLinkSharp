@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new VisionPositionEstimateData
         /// </summary>    
+        /*
         public VisionPositionEstimateData() {
+            Init();
+        }
+        */
+        public void Init() {
             Usec               = default(ulong);
             X                  = default(float);
             Y                  = default(float);

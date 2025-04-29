@@ -34,7 +34,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AutopilotVersionData
         /// </summary>    
+        /*
         public AutopilotVersionData() {
+            Init();
+        }
+        */
+        public void Init() {
             Capabilities                   = default(MAVProtocolCapabilityFlags);
             Uid                            = default(ulong                     );
             FlightSwVersion                = default(uint                      );

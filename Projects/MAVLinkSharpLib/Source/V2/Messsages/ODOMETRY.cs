@@ -40,7 +40,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OdometryData
         /// </summary>    
+        /*
         public OdometryData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec                 = default(ulong                );
             X                        = default(float                );
             Y                        = default(float                );

@@ -38,7 +38,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SetPositionTargetLocalNedData
         /// </summary>    
+        /*
         public SetPositionTargetLocalNedData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs            = default(uint                       );
             X                     = default(float                      );
             Y                     = default(float                      );

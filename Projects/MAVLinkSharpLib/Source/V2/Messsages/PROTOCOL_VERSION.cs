@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ProtocolVersionData
         /// </summary>    
+        /*
         public ProtocolVersionData() {
+            Init();
+        }
+        */
+        public void Init() {
             Version                   = default(ushort);
             MinVersion                = default(ushort);
             MaxVersion                = default(ushort);

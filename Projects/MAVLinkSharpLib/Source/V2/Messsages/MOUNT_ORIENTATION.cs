@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MountOrientationData
         /// </summary>    
+        /*
         public MountOrientationData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint );
             Roll              = default(float);
             Pitch             = default(float);

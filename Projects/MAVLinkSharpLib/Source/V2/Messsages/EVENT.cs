@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new EventData
         /// </summary>    
+        /*
         public EventData() {
+            Init();
+        }
+        */
+        public void Init() {
             Id                         = default(uint  );
             EventTimeBootMs            = default(uint  );
             Sequence                   = default(ushort);

@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CommandCancelData
         /// </summary>    
+        /*
         public CommandCancelData() {
+            Init();
+        }
+        */
+        public void Init() {
             Command               = default(MAVCmdFlags);
             TargetSystem          = default(byte       );
             TargetComponent       = default(byte       );

@@ -40,7 +40,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MagCalReportData
         /// </summary>    
+        /*
         public MagCalReportData() {
+            Init();
+        }
+        */
+        public void Init() {
             Fitness                     = default(float                    );
             OfsX                        = default(float                    );
             OfsY                        = default(float                    );

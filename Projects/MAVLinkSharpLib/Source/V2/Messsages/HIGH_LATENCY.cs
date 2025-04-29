@@ -46,7 +46,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HighLatencyData
         /// </summary>    
+        /*
         public HighLatencyData() {
+            Init();
+        }
+        */
+        public void Init() {
             CustomMode             = default(uint               );
             Latitude               = default(int                );
             Longitude              = default(int                );

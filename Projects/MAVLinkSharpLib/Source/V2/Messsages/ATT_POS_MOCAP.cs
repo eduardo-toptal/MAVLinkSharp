@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AttPosMocapData
         /// </summary>    
+        /*
         public AttPosMocapData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec        = default(ulong);
             Q               = new float[  4];
             X               = default(float);

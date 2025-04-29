@@ -35,7 +35,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GpsRtkData
         /// </summary>    
+        /*
         public GpsRtkData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeLastBaselineMs         = default(uint                            );
             Tow                        = default(uint                            );
             BaselineAMm                = default(int                             );

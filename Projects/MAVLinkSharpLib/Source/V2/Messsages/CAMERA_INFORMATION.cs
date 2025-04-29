@@ -35,7 +35,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CameraInformationData
         /// </summary>    
+        /*
         public CameraInformationData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs                  = default(uint          );
             FirmwareVersion             = default(uint          );
             FocalLength                 = default(float         );

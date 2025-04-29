@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new MissionRequestIntData
         /// </summary>    
+        /*
         public MissionRequestIntData() {
+            Init();
+        }
+        */
+        public void Init() {
             Seq                   = default(ushort             );
             TargetSystem          = default(byte               );
             TargetComponent       = default(byte               );

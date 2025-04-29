@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AttitudeData
         /// </summary>    
+        /*
         public AttitudeData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint );
             Roll              = default(float);
             Pitch             = default(float);

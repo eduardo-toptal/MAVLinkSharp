@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TimesyncData
         /// </summary>    
+        /*
         public TimesyncData() {
+            Init();
+        }
+        */
+        public void Init() {
             Tc1      = default(long);
             Ts1      = default(long);
         }

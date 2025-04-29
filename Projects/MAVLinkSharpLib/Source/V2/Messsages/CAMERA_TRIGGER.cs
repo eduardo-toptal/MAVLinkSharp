@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CameraTriggerData
         /// </summary>    
+        /*
         public CameraTriggerData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec       = default(ulong);
             Seq            = default(uint );
         }

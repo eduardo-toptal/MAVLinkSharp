@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CommandAckData
         /// </summary>    
+        /*
         public CommandAckData() {
+            Init();
+        }
+        */
+        public void Init() {
             Command               = default(MAVCmdFlags   );
             Result                = default(MAVResultFlags);
             Progress              = default(byte          );

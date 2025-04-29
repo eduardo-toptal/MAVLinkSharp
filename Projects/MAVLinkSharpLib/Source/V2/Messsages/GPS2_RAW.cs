@@ -40,7 +40,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new Gps2RawData
         /// </summary>    
+        /*
         public Gps2RawData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec                = default(ulong          );
             Lat                     = default(int            );
             Lon                     = default(int            );

@@ -39,7 +39,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AisVesselData
         /// </summary>    
+        /*
         public AisVesselData() {
+            Init();
+        }
+        */
+        public void Init() {
             Mmsi                     = default(uint             );
             Lat                      = default(int              );
             Lon                      = default(int              );

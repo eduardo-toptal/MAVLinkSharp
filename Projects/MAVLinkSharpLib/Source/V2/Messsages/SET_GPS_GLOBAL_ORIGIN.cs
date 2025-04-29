@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SetGpsGlobalOriginData
         /// </summary>    
+        /*
         public SetGpsGlobalOriginData() {
+            Init();
+        }
+        */
+        public void Init() {
             Latitude           = default(int  );
             Longitude          = default(int  );
             Altitude           = default(int  );

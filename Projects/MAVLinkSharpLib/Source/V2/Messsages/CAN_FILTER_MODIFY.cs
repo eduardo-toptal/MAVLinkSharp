@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CanFilterModifyData
         /// </summary>    
+        /*
         public CanFilterModifyData() {
+            Init();
+        }
+        */
+        public void Init() {
             Ids                   = new ushort[ 16];
             TargetSystem          = default(byte            );
             TargetComponent       = default(byte            );

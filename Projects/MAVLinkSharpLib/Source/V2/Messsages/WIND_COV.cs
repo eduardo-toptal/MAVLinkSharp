@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new WindCovData
         /// </summary>    
+        /*
         public WindCovData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec            = default(ulong);
             WindX               = default(float);
             WindY               = default(float);

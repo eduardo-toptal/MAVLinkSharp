@@ -35,7 +35,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AdsbVehicleData
         /// </summary>    
+        /*
         public AdsbVehicleData() {
+            Init();
+        }
+        */
+        public void Init() {
             IcaoAddress        = default(uint                 );
             Lat                = default(int                  );
             Lon                = default(int                  );

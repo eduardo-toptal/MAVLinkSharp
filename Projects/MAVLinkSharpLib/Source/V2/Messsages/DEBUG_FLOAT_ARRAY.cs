@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new DebugFloatArrayData
         /// </summary>    
+        /*
         public DebugFloatArrayData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec       = default(ulong );
             ArrayId        = default(ushort);
             Name           = new char[ 10];

@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CanFrameData
         /// </summary>    
+        /*
         public CanFrameData() {
+            Init();
+        }
+        */
+        public void Init() {
             Id                    = default(uint);
             TargetSystem          = default(byte);
             TargetComponent       = default(byte);

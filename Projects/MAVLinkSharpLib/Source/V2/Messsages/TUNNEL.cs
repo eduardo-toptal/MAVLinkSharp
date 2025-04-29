@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TunnelData
         /// </summary>    
+        /*
         public TunnelData() {
+            Init();
+        }
+        */
+        public void Init() {
             PayloadType           = default(MAVTunnelPayloadTypeFlags);
             TargetSystem          = default(byte                     );
             TargetComponent       = default(byte                     );

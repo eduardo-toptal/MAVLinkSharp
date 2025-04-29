@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new WifiConfigApData
         /// </summary>    
+        /*
         public WifiConfigApData() {
+            Init();
+        }
+        */
+        public void Init() {
             Ssid          = new char[ 32];
             Password      = new char[ 64];
             Mode          = default(WifiConfigApModeFlags    );

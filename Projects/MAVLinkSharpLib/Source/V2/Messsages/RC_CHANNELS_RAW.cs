@@ -33,7 +33,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RcChannelsRawData
         /// </summary>    
+        /*
         public RcChannelsRawData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs        = default(uint  );
             Chan1Raw          = default(ushort);
             Chan2Raw          = default(ushort);

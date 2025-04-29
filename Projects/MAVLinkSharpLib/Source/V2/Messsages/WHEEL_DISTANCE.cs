@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new WheelDistanceData
         /// </summary>    
+        /*
         public WheelDistanceData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec       = default(ulong );
             Distance       = new double[ 16];
             Count          = default(byte  );

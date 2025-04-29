@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ScaledPressureData
         /// </summary>    
+        /*
         public ScaledPressureData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs                  = default(uint );
             PressAbs                    = default(float);
             PressDiff                   = default(float);

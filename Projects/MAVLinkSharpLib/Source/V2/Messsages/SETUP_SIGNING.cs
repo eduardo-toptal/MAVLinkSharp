@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SetupSigningData
         /// </summary>    
+        /*
         public SetupSigningData() {
+            Init();
+        }
+        */
+        public void Init() {
             InitialTimestamp       = default(ulong);
             TargetSystem           = default(byte );
             TargetComponent        = default(byte );

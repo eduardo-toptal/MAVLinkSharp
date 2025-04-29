@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GimbalManagerStatusData
         /// </summary>    
+        /*
         public GimbalManagerStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs                    = default(uint              );
             Flags                         = default(GimbalManagerFlags);
             GimbalDeviceId                = default(byte              );

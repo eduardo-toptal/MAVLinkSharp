@@ -33,7 +33,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HilControlsData
         /// </summary>    
+        /*
         public HilControlsData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec            = default(ulong       );
             RollAilerons        = default(float       );
             PitchElevator       = default(float       );

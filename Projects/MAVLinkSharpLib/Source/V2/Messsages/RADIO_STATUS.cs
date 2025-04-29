@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RadioStatusData
         /// </summary>    
+        /*
         public RadioStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             Rxerrors      = default(ushort);
             @Fixed        = default(ushort);
             Rssi          = default(byte  );

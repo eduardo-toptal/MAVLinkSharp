@@ -34,7 +34,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new VideoStreamInformationData
         /// </summary>    
+        /*
         public VideoStreamInformationData() {
+            Init();
+        }
+        */
+        public void Init() {
             Framerate         = default(float                 );
             Bitrate           = default(uint                  );
             Flags             = default(VideoStreamStatusFlags);

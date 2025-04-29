@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new TerrainRequestData
         /// </summary>    
+        /*
         public TerrainRequestData() {
+            Init();
+        }
+        */
+        public void Init() {
             Mask              = default(ulong );
             Lat               = default(int   );
             Lon               = default(int   );

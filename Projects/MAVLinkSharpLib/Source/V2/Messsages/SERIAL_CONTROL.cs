@@ -30,7 +30,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SerialControlData
         /// </summary>    
+        /*
         public SerialControlData() {
+            Init();
+        }
+        */
+        public void Init() {
             Baudrate              = default(uint                 );
             Timeout               = default(ushort               );
             Device                = default(SerialControlDevFlags);

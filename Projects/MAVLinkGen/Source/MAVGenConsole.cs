@@ -61,7 +61,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new %name%
         /// </summary>    
+        /*
         public %name%() {
+            Init();
+        }
+        */
+        public void Init() {
             //%ctor-field%
         }
         #endregion

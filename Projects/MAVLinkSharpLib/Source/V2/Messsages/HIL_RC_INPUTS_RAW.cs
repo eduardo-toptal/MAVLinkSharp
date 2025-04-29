@@ -36,7 +36,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HilRcInputsRawData
         /// </summary>    
+        /*
         public HilRcInputsRawData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec        = default(ulong );
             Chan1Raw        = default(ushort);
             Chan2Raw        = default(ushort);

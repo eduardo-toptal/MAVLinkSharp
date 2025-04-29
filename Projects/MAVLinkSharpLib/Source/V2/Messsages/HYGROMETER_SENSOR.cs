@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HygrometerSensorData
         /// </summary>    
+        /*
         public HygrometerSensorData() {
+            Init();
+        }
+        */
+        public void Init() {
             Temperature      = default(short );
             Humidity         = default(ushort);
             Id               = default(byte  );

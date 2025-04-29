@@ -34,7 +34,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new OpticalFlowRadData
         /// </summary>    
+        /*
         public OpticalFlowRadData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec                    = default(ulong);
             IntegrationTimeUs           = default(uint );
             IntegratedX                 = default(float);

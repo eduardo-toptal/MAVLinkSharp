@@ -26,7 +26,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new FileTransferProtocolData
         /// </summary>    
+        /*
         public FileTransferProtocolData() {
+            Init();
+        }
+        */
+        public void Init() {
             TargetNetwork         = default(byte);
             TargetSystem          = default(byte);
             TargetComponent       = default(byte);

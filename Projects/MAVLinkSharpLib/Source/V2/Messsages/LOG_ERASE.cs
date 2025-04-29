@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new LogEraseData
         /// </summary>    
+        /*
         public LogEraseData() {
+            Init();
+        }
+        */
+        public void Init() {
             TargetSystem          = default(byte);
             TargetComponent       = default(byte);
         }

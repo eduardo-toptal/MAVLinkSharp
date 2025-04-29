@@ -38,7 +38,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new HilStateData
         /// </summary>    
+        /*
         public HilStateData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec        = default(ulong);
             Roll            = default(float);
             Pitch           = default(float);

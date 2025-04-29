@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CameraCaptureStatusData
         /// </summary>    
+        /*
         public CameraCaptureStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeBootMs              = default(uint );
             ImageInterval           = default(float);
             RecordingTimeMs         = default(uint );

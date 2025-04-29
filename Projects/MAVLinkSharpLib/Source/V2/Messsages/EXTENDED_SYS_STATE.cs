@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ExtendedSysStateData
         /// </summary>    
+        /*
         public ExtendedSysStateData() {
+            Init();
+        }
+        */
+        public void Init() {
             VtolState         = default(MAVVtolStateFlags  );
             LandedState       = default(MAVLandedStateFlags);
         }

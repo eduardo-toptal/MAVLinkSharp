@@ -28,7 +28,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new VisionSpeedEstimateData
         /// </summary>    
+        /*
         public VisionSpeedEstimateData() {
+            Init();
+        }
+        */
+        public void Init() {
             Usec               = default(ulong);
             X                  = default(float);
             Y                  = default(float);

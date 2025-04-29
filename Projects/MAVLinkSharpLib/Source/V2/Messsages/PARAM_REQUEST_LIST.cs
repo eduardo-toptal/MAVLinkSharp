@@ -24,7 +24,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ParamRequestListData
         /// </summary>    
+        /*
         public ParamRequestListData() {
+            Init();
+        }
+        */
+        public void Init() {
             TargetSystem          = default(byte);
             TargetComponent       = default(byte);
         }

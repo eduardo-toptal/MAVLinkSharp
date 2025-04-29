@@ -33,7 +33,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new FollowTargetData
         /// </summary>    
+        /*
         public FollowTargetData() {
+            Init();
+        }
+        */
+        public void Init() {
             Timestamp             = default(ulong);
             CustomState           = default(ulong);
             Lat                   = default(int  );

@@ -25,7 +25,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new SetModeData
         /// </summary>    
+        /*
         public SetModeData() {
+            Init();
+        }
+        */
+        public void Init() {
             CustomMode         = default(uint        );
             TargetSystem       = default(byte        );
             BaseMode           = default(MAVModeFlags);

@@ -34,7 +34,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new RawImuData
         /// </summary>    
+        /*
         public RawImuData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec         = default(ulong);
             Xacc             = default(short);
             Yacc             = default(short);

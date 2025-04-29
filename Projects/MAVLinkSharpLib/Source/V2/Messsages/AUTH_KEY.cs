@@ -23,7 +23,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new AuthKeyData
         /// </summary>    
+        /*
         public AuthKeyData() {
+            Init();
+        }
+        */
+        public void Init() {
             Key      = new char[ 32];
         }
         #endregion

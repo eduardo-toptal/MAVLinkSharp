@@ -31,7 +31,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new UavcanNodeInfoData
         /// </summary>    
+        /*
         public UavcanNodeInfoData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec              = default(ulong);
             UptimeSec             = default(uint );
             SwVcsCommit           = default(uint );

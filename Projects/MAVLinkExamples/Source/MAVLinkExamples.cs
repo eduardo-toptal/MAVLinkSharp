@@ -809,6 +809,8 @@ namespace MAVLinkExamples {
                                     
                                                 AutopilotVersionData d = new AutopilotVersionData();
 
+                                                d.Init();
+
                                                 byte[] sb;
                                                 byte[] nb;
 

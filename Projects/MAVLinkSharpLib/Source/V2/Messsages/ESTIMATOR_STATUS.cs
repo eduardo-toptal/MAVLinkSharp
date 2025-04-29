@@ -32,7 +32,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new EstimatorStatusData
         /// </summary>    
+        /*
         public EstimatorStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             TimeUsec                = default(ulong               );
             VelRatio                = default(float               );
             PosHorizRatio           = default(float               );

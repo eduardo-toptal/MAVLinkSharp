@@ -30,7 +30,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GimbalManagerSetAttitudeData
         /// </summary>    
+        /*
         public GimbalManagerSetAttitudeData() {
+            Init();
+        }
+        */
+        public void Init() {
             Flags                   = default(GimbalManagerFlags);
             Q                       = new float[  4];
             AngularVelocityX        = default(float             );

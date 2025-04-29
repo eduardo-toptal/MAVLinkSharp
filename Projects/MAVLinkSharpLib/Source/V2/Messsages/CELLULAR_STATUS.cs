@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new CellularStatusData
         /// </summary>    
+        /*
         public CellularStatusData() {
+            Init();
+        }
+        */
+        public void Init() {
             Mcc                 = default(ushort                          );
             Mnc                 = default(ushort                          );
             Lac                 = default(ushort                          );

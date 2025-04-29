@@ -29,7 +29,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new DataTransmissionHandshakeData
         /// </summary>    
+        /*
         public DataTransmissionHandshakeData() {
+            Init();
+        }
+        */
+        public void Init() {
             Size             = default(uint                      );
             Width            = default(ushort                    );
             Height           = default(ushort                    );

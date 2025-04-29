@@ -37,7 +37,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new GimbalDeviceInformationData
         /// </summary>    
+        /*
         public GimbalDeviceInformationData() {
+            Init();
+        }
+        */
+        public void Init() {
             Uid                   = default(ulong               );
             TimeBootMs            = default(uint                );
             FirmwareVersion       = default(uint                );

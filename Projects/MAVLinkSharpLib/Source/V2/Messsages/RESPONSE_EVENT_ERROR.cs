@@ -27,7 +27,12 @@ namespace MAVLinkSharp.Bindings {
         /// <summary>
         /// Instantiates a new ResponseEventErrorData
         /// </summary>    
+        /*
         public ResponseEventErrorData() {
+            Init();
+        }
+        */
+        public void Init() {
             Sequence                       = default(ushort                  );
             SequenceOldestAvailable        = default(ushort                  );
             TargetSystem                   = default(byte                    );
