@@ -1,0 +1,146 @@
+        
+using System.IO;
+using System.Runtime.InteropServices;
+using MAVLinkSharp.Runtime;
+
+#pragma warning disable CS0675
+
+namespace MAVLinkSharp.Bindings {
+
+    /// <summary>
+    /// Set a safety zone (volume), which is defined by two corners of a cube. This message can be used to tell the MAV which setpoints/waypoints to accept and which to reject. Safety areas are often enforced by national or competition regulations.
+    /// </summary>    
+    public struct SafetySetAllowedAreaData : IMAVLinkMessageData {
+
+        /// <summary>
+        /// Message Id Associated w/ this Struct
+        /// </summary>    
+        public int GetId() { return 54; }
+
+        public float          P1x;                 //x position 1 / Latitude 1
+        public float          P1y;                 //y position 1 / Longitude 1
+        public float          P1z;                 //z position 1 / Altitude 1
+        public float          P2x;                 //x position 2 / Latitude 2
+        public float          P2y;                 //y position 2 / Longitude 2
+        public float          P2z;                 //z position 2 / Altitude 2
+        public byte           TargetSystem;        //System ID
+        public byte           TargetComponent;     //Component ID
+        public MAVFrameFlags  Frame;               //Coordinate frame. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z axis down.    
+
+        #region CTOR
+        /// <summary>
+        /// Instantiates a new SafetySetAllowedAreaData
+        /// </summary>    
+        public SafetySetAllowedAreaData() {
+            P1x                   = default(float        );
+            P1y                   = default(float        );
+            P1z                   = default(float        );
+            P2x                   = default(float        );
+            P2y                   = default(float        );
+            P2z                   = default(float        );
+            TargetSystem          = default(byte         );
+            TargetComponent       = default(byte         );
+            Frame                 = default(MAVFrameFlags);
+        }
+        #endregion
+
+        #region Read Buffer
+        /// <summary>
+        /// Reads the data from Buffer into this struct
+        /// </summary>    
+        public int Read(byte[] p_buffer,int p_offset=0) {
+            int    l = 27;
+            //Assert Range
+            if((p_buffer.Length - p_offset) < l) return 0; 
+            //Locals
+            int[]  LS8  = MAVLinkCRC.U8_LSH8, LS16 = MAVLinkCRC.U8_LSH16, LS24 = MAVLinkCRC.U8_LSH24, LS32 = MAVLinkCRC.U8_LSH32, LS40 = MAVLinkCRC.U8_LSH40, LS48 = MAVLinkCRC.U8_LSH48, LS56 = MAVLinkCRC.U8_LSH56;
+            Span<byte> b = p_buffer.AsSpan(p_offset);            
+            int        p = 0;            
+            //byte[] b = p_buffer;
+            //int    p = p_offset;
+            P1x                   = (float        ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            P1y                   = (float        ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            P1z                   = (float        ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            P2x                   = (float        ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            P2y                   = (float        ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            P2z                   = (float        ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            TargetSystem          = (byte         ) (b[p++]);
+            TargetComponent       = (byte         ) (b[p++]);
+            Frame                 = (MAVFrameFlags) (b[p++]);            
+            return p;
+        }
+        #endregion
+
+        #region Write Buffer
+        /// <summary>
+        /// Writes the message data into a Buffer
+        /// </summary>    
+        public int Write(byte[] p_buffer,int p_offset=0) {
+            int    l = 27;
+            //Assert Range
+            if((p_buffer.Length - p_offset) < l) return 0; 
+            //Locals            
+            Span<byte> b = p_buffer.AsSpan(p_offset);
+            int        p = 0;            
+            //byte[] b = p_buffer;
+            //int    p = p_offset;
+            MemoryMarshal.Write(b.Slice(p, 4), ref P1x                  ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref P1y                  ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref P1z                  ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref P2x                  ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref P2y                  ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref P2z                  ); p+=4;
+            b[p++] = (byte)(TargetSystem);
+            b[p++] = (byte)(TargetComponent);
+            b[p++] = (byte)(Frame);
+            return p;
+        }
+        #endregion
+
+        #region Read Stream
+        /// <summary>
+        /// Reads the struct data from a stream
+        /// </summary>
+        /// <param name="p_stream"></param>
+        /// <returns></returns>
+        public int Read(Stream p_stream) {
+            Stream ss = p_stream;
+            if(ss==null) return 0;
+            int l = 27;
+            if(ss.Length - ss.Position < l) return 0;
+            byte[] b;            
+            long p = ss.Position;
+            if(ss is MemoryStream) {
+                MemoryStream ms = ( MemoryStream ) ss;
+                b = ms.GetBuffer();
+            }
+            else {
+                b = new byte[l];
+                p = 0;
+                ss.Read(b,0,l);                
+            }
+            return Read(b,(int)p);
+        }
+        #endregion
+
+        #region Write Stream
+        /// <summary>
+        /// Writes the struct data into a Stream
+        /// </summary>
+        /// <param name="p_stream"></param>
+        /// <returns></returns>
+        public int Write(Stream p_stream) {
+            Stream ss = p_stream;
+            if(ss==null) return 0;
+            MemoryStream ms = new MemoryStream();
+            int c = Read(ms);
+            ms.Position=0;
+            ms.CopyTo(ss);            
+            ms.Close();
+            return c;
+        }
+        #endregion
+
+    }
+
+}

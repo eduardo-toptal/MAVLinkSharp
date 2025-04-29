@@ -1,4 +1,4 @@
-﻿using MAVLinkBindings;
+﻿using MAVLinkSharp.Runtime;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Linq;
 using System;
@@ -23,7 +23,7 @@ namespace MAVLinkGen {
 
         static string CSEnumTemplate = 
 @"        
-namespace MAVLinkBindings {
+namespace MAVLinkSharp.Bindings {
 
     /// <summary>
     /// %description%
@@ -39,10 +39,11 @@ namespace MAVLinkBindings {
 @"        
 using System.IO;
 using System.Runtime.InteropServices;
+using MAVLinkSharp.Runtime;
 
 #pragma warning disable CS0675
 
-namespace MAVLinkBindings {
+namespace MAVLinkSharp.Bindings {
 
     /// <summary>
     /// %description%
@@ -983,7 +984,8 @@ namespace MAVLinkBindings {
                 var_flag = CmdVarType.None;
             }
             //Assert Directories and File
-            if(string.IsNullOrEmpty(args.path)) args.path = $"{Environment.CurrentDirectory}/Definitions/";
+            DirectoryInfo root_dir = new DirectoryInfo(Environment.CurrentDirectory);            
+            if(string.IsNullOrEmpty(args.path)) args.path = $"{root_dir.FullName}/Definitions/v1.0";
             args.pathDir = new DirectoryInfo(args.path);
             if(!args.pathDir.Exists) { throw new DirectoryNotFoundException($"MAVLink Definitions Path [{args.pathDir.FullName}] Not Found!"); }
             FileInfo target_file = new FileInfo(args.pathDir.FullName+"/"+args.file);
@@ -1452,8 +1454,8 @@ namespace MAVLinkBindings {
 
                                 for(int j=0;j<rsh_c;j++) {                                        
                                     switch(it_f.csType) {
-                                        case "float" : op_line = $"{"".PadRight(pad_arr)}MemoryMarshal.Write(b.Slice(p, 4), in {op_var.PadRight(name_pad)}); p+=4;"; break;
-                                        case "double": op_line = $"{"".PadRight(pad_arr)}MemoryMarshal.Write(b.Slice(p, 8), in {op_var.PadRight(name_pad)}); p+=8;"; break;
+                                        case "float" : op_line = $"{"".PadRight(pad_arr)}MemoryMarshal.Write(b.Slice(p, 4), ref {op_var.PadRight(name_pad)}); p+=4;"; break;
+                                        case "double": op_line = $"{"".PadRight(pad_arr)}MemoryMarshal.Write(b.Slice(p, 8), ref {op_var.PadRight(name_pad)}); p+=8;"; break;
                                         default: {
                                             //Low -> High Bytes
                                             string rsh_op   = $">>{rsh_v.ToString().PadRight(2)}";

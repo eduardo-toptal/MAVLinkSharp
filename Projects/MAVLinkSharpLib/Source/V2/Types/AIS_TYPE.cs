@@ -1,0 +1,110 @@
+        
+namespace MAVLinkSharp.Bindings {
+
+    /// <summary>
+    /// Type of AIS vessel, enum duplicated from AIS standard, https://gpsd.gitlab.io/gpsd/AIVDM.html
+    /// </summary>    
+    public enum AisTypeFlags {
+        Unknown                                 = 0,           //Not available (default).
+        Reserved1                               = 1,           //
+        Reserved2                               = 2,           //
+        Reserved3                               = 3,           //
+        Reserved4                               = 4,           //
+        Reserved5                               = 5,           //
+        Reserved6                               = 6,           //
+        Reserved7                               = 7,           //
+        Reserved8                               = 8,           //
+        Reserved9                               = 9,           //
+        Reserved10                              = 10,          //
+        Reserved11                              = 11,          //
+        Reserved12                              = 12,          //
+        Reserved13                              = 13,          //
+        Reserved14                              = 14,          //
+        Reserved15                              = 15,          //
+        Reserved16                              = 16,          //
+        Reserved17                              = 17,          //
+        Reserved18                              = 18,          //
+        Reserved19                              = 19,          //
+        Wig                                     = 20,          //Wing In Ground effect.
+        WigHazardousA                           = 21,          //
+        WigHazardousB                           = 22,          //
+        WigHazardousC                           = 23,          //
+        WigHazardousD                           = 24,          //
+        WigReserved1                            = 25,          //
+        WigReserved2                            = 26,          //
+        WigReserved3                            = 27,          //
+        WigReserved4                            = 28,          //
+        WigReserved5                            = 29,          //
+        Fishing                                 = 30,          //
+        Towing                                  = 31,          //
+        TowingLarge                             = 32,          //Towing: length exceeds 200m or breadth exceeds 25m.
+        Dredging                                = 33,          //Dredging or other underwater ops.
+        Diving                                  = 34,          //
+        Military                                = 35,          //
+        Sailing                                 = 36,          //
+        Pleasure                                = 37,          //
+        Reserved20                              = 38,          //
+        Reserved21                              = 39,          //
+        Hsc                                     = 40,          //High Speed Craft.
+        HscHazardousA                           = 41,          //
+        HscHazardousB                           = 42,          //
+        HscHazardousC                           = 43,          //
+        HscHazardousD                           = 44,          //
+        HscReserved1                            = 45,          //
+        HscReserved2                            = 46,          //
+        HscReserved3                            = 47,          //
+        HscReserved4                            = 48,          //
+        HscUnknown                              = 49,          //
+        Pilot                                   = 50,          //
+        Sar                                     = 51,          //Search And Rescue vessel.
+        Tug                                     = 52,          //
+        PortTender                              = 53,          //
+        AntiPollution                           = 54,          //Anti-pollution equipment.
+        LawEnforcement                          = 55,          //
+        SpareLocal1                             = 56,          //
+        SpareLocal2                             = 57,          //
+        MedicalTransport                        = 58,          //
+        Nonecombatant                           = 59,          //Noncombatant ship according to RR Resolution No. 18.
+        Passenger                               = 60,          //
+        PassengerHazardousA                     = 61,          //
+        PassengerHazardousB                     = 62,          //
+        PassengerHazardousC                     = 63,          //
+        PassengerHazardousD                     = 64,          //
+        PassengerReserved1                      = 65,          //
+        PassengerReserved2                      = 66,          //
+        PassengerReserved3                      = 67,          //
+        PassengerReserved4                      = 68,          //
+        PassengerUnknown                        = 69,          //
+        Cargo                                   = 70,          //
+        CargoHazardousA                         = 71,          //
+        CargoHazardousB                         = 72,          //
+        CargoHazardousC                         = 73,          //
+        CargoHazardousD                         = 74,          //
+        CargoReserved1                          = 75,          //
+        CargoReserved2                          = 76,          //
+        CargoReserved3                          = 77,          //
+        CargoReserved4                          = 78,          //
+        CargoUnknown                            = 79,          //
+        Tanker                                  = 80,          //
+        TankerHazardousA                        = 81,          //
+        TankerHazardousB                        = 82,          //
+        TankerHazardousC                        = 83,          //
+        TankerHazardousD                        = 84,          //
+        TankerReserved1                         = 85,          //
+        TankerReserved2                         = 86,          //
+        TankerReserved3                         = 87,          //
+        TankerReserved4                         = 88,          //
+        TankerUnknown                           = 89,          //
+        Other                                   = 90,          //
+        OtherHazardousA                         = 91,          //
+        OtherHazardousB                         = 92,          //
+        OtherHazardousC                         = 93,          //
+        OtherHazardousD                         = 94,          //
+        OtherReserved1                          = 95,          //
+        OtherReserved2                          = 96,          //
+        OtherReserved3                          = 97,          //
+        OtherReserved4                          = 98,          //
+        OtherUnknown                            = 99           //
+    }
+
+}

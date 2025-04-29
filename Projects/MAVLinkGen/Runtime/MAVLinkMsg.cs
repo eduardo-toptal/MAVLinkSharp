@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Intrinsics;
 using System.Text;
+using MAVLinkSharp.Bindings;
 
 #pragma warning disable CS8618
 #pragma warning disable CS8603
+#pragma warning disable CS8600
 #pragma warning disable CS1522
 
-namespace MAVLinkBindings {
+namespace MAVLinkSharp.Runtime {
 
     #region MAVLinkMsgId
     /// <summary>

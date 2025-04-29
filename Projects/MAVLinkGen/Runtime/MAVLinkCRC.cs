@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 #pragma warning disable CS8618
 #pragma warning disable CS1522
 
-namespace MAVLinkBindings {
+namespace MAVLinkSharp.Runtime {
     
     /// <summary>
     /// Utility for Samplig CRC

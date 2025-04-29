@@ -1,5 +1,5 @@
 ﻿
-using MAVLinkBindings;
+using MAVLinkSharp.Bindings;
 using MAVLinkSharp.Runtime;
 using System;
 using System.Diagnostics;
@@ -852,7 +852,7 @@ namespace MAVLinkExamples {
 
                 while(true) {     
 
-                    ulong time_usec = (ulong)app_clock.Elapsed.TotalMicroseconds;
+                    ulong time_usec = (ulong)app_clock.Elapsed.Ticks/10;
                     float dt = (float)app_clock_dt.Elapsed.TotalSeconds;
                     app_clock_dt.Restart();
 
