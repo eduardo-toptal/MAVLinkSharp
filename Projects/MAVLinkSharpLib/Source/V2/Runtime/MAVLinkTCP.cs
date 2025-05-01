@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -48,12 +49,14 @@ namespace MAVLinkSharp.Runtime {
                 m_conn   = null;
                 m_client = null;
             }
+            Console.WriteLine($"[{name}] Waiting Client...");
             m_conn = new TcpListener(IPAddress.Parse("0.0.0.0"),p_port);            
             m_conn.Start();                        
             m_listen_tsk =
             Task.Run(async delegate() { 
                 m_client = await m_conn.AcceptTcpClientAsync();
                 m_listen_tsk = null;
+                Console.WriteLine($"[{name}] Client Connected!");
             });
         }
 
