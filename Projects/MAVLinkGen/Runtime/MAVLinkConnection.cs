@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading;
 
@@ -126,9 +126,11 @@ namespace MAVLinkSharp.Runtime {
                 OnPacketReceive(out d,out len);
                 //if(len>0) Console.WriteLine($"[{name}] RCV {len} bytes");
                 MemoryStream ms = m_rcv_ms;
-                ms.SetLength(0);
-                if(len>0) if(d!=null) m_rcv_ms.Write(d,0,len);                
-                ms.Position = 0;
+                if(ms.CanWrite) {
+                    ms.SetLength(0);
+                    if(len>0) if(d!=null) m_rcv_ms.Write(d,0,len);                
+                    ms.Position = 0;
+                }                
                 bool will_read  = len>0;
                 bool is_success = false;
                 while(will_read) {                    

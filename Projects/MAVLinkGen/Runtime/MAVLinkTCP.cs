@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -12,6 +12,16 @@ namespace MAVLinkSharp.Runtime {
     /// Class that describes an TCP MAVLinkConnection
     /// </summary>
     public class MAVLinkTCP : MAVLinkConnection {
+
+        /// <summary>
+        /// Flag that tells a client has connected in this connection.
+        /// </summary>
+        public bool connected { get { return m_client==null ? false : m_client.Connected; } }
+
+        /// <summary>
+        /// Reference to the connected client.
+        /// </summary>
+        public TcpClient client { get { return m_client; } }
 
         /// <summary>
         /// Internals
@@ -35,14 +45,17 @@ namespace MAVLinkSharp.Runtime {
         public void Start(int p_port=0) {
             if(m_conn!=null) { 
                 try { m_conn.Stop(); } catch(System.Exception){ }
-                m_conn = null;
+                m_conn   = null;
+                m_client = null;
             }
+            Console.WriteLine($"[{name}] Waiting Client...");
             m_conn = new TcpListener(IPAddress.Parse("0.0.0.0"),p_port);            
             m_conn.Start();                        
             m_listen_tsk =
             Task.Run(async delegate() { 
                 m_client = await m_conn.AcceptTcpClientAsync();
                 m_listen_tsk = null;
+                Console.WriteLine($"[{name}] Client Connected!");
             });
         }
 
