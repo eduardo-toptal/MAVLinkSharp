@@ -19,6 +19,11 @@ namespace MAVLinkSharp.Runtime {
         public bool connected { get { return m_client==null ? false : m_client.Connected; } }
 
         /// <summary>
+        /// Reference to the connected client.
+        /// </summary>
+        public TcpClient client { get { return m_client; } }
+
+        /// <summary>
         /// Internals
         /// </summary>
         private TcpListener? m_conn;
@@ -40,7 +45,8 @@ namespace MAVLinkSharp.Runtime {
         public void Start(int p_port=0) {
             if(m_conn!=null) { 
                 try { m_conn.Stop(); } catch(System.Exception){ }
-                m_conn = null;
+                m_conn   = null;
+                m_client = null;
             }
             m_conn = new TcpListener(IPAddress.Parse("0.0.0.0"),p_port);            
             m_conn.Start();                        

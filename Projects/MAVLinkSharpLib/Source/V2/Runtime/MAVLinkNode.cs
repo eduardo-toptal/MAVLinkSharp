@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 #pragma warning disable CS8603
 #pragma warning disable CS8632
@@ -192,7 +193,13 @@ namespace MAVLinkSharp.Runtime {
         /// <summary>
         /// Handler for timed update of the entire network
         /// </summary>
-        virtual internal void OnUpdate() { }
+        virtual protected void OnUpdate() { }
+
+        /// <summary>
+        /// Auxiliary access
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void InternalUpdate() { OnUpdate(); }
 
     }
 }

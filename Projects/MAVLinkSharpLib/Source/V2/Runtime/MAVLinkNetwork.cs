@@ -17,15 +17,17 @@ namespace MAVLinkSharp.Runtime {
     /// </summary>
     [Flags]
     public enum MAVLinkNetworkRate {
-        Disabled  = 0,
-        Realtime  = (1<<0),
-        Rate1hz   = (1<<1),
-        Rate5hz   = (1<<2),
-        Rate10hz  = (1<<3),
-        Rate20hz  = (1<<4),
-        Rate60hz  = (1<<5),
-        Rate100hz = (1<<6),
-        Rate200hz = (1<<7),
+        Disabled   = 0,
+        Realtime   = (1<<0),        
+        Rate1000ms = (1<<1),
+        Rate800ms  = (1<<2),
+        Rate500ms  = (1<<3),
+        Rate200ms  = (1<<4),
+        Rate100ms  = (1<<5),
+        Rate50ms   = (1<<6),
+        Rate16ms   = (1<<7),
+        Rate10ms   = (1<<8),
+        Rate5ms    = (1<<9),
     }
 
     /// <summary>
@@ -98,7 +100,7 @@ namespace MAVLinkSharp.Runtime {
         internal List<MAVLinkNode> m_nodes;
         internal Stopwatch m_clk_elapsed;
         internal Stopwatch m_clk_delta;
-        private double t1hz,t5hz,t10hz,t20hz,t60hz,t100hz,t200hz;
+        private double t10000ms,t800ms,t500ms,t200ms,t100ms,t50ms,t16ms,t10ms,t5ms;
         private bool   m_running;
         
         /// <summary>
@@ -125,7 +127,7 @@ namespace MAVLinkSharp.Runtime {
             m_running = true;
             ThreadPool.QueueUserWorkItem(InternalLoop);
             m_clk_elapsed.Start();
-            t1hz=t5hz=t10hz=t20hz=t60hz=t100hz=t200hz=0;
+            t10000ms=t800ms=t500ms=t200ms=t100ms=t50ms=t16ms=t10ms=t5ms=0;
         }
 
         /// <summary>
@@ -164,13 +166,15 @@ namespace MAVLinkSharp.Runtime {
                 double vd;
 
                 MAVLinkNetworkRate msk_exec = MAVLinkNetworkRate.Realtime;
-                vd = t1hz;    vd += dt; if(vd >   1.0000) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate1hz;   } t1hz   = vd;
-                vd = t5hz;    vd += dt; if(vd >   0.2000) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate5hz;   } t5hz   = vd;
-                vd = t10hz;   vd += dt; if(vd >   0.1000) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate10hz;  } t10hz  = vd;
-                vd = t20hz;   vd += dt; if(vd >   0.0500) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate20hz;  } t20hz  = vd;
-                vd = t60hz;   vd += dt; if(vd >   0.0166) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate60hz;  } t60hz  = vd;
-                vd = t100hz;  vd += dt; if(vd >   0.0100) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate100hz; } t100hz = vd;
-                vd = t200hz;  vd += dt; if(vd >   0.0050) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate200hz; } t200hz = vd;
+                vd = t10000ms;  vd += dt; if(vd >   1.0000) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate1000ms;   } t10000ms = vd;
+                vd = t800ms;    vd += dt; if(vd >   0.8000) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate800ms;    } t800ms   = vd;
+                vd = t500ms;    vd += dt; if(vd >   0.5000) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate500ms;    } t500ms   = vd;
+                vd = t200ms;    vd += dt; if(vd >   0.2000) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate200ms;    } t200ms   = vd;
+                vd = t100ms;    vd += dt; if(vd >   0.1000) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate100ms;    } t100ms   = vd;
+                vd = t50ms;     vd += dt; if(vd >   0.0500) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate50ms;     } t50ms    = vd;
+                vd = t16ms;     vd += dt; if(vd >   0.0166) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate16ms;     } t16ms    = vd;
+                vd = t10ms;     vd += dt; if(vd >   0.0100) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate10ms;     } t10ms    = vd;
+                vd = t5ms;      vd += dt; if(vd >   0.0050) { vd=0; msk_exec |= MAVLinkNetworkRate.Rate5ms;      } t5ms     = vd;
                 
                 List<MAVLinkNode> nl = m_nodes;
 
@@ -185,13 +189,15 @@ namespace MAVLinkSharp.Runtime {
                     switch(f) {
                         case MAVLinkNetworkRate.Disabled: continue;
                         case MAVLinkNetworkRate.Realtime: break;
-                        case MAVLinkNetworkRate.Rate1hz:    exec_dt = 1.0000; break;
-                        case MAVLinkNetworkRate.Rate5hz:    exec_dt = 0.2000; break;
-                        case MAVLinkNetworkRate.Rate10hz:   exec_dt = 0.1000; break;
-                        case MAVLinkNetworkRate.Rate20hz:   exec_dt = 0.0500; break;
-                        case MAVLinkNetworkRate.Rate60hz:   exec_dt = 0.0166; break;
-                        case MAVLinkNetworkRate.Rate100hz:  exec_dt = 0.0100; break;
-                        case MAVLinkNetworkRate.Rate200hz:  exec_dt = 0.0050; break;
+                        case MAVLinkNetworkRate.Rate1000ms:    exec_dt = 1.0000; break;
+                        case MAVLinkNetworkRate.Rate800ms:     exec_dt = 0.8000; break;
+                        case MAVLinkNetworkRate.Rate500ms:     exec_dt = 0.5000; break;
+                        case MAVLinkNetworkRate.Rate200ms:     exec_dt = 0.2000; break;
+                        case MAVLinkNetworkRate.Rate100ms:     exec_dt = 0.1000; break;
+                        case MAVLinkNetworkRate.Rate50ms:      exec_dt = 0.0500; break;
+                        case MAVLinkNetworkRate.Rate16ms:      exec_dt = 0.0166; break;
+                        case MAVLinkNetworkRate.Rate10ms:      exec_dt = 0.0100; break;
+                        case MAVLinkNetworkRate.Rate5ms:       exec_dt = 0.0050; break;
                     }
                     time = new Clock() {
                         rate      = f,
@@ -199,7 +205,7 @@ namespace MAVLinkSharp.Runtime {
                         elapsedMS = t_ms,
                         elapsedUS = t_us
                     };
-                    lock(nl) for(int i=0;i<nl.Count;i++) if((nl[i].rate & f)!=0) if(nl[i].enabled) nl[i].OnUpdate();
+                    lock(nl) for(int i=0;i<nl.Count;i++) if((nl[i].rate & f)!=0) if(nl[i].enabled) nl[i].InternalUpdate();
                 }
                 Thread.Yield();
             }
