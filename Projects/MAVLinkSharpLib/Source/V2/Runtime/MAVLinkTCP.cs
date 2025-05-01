@@ -14,6 +14,11 @@ namespace MAVLinkSharp.Runtime {
     public class MAVLinkTCP : MAVLinkConnection {
 
         /// <summary>
+        /// Flag that tells a client has connected in this connection.
+        /// </summary>
+        public bool connected { get { return m_client==null ? false : m_client.Connected; } }
+
+        /// <summary>
         /// Internals
         /// </summary>
         private TcpListener? m_conn;
