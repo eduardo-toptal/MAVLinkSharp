@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
@@ -16,7 +16,7 @@ namespace MAVLinkSharp.Runtime {
         /// <summary>
         /// Internals
         /// </summary>
-        private UdpClient? m_conn;
+        private UdpClient? m_client;
         private List<IPEndPoint> m_targets;
         private IPEndPoint m_rcv_ep;
 
@@ -33,11 +33,16 @@ namespace MAVLinkSharp.Runtime {
         /// </summary>
         /// <param name="p_port"></param>
         public void Start(int p_port=0) {
-            if(m_conn!=null) { 
-                try { m_conn.Close(); } catch(System.Exception){ }
-                m_conn = null;
+            if(m_client!=null) { 
+                try { m_client.Close(); } catch(System.Exception){ }
+                m_client = null;
             }
-            try { m_conn = p_port<=0 ? new UdpClient() : new UdpClient(p_port); } catch(System.Exception) { }
+            try { 
+                m_client = p_port<=0 ? new UdpClient() : new UdpClient(p_port); 
+                m_client.Client.ReceiveBufferSize = 4 * 1024 * 1024;
+                m_client.Client.SendBufferSize    = 1 * 1024 * 1024;
+            }
+            catch(System.Exception) { }
         }
 
         /// <summary>
@@ -54,10 +59,10 @@ namespace MAVLinkSharp.Runtime {
         /// <param name="p_packet"></param>
         /// <param name="p_length"></param>
         override protected void OnPacketSend(byte[] p_packet,int p_length) {
-            if(m_conn==null) return;
+            if(m_client==null) return;
             for(int i=0;i<m_targets.Count;i++) {
                 IPEndPoint ep = m_targets[i];
-                try { m_conn.Send(p_packet,p_length, ep); } catch(System.Exception) { }
+                try { m_client.Send(p_packet,p_length, ep); } catch(System.Exception) { }
             }            
         }
 
@@ -70,8 +75,8 @@ namespace MAVLinkSharp.Runtime {
             byte[]? d = null;
             p_buffer = d;
             p_length = 0;
-            if(m_conn==null) return;
-            try { d = m_conn.Receive(ref m_rcv_ep); } catch(System.Exception p_err) { /*Console.WriteLine($"[{name}] RCV Err {p_err.Message}");*/ }   
+            if(m_client==null) return;
+            try { d = m_client.Receive(ref m_rcv_ep); } catch(System.Exception p_err) { }   
             p_buffer = d;
             p_length = d==null ? 0 : d.Length;
         }
@@ -81,7 +86,7 @@ namespace MAVLinkSharp.Runtime {
         /// </summary>
         protected override void OnDispose() {
             base.OnDispose();
-            if (m_conn!=null) m_conn.Dispose();
+            if (m_client!=null) m_client.Dispose();
         }
 
     }

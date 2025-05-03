@@ -889,6 +889,7 @@ namespace MAVLinkExamples {
                     if(hil_t>=0.001f) {
                         hil_t=0f;
 
+                        /*
                         px4_hil.Send(new HilStateQuaternionData() {
                            TimeUsec = time_usec,
                            Alt = 98400,
@@ -909,6 +910,7 @@ namespace MAVLinkExamples {
                            FixType = 3,
                            SatellitesVisible = 10,
                         },1,0);
+                        //*/
 
                         /*
                         MAVLinkMsg msg;

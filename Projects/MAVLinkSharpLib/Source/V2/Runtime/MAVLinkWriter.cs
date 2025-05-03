@@ -201,7 +201,7 @@ namespace MAVLinkSharp.Runtime {
             //Signature if any
             if(is_sign) { /*Skip SIGN for now*/ p+=13; }
             //Writes into stream
-            Stream.Write(b,0,p);
+            if(Stream.CanWrite) Stream.Write(b,0,p);
             //Return Size Written
             return p;
         }

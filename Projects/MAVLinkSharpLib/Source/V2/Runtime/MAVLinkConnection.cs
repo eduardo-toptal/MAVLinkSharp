@@ -27,6 +27,10 @@ namespace MAVLinkSharp.Runtime {
         protected bool m_rcv_active;
         protected bool m_snd_active;
         protected byte m_snd_seq;
+        protected object m_send_seq_lock;
+        private Thread m_rcv_thd;
+        private Thread m_snd_thd;        
+        private ManualResetEvent m_snd_signal;
 
         /// <summary>
         /// CTOR
@@ -39,8 +43,17 @@ namespace MAVLinkSharp.Runtime {
             m_rcv_active = true;
             m_snd_active = true;
             m_snd_seq    = 0;
-            ThreadPool.QueueUserWorkItem(InternalReadLoop);
-            ThreadPool.QueueUserWorkItem(InternalWriteLoop);
+            m_send_seq_lock = new object();
+
+            m_snd_signal = new ManualResetEvent(false);
+
+            m_rcv_thd = new Thread(InternalReadLoop);
+            m_snd_thd = new Thread(InternalWriteLoop);
+            m_rcv_thd.Name = $"MAVLINK_{name.ToUpper()}.RCV";
+            m_snd_thd.Name = $"MAVLINK_{name.ToUpper()}.SND";
+            m_rcv_thd.Start();
+            m_snd_thd.Start();
+
         }
 
         /// <summary>
@@ -75,8 +88,8 @@ namespace MAVLinkSharp.Runtime {
         /// Sends a MAVLink Message
         /// </summary>
         /// <param name="p_msg"></param>
-        public void Send(MAVLinkMsg p_msg) {
-            p_msg.sequence = m_snd_seq++;
+        public void Send(MAVLinkMsg p_msg) {            
+            lock(m_send_seq_lock) p_msg.sequence = m_snd_seq++;
             InternalSend(p_msg);
         }
 
@@ -84,10 +97,11 @@ namespace MAVLinkSharp.Runtime {
         /// Handles message actual delivery
         /// </summary>
         /// <param name="p_msg"></param>
-        internal void InternalSend(MAVLinkMsg p_msg) {
+        internal void InternalSend(MAVLinkMsg p_msg) {                        
             lock(m_snd_ms) {
-                m_snd.WriteV2(p_msg);
+                m_snd.WriteV2(p_msg);                
             }
+            try { m_snd_signal.Set(); } catch(System.Exception){ }
         }
 
         /// <summary>
@@ -119,34 +133,32 @@ namespace MAVLinkSharp.Runtime {
         /// <param name="so"></param>
         protected void InternalReadLoop(object? so) {
             
-            while(m_rcv_active) { 
-                
+            while(m_rcv_active) {
                 byte[]? d = null; 
                 int len = 0;
-                OnPacketReceive(out d,out len);
-                //if(len>0) Console.WriteLine($"[{name}] RCV {len} bytes");
+                OnPacketReceive(out d,out len);                
                 MemoryStream ms = m_rcv_ms;
                 if(ms.CanWrite) {
                     ms.SetLength(0);
-                    if(len>0) if(d!=null) m_rcv_ms.Write(d,0,len);                
+                    if(len>0) if(d!=null) ms.Write(d,0,len);                
                     ms.Position = 0;
                 }                
                 bool will_read  = len>0;
-                bool is_success = false;
-                while(will_read) {                    
+                //bool is_success = false;
+                while(will_read) {   
+                    if(ms.Position>=ms.Length) break;
                     MAVLinkMsg msg = MAVLinkMsg.GetPool();
                     MAVLinkParseResult res = MAVLinkParseResult.Unknown;
                     res = m_rcv.Read(ref msg);                    
                     switch(res) {
-                        case MAVLinkParseResult.Success:    Dispatch(msg); if(OnMessageReceived!=null) OnMessageReceived(msg); is_success=true; break;
+                        case MAVLinkParseResult.Success:    Dispatch(msg); if(OnMessageReceived!=null) OnMessageReceived(msg); /*is_success=true;*/ break;
                         case MAVLinkParseResult.NotFound: 
                         case MAVLinkParseResult.Incomplete: will_read=false; break;
                         case MAVLinkParseResult.BadCRC:     break;
-                    }                                                    
+                    }                    
                     MAVLinkMsg.SetPool(msg);
                 }                    
-                if(!is_success) Thread.Sleep(10);
-                
+                Thread.Yield();                
             }
         }
 
@@ -154,33 +166,38 @@ namespace MAVLinkSharp.Runtime {
         /// Wait for buffered sent messages and process submissions
         /// </summary>
         /// <param name="so"></param>
-        protected void InternalWriteLoop(object? so) {            
-            while(m_snd_active) {                 
-                MemoryStream ms = m_snd_ms;
-                byte[] b     = ms.GetBuffer();
-                int    b_len = 0;
-                lock(ms) {                    
+        protected void InternalWriteLoop(object? so) {  
+            byte[] b;
+            int    b_len;
+            MemoryStream ms = m_snd_ms;
+            while(m_snd_active) {                   
+                m_snd_signal.WaitOne(10);
+                lock(ms) {                 
+                    b = ms.GetBuffer();
                     b_len = (int)ms.Position;
-                    if(b_len>0) {
-                        //if(b_len>0) Console.WriteLine($"[{name}] SND {b_len} bytes");
-                        OnPacketSend(b,b_len);
+                    if(b_len>0) { 
+                        OnPacketSend(b,b_len);                        
                         ms.Position=0;
-                        //if(name=="hil") { Console.WriteLine($">>> {(int)pfl.Elapsed.TotalMilliseconds}ms | pos: {b_len}"); pfl.Restart(); }                        
-                    }                    
-                }
-                if(b_len<=0) Thread.Sleep(10);                
-            }
+                    }
+                }                      
+                m_snd_signal.Reset();                
+            }            
         }        
         
         /// <summary>
         /// DTOR
         /// </summary>
-        protected override void OnDispose() {
-            m_rcv_ms.Dispose();
-            m_snd_ms.Dispose();
+        protected override void OnDispose() {            
             m_rcv_active = false;
             m_snd_active = false;
-            m_snd_seq    = 0;
+            if(m_rcv_thd!=null) if(!m_rcv_thd.Join(48)) m_rcv_thd.Abort();
+            if(m_snd_thd!=null) if(!m_snd_thd.Join(48)) m_snd_thd.Abort();
+            m_rcv_thd = null;
+            m_snd_thd = null;
+            m_snd_seq = 0;
+            m_rcv_ms.Dispose();
+            m_snd_ms.Dispose();
+            m_snd_signal.Dispose();
         }
 
     }

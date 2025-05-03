@@ -31,12 +31,14 @@ namespace MAVLinkSharp.Runtime {
         private TcpClient?   m_client;
         private Task?        m_listen_tsk;
         private byte[]       m_buffer;
+        private object m_lock_ns;
 
         /// <summary>
         /// CTOR
         /// </summary>
         public MAVLinkTCP(string p_name="") : base(p_name) {                        
-            m_buffer = new byte[1024 * 4];
+            m_buffer  = new byte[1024 * 80];
+            m_lock_ns = new object();
         }
 
         /// <summary>
@@ -49,14 +51,17 @@ namespace MAVLinkSharp.Runtime {
                 m_conn   = null;
                 m_client = null;
             }
-            Console.WriteLine($"[{name}] Waiting Client...");
+            //Console.WriteLine($"[{name}] Waiting Client...");
             m_conn = new TcpListener(IPAddress.Parse("0.0.0.0"),p_port);            
             m_conn.Start();                        
             m_listen_tsk =
             Task.Run(async delegate() { 
                 m_client = await m_conn.AcceptTcpClientAsync();
+                m_client.NoDelay = true;
+                m_client.Client.ReceiveBufferSize = 4 * 1024 * 1024; //   4 MB receive buffer
+                m_client.Client.SendBufferSize    = 1 * 1024 * 1024; // 512 KB send buffer
                 m_listen_tsk = null;
-                Console.WriteLine($"[{name}] Client Connected!");
+                //Console.WriteLine($"[{name}] Client Connected!");
             });
         }
 
@@ -69,8 +74,8 @@ namespace MAVLinkSharp.Runtime {
             if(m_conn  ==null) return;
             if(m_client==null) return;            
             try { 
-                NetworkStream ns = m_client.GetStream();
-                ns.Write(p_packet,0,p_length);                 
+                NetworkStream ns = m_client.GetStream();                
+                ns.Write(p_packet,0,p_length);                        
             } catch(System.Exception) { }
         }
 
@@ -82,9 +87,8 @@ namespace MAVLinkSharp.Runtime {
             if(m_client == null) return;            
             int c = 0;
             try { 
-                NetworkStream ns = m_client.GetStream();
-                c = ns.Read(m_buffer); 
-                //if(c>0)Console.WriteLine($"[{name}] RCV {c} bytes");
+                NetworkStream ns = m_client.GetStream();                
+                c = ns.Read(m_buffer);                 
             } catch(System.Exception){ }
             if(c<=0) return;
             p_buffer = m_buffer;

@@ -102,6 +102,7 @@ namespace MAVLinkSharp.Runtime {
         internal Stopwatch m_clk_delta;
         private double t10000ms,t800ms,t500ms,t200ms,t100ms,t50ms,t16ms,t10ms,t5ms;
         private bool   m_running;
+        private Thread m_thd;
         
         /// <summary>
         /// CTOR.
@@ -125,7 +126,9 @@ namespace MAVLinkSharp.Runtime {
         public void Start() {
             if(m_running) return;
             m_running = true;
-            ThreadPool.QueueUserWorkItem(InternalLoop);
+            m_thd = new Thread(InternalLoop);
+            m_thd.Name = $"MAVLINK_{name.ToUpper()}";
+            m_thd.Start();
             m_clk_elapsed.Start();
             t10000ms=t800ms=t500ms=t200ms=t100ms=t50ms=t16ms=t10ms=t5ms=0;
         }
@@ -150,13 +153,21 @@ namespace MAVLinkSharp.Runtime {
         /// <param name="p_msg"></param>
         internal void OnMessageInternal(MAVLinkNode p_sender,MAVLinkMsg p_msg) {            
             if (!enabled) return;
+            OnMessage(p_sender,p_msg);
             if (OnMessageEvent != null) OnMessageEvent(p_sender,p_msg);
         }
 
         /// <summary>
+        /// Handler for all across network messages
+        /// </summary>
+        /// <param name="p_sender"></param>
+        /// <param name="p_msg"></param>
+        virtual protected void OnMessage(MAVLinkNode p_sender,MAVLinkMsg p_msg) { }
+
+        /// <summary>
         /// Updates this network clocking
         /// </summary>
-        internal void InternalLoop(object? so) {
+        internal void InternalLoop() {
             while(m_running) {
                 if(!enabled) { Thread.Sleep(100); continue; }
                 double dt   = m_clk_delta.Elapsed.TotalSeconds;
@@ -216,6 +227,8 @@ namespace MAVLinkSharp.Runtime {
         /// </summary>
         public void Dispose() {
             m_running = false; 
+            if(m_thd!=null) if(!m_thd.Join(48)) m_thd.Abort();
+            m_thd=null;
             List<MAVLinkNode> nl = m_nodes;
             lock(nl) for(int i=0;i<nl.Count;i++) nl[i].Dispose();
             m_instance = null;
