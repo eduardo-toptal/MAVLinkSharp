@@ -100,7 +100,7 @@ namespace MAVLinkSharp.Runtime {
         /// </summary>
         protected override void OnDispose() {
             base.OnDispose();
-            if (m_listen_tsk!=null) m_listen_tsk.Dispose();
+            if (m_listen_tsk!=null) try { m_listen_tsk.Dispose(); } catch(System.Exception) { }
             if (m_conn!=null) try { m_conn.Stop(); } catch(System.Exception) { }
             m_client = null;
         }
