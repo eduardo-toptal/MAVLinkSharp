@@ -252,38 +252,38 @@ namespace MAVLinkSharp.Runtime {
         /// <summary>
         /// LUT
         /// </summary>        
-        static internal int[] U8_LSH8;
-        static internal int[] U8_LSH16;
-        static internal int[] U8_LSH24;
-        static internal int[] U8_LSH32;
-        static internal int[] U8_LSH40;
-        static internal int[] U8_LSH48;
-        static internal int[] U8_LSH56;
+        static public int[] U8_LSH8;
+        static public int[] U8_LSH16;
+        static public int[] U8_LSH24;
+        static public int[] U8_LSH32;
+        static public int[] U8_LSH40;
+        static public int[] U8_LSH48;
+        static public int[] U8_LSH56;
 
-        static internal int[] U8_RSH8;
-        static internal int[] U8_RSH16;
-        static internal int[] U8_RSH24;
-        static internal int[] U8_RSH32;
-        static internal int[] U8_RSH40;
-        static internal int[] U8_RSH48;
-        static internal int[] U8_RSH56;
+        static public int[] U8_RSH8;
+        static public int[] U8_RSH16;
+        static public int[] U8_RSH24;
+        static public int[] U8_RSH32;
+        static public int[] U8_RSH40;
+        static public int[] U8_RSH48;
+        static public int[] U8_RSH56;
 
-        static internal int[] U16_RSH8;
+        static public int[] U16_RSH8;
 
         /*
-        static internal int[] U16_RSH16;
-        static internal int[] U16_RSH24;
-        static internal int[] U16_RSH32;
-        static internal int[] U16_RSH40;
-        static internal int[] U16_RSH48;
-        static internal int[] U16_RSH56;
+        static public int[] U16_RSH16;
+        static public int[] U16_RSH24;
+        static public int[] U16_RSH32;
+        static public int[] U16_RSH40;
+        static public int[] U16_RSH48;
+        static public int[] U16_RSH56;
         //*/
 
-        static internal int[] U8_LSH3;
-        static internal int[] U8_RSH4;        
-        static internal int[] U8_LSH4;
-        static internal int[][] U8_XOR;
-        static internal ushort[][] U16_CRC;
+        static public int[] U8_LSH3;
+        static public int[] U8_RSH4;        
+        static public int[] U8_LSH4;
+        static public int[][] U8_XOR;
+        static public ushort[][] U16_CRC;
 
         /// <summary>
         /// CTOR

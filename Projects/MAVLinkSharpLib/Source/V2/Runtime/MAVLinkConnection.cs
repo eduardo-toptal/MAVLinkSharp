@@ -171,7 +171,7 @@ namespace MAVLinkSharp.Runtime {
             int    b_len;
             MemoryStream ms = m_snd_ms;
             while(m_snd_active) {                   
-                m_snd_signal.WaitOne(2);
+                m_snd_signal.WaitOne(10);
                 lock(ms) {                 
                     b = ms.GetBuffer();
                     b_len = (int)ms.Position;
