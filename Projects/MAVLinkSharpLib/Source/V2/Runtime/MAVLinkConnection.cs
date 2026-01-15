@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -133,16 +132,11 @@ namespace MAVLinkSharp.Runtime {
         /// </summary>
         /// <param name="so"></param>
         protected void InternalReadLoop(object? so) {
-
-            //Stopwatch clk = Stopwatch.StartNew();
             
             while(m_rcv_active) {
-                //if(clk.Elapsed.TotalMilliseconds<0.5) { Thread.SpinWait(5); continue; }
-                //clk.Restart();                
                 byte[]? d = null; 
                 int len = 0;
                 OnPacketReceive(out d,out len);                
-
                 MemoryStream ms = m_rcv_ms;
                 if(ms.CanWrite) {
                     ms.SetLength(0);
@@ -164,8 +158,7 @@ namespace MAVLinkSharp.Runtime {
                     }                    
                     MAVLinkMsg.SetPool(msg);
                 }                    
-                //Thread.Yield();
-                if(len<=0) Thread.Sleep(1); else Thread.Yield();
+                Thread.Yield();                
             }
         }
 

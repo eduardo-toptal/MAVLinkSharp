@@ -14,8 +14,8 @@ namespace MAVLinkSharp.Runtime {
     /// </summary>
     public enum MAVLinkMsgId {
         Heartbeat                                  = 0     , //The heartbeat message shows that a system or component is present and responding. The type and autopilot fields (along with the message component id), allow the receiving system to treat further messages from this system appropriately (e.g. by laying out the user interface based on the autopilot). This microservice is documented at https://mavlink.io/en/services/heartbeat.html
-        SysStatus                                  = 1     , //The general system state. If the system is following the MAVLink standard, the system state is mainly defined by three orthogonal states/modes: The system mode, which is either LOCKED (motors shut down and locked), MANUAL (system under RC control), GUIDED (system with autonomous position control, position setpoint controlled manually) or AUTO (system guided by path/waypoint planner). The NAV_MODE defined the current flight state: LIFTOFF (often an open-loop maneuver), LANDING, WAYPOINTS or VECTOR. This represents the internal navigation state machine. The system status shows whether the system is currently active or not and if an emergency occurred. During the CRITICAL and EMERGENCY states the MAV is still considered to be active, but should start emergency procedures autonomously. After a failure occurred it should first move from active to critical to allow manual intervention and then move to emergency after a certain timeout.
-        SystemTime                                 = 2     , //The system time is the time of the master clock, typically the computer clock of the main onboard computer.
+        SysStatus                                  = 1     , //Sensor and subsystem status information. Provides a compact representation of sensor/subsystem status and a few other basic statistics.
+        SystemTime                                 = 2     , //The system time is the time of the sender's master clock. |         This can be emitted by flight controllers, onboard computers, or other components in the MAVLink network. |         Components that are using a less reliable time source, such as a battery-backed real time clock, can choose to match their system clock to that of a system that indicates a more recent time. |         This allows more broadly accurate date stamping of logs, and so on. |         If precise time synchronization is needed then use TIMESYNC instead.
         Ping                                       = 4     , //A ping message either requesting or responding to a ping. This allows to measure the system latencies, including serial port, radio modem and UDP connections. The ping microservice is documented at https://mavlink.io/en/services/ping.html
         ChangeOperatorControl                      = 5     , //Request to control this MAV
         ChangeOperatorControlAck                   = 6     , //Accept / deny control of this MAV
@@ -25,26 +25,26 @@ namespace MAVLinkSharp.Runtime {
         ParamRequestRead                           = 20    , //Request to read the onboard parameter with the param_id string id. Onboard parameters are stored as key[const char*] -> value[float]. This allows to send a parameter to any other component (such as the GCS) without the need of previous knowledge of possible parameter names. Thus the same GCS can store different parameters for different autopilots. See also https://mavlink.io/en/services/parameter.html for a full documentation of QGroundControl and IMU code.
         ParamRequestList                           = 21    , //Request all parameters of this component. After this request, all parameters are emitted. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html
         ParamValue                                 = 22    , //Emit the value of a onboard parameter. The inclusion of param_count and param_index in the message allows the recipient to keep track of received parameters and allows him to re-request missing parameters after a loss or timeout. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html
-        ParamSet                                   = 23    , //Set a parameter value (write new value to permanent storage). |         The receiving component should acknowledge the new parameter value by broadcasting a PARAM_VALUE message (broadcasting ensures that multiple GCS all have an up-to-date list of all parameters). If the sending GCS did not receive a PARAM_VALUE within its timeout time, it should re-send the PARAM_SET message. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html. |         PARAM_SET may also be called within the context of a transaction (started with MAV_CMD_PARAM_TRANSACTION). Within a transaction the receiving component should respond with PARAM_ACK_TRANSACTION to the setter component (instead of broadcasting PARAM_VALUE), and PARAM_SET should be re-sent if this is ACK not received.
+        ParamSet                                   = 23    , //Set a parameter value (write new value to permanent storage). |         The receiving component should acknowledge the new parameter value by broadcasting a PARAM_VALUE message (broadcasting ensures that multiple GCS all have an up-to-date list of all parameters). If the sending GCS did not receive a PARAM_VALUE within its timeout time, it should re-send the PARAM_SET message. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html. |       
         GpsRawInt                                  = 24    , //The global position, as returned by the Global Positioning System (GPS). This is |                 NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION_INT for the global position estimate.
         GpsStatus                                  = 25    , //The positioning status, as reported by GPS. This message is intended to display status information about each satellite visible to the receiver. See message GLOBAL_POSITION_INT for the global position estimate. This message can contain information for up to 20 satellites.
         ScaledImu                                  = 26    , //The RAW IMU readings for the usual 9DOF sensor setup. This message should contain the scaled values to the described units
         RawImu                                     = 27    , //The RAW IMU readings for a 9DOF sensor, which is identified by the id (default IMU1). This message should always contain the true raw values without any scaling to allow data capture and system debugging.
         RawPressure                                = 28    , //The RAW pressure readings for the typical setup of one absolute pressure and one differential pressure sensor. The sensor values should be the raw, UNSCALED ADC values.
         ScaledPressure                             = 29    , //The pressure readings for the typical setup of one absolute and differential pressure sensor. The units are as specified in each field.
-        Attitude                                   = 30    , //The attitude in the aeronautical frame (right-handed, Z-down, X-front, Y-right).
+        Attitude                                   = 30    , //The attitude in the aeronautical frame (right-handed, Z-down, Y-right, X-front, ZYX, intrinsic).
         AttitudeQuaternion                         = 31    , //The attitude in the aeronautical frame (right-handed, Z-down, X-front, Y-right), expressed as quaternion. Quaternion order is w, x, y, z and a zero rotation would be expressed as (1 0 0 0).
         LocalPositionNed                           = 32    , //The filtered local position (e.g. fused computer vision and accelerometers). Coordinate frame is right-handed, Z-axis down (aeronautical frame, NED / north-east-down convention)
-        GlobalPositionInt                          = 33    , //The filtered global position (e.g. fused GPS and accelerometers). The position is in GPS-frame (right-handed, Z-up). It |                is designed as scaled integer message since the resolution of float is not sufficient.
-        RcChannelsScaled                           = 34    , //The scaled values of the RC channels received: (-100%) -10000, (0%) 0, (100%) 10000. Channels that are inactive should be set to UINT16_MAX.
+        GlobalPositionInt                          = 33    , //The filtered global position (e.g. fused GPS and accelerometers). The position is in GPS-frame (right-handed, Z-up). It is designed as scaled integer message since the resolution of float is not sufficient.
+        RcChannelsScaled                           = 34    , //The scaled values of the RC channels received: (-100%) -10000, (0%) 0, (100%) 10000. Channels that are inactive should be set to INT16_MAX.
         RcChannelsRaw                              = 35    , //The RAW values of the RC channels received. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. A value of UINT16_MAX implies the channel is unused. Individual receivers/transmitters might violate this specification.
         ServoOutputRaw                             = 36    , //Superseded by ACTUATOR_OUTPUT_STATUS. The RAW values of the servo outputs (for RC input from the remote, use the RC_CHANNELS messages). The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%.
         MissionRequestPartialList                  = 37    , //Request a partial list of mission items from the system/component. https://mavlink.io/en/services/mission.html. If start and end index are the same, just send one waypoint.
         MissionWritePartialList                    = 38    , //This message is sent to the MAV to write a partial list. If start index == end index, only one item will be transmitted / updated. If the start index is NOT 0 and above the current list size, this request should be REJECTED!
-        MissionItem                                = 39    , //Message encoding a mission item. This message is emitted to announce |                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). NaN may be used to indicate an optional/default value (e.g. to use the system's current latitude or yaw rather than a specific value). See also https://mavlink.io/en/services/mission.html.
+        MissionItem                                = 39    , //Message encoding a mission item. |         This message is emitted to announce the presence of a mission item and to set a mission item on the system. |         The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). NaN may be used to indicate an optional/default value (e.g. to use the system's current latitude or yaw rather than a specific value). See also https://mavlink.io/en/services/mission.html.
         MissionRequest                             = 40    , //Request the information of the mission item with the sequence number seq. The response of the system to this message should be a MISSION_ITEM message. https://mavlink.io/en/services/mission.html
-        MissionSetCurrent                          = 41    , //Set the mission item with sequence number seq as current item. This means that the MAV will continue to this mission item on the shortest path (not following the mission items in-between).
-        MissionCurrent                             = 42    , //Message that announces the sequence number of the current active mission item. The MAV will fly towards this mission item.
+        MissionSetCurrent                          = 41    , // |         Set the mission item with sequence number seq as the current item and emit MISSION_CURRENT (whether or not the mission number changed). |         If a mission is currently being executed, the system will continue to this new mission item on the shortest path, skipping any intermediate mission items. |         Note that mission jump repeat counters are not reset (see MAV_CMD_DO_JUMP param2). |  |         This message may trigger a mission state-machine change on some systems: for example from MISSION_STATE_NOT_STARTED or MISSION_STATE_PAUSED to MISSION_STATE_ACTIVE. |         If the system is in mission mode, on those systems this command might therefore start, restart or resume the mission. |         If the system is not in mission mode this message must not trigger a switch to mission mode. |       
+        MissionCurrent                             = 42    , // |         Message that announces the sequence number of the current target mission item (that the system will fly towards/execute when the mission is running). |         This message should be streamed all the time (nominally at 1Hz). |         This message should be emitted following a call to MAV_CMD_DO_SET_MISSION_CURRENT or MISSION_SET_CURRENT. |       
         MissionRequestList                         = 43    , //Request the overall list of mission items from the system/component.
         MissionCount                               = 44    , //This message is emitted as response to MISSION_REQUEST_LIST by the MAV and to initiate a write transaction. The GCS can then request the individual mission item based on the knowledge of the total number of waypoints.
         MissionClearAll                            = 45    , //Delete all mission items at once.
@@ -63,12 +63,12 @@ namespace MAVLinkSharp.Runtime {
         RcChannels                                 = 65    , //The PPM values of the RC channels received. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%.  A value of UINT16_MAX implies the channel is unused. Individual receivers/transmitters might violate this specification.
         RequestDataStream                          = 66    , //Request a data stream.
         DataStream                                 = 67    , //Data stream status information.
-        ManualControl                              = 69    , //This message provides an API for manually controlling the vehicle using standard joystick axes nomenclature, along with a joystick-like input device. Unused axes can be disabled and buttons states are transmitted as individual on/off bits of a bitmask
+        ManualControl                              = 69    , //Manual (joystick) control message. |         This message represents movement axes and button using standard joystick axes nomenclature. Unused axes can be disabled and buttons states are transmitted as individual on/off bits of a bitmask. For more information see https://mavlink.io/en/manual_control.html
         RcChannelsOverride                         = 70    , //The RAW values of the RC channels sent to the MAV to override info received from the RC radio. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification.  Note carefully the semantic differences between the first 8 channels and the subsequent channels
         MissionItemInt                             = 73    , //Message encoding a mission item. This message is emitted to announce |                 the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). NaN or INT32_MAX may be used in float/integer params (respectively) to indicate optional/default values (e.g. to use the component's current latitude, yaw rather than a specific value). See also https://mavlink.io/en/services/mission.html.
         VfrHud                                     = 74    , //Metrics typically displayed on a HUD for fixed wing aircraft.
-        CommandInt                                 = 75    , //Message encoding a command with parameters as scaled integers. Scaling depends on the actual command value. NaN or INT32_MAX may be used in float/integer params (respectively) to indicate optional/default values (e.g. to use the component's current latitude, yaw rather than a specific value). The command microservice is documented at https://mavlink.io/en/services/command.html
-        CommandLong                                = 76    , //Send a command with up to seven parameters to the MAV. The command microservice is documented at https://mavlink.io/en/services/command.html
+        CommandInt                                 = 75    , //Send a command with up to seven parameters to the MAV, where params 5 and 6 are integers and the other values are floats. This is preferred over COMMAND_LONG as it allows the MAV_FRAME to be specified for interpreting positional information, such as altitude. COMMAND_INT is also preferred when sending latitude and longitude data in params 5 and 6, as it allows for greater precision. Param 5 and 6 encode positional data as scaled integers, where the scaling depends on the actual command value. NaN or INT32_MAX may be used in float/integer params (respectively) to indicate optional/default values (e.g. to use the component's current latitude, yaw rather than a specific value). The command microservice is documented at https://mavlink.io/en/services/command.html
+        CommandLong                                = 76    , //Send a command with up to seven parameters to the MAV. COMMAND_INT is generally preferred when sending MAV_CMD commands that include positional information; it offers higher precision and allows the MAV_FRAME to be specified (which may otherwise be ambiguous, particularly for altitude). The command microservice is documented at https://mavlink.io/en/services/command.html
         CommandAck                                 = 77    , //Report status of a command. Includes feedback whether the command was executed. The command microservice is documented at https://mavlink.io/en/services/command.html
         CommandCancel                              = 80    , //Cancel a long running command. The target system should respond with a COMMAND_ACK to the original command with result=MAV_RESULT_CANCELLED if the long running process was cancelled. If it has already completed, the cancel action can be ignored. The cancel action can be retried until some sort of acknowledgement to the original command has been received. The command microservice is documented at https://mavlink.io/en/services/command.html
         ManualSetpoint                             = 81    , //Setpoint in roll, pitch, yaw and thrust from the operator
@@ -80,9 +80,9 @@ namespace MAVLinkSharp.Runtime {
         PositionTargetGlobalInt                    = 87    , //Reports the current commanded vehicle position, velocity, and acceleration as specified by the autopilot. This should match the commands sent in SET_POSITION_TARGET_GLOBAL_INT if the vehicle is being controlled this way.
         LocalPositionNedSystemGlobalOffset         = 89    , //The offset in X, Y, Z and yaw between the LOCAL_POSITION_NED messages of MAV X and the global coordinate frame in NED coordinates. Coordinate frame is right-handed, Z-axis down (aeronautical frame, NED / north-east-down convention)
         HilState                                   = 90    , //Sent from simulation to autopilot. This packet is useful for high throughput applications such as hardware in the loop simulations.
-        HilControls                                = 91    , //Sent from autopilot to simulation. Hardware in the loop control outputs
+        HilControls                                = 91    , //Sent from autopilot to simulation. Hardware in the loop control outputs. Alternative to HIL_ACTUATOR_CONTROLS.
         HilRcInputsRaw                             = 92    , //Sent from simulation to autopilot. The RAW values of the RC channels received. The standard PPM modulation is as follows: 1000 microseconds: 0%, 2000 microseconds: 100%. Individual receivers/transmitters might violate this specification.
-        HilActuatorControls                        = 93    , //Sent from autopilot to simulation. Hardware in the loop control outputs (replacement for HIL_CONTROLS)
+        HilActuatorControls                        = 93    , //Sent from autopilot to simulation. Hardware in the loop control outputs. Alternative to HIL_CONTROLS.
         OpticalFlow                                = 100   , //Optical flow from a flow sensor (e.g. optical mouse sensor)
         GlobalVisionPositionEstimate               = 101   , //Global position/attitude estimate from a vision source.
         VisionPositionEstimate                     = 102   , //Local position/attitude estimate from a vision source.
@@ -94,7 +94,7 @@ namespace MAVLinkSharp.Runtime {
         SimState                                   = 108   , //Status of simulation environment, if used
         RadioStatus                                = 109   , //Status generated by radio and injected into MAVLink stream.
         FileTransferProtocol                       = 110   , //File transfer protocol message: https://mavlink.io/en/services/ftp.html.
-        Timesync                                   = 111   , //Time synchronization message.
+        Timesync                                   = 111   , // |         Time synchronization message. |         The message is used for both timesync requests and responses. |         The request is sent with `ts1=syncing component timestamp` and `tc1=0`, and may be broadcast or targeted to a specific system/component. |         The response is sent with `ts1=syncing component timestamp` (mirror back unchanged), and `tc1=responding component timestamp`, with the `target_system` and `target_component` set to ids of the original request. |         Systems can determine if they are receiving a request or response based on the value of `tc`. |         If the response has `target_system==target_component==0` the remote system has not been updated to use the component IDs and cannot reliably timesync; the requester may report an error. |         Timestamps are UNIX Epoch time or time since system boot in nanoseconds (the timestamp format can be inferred by checking for the magnitude of the number; generally it doesn't matter as only the offset is used). |         The message sequence is repeated numerous times with results being filtered/averaged to estimate the offset. |         See also: https://mavlink.io/en/services/timesync.html. |       
         CameraTrigger                              = 112   , //Camera-IMU triggering and synchronisation message.
         HilGps                                     = 113   , //The global position, as returned by the Global Positioning System (GPS). This is |                  NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION_INT for the global position estimate.
         HilOpticalFlow                             = 114   , //Simulated optical flow from a flow sensor (e.g. PX4FLOW or optical mouse sensor)
@@ -129,7 +129,7 @@ namespace MAVLinkSharp.Runtime {
         ScaledPressure3                            = 143   , //Barometer readings for 3rd barometer
         FollowTarget                               = 144   , //Current motion information from a designated system
         ControlSystemState                         = 146   , //The smoothed, monotonic system state used to feed the control loops of the system.
-        BatteryStatus                              = 147   , //Battery information. Updates GCS with flight controller battery status. Smart batteries also use this message, but may additionally send SMART_BATTERY_INFO.
+        BatteryStatus                              = 147   , //Battery information. Updates GCS with flight controller battery status. Smart batteries also use this message, but may additionally send BATTERY_INFO.
         AutopilotVersion                           = 148   , //Version and capability of autopilot software. This should be emitted in response to a request with MAV_CMD_REQUEST_MESSAGE.
         LandingTarget                              = 149   , //The location of a landing target. See: https://mavlink.io/en/services/landing_target.html
         FenceStatus                                = 162   , //Status of geo-fencing. Sent in extended status stream when fencing enabled.
@@ -143,7 +143,7 @@ namespace MAVLinkSharp.Runtime {
         HighLatency2                               = 235   , //Message appropriate for high latency connections like Iridium (version 2)
         Vibration                                  = 241   , //Vibration levels and accelerometer clipping
         HomePosition                               = 242   , // | 	Contains the home position. | 	The home position is the default position that the system will return to and land on. | 	The position must be set automatically by the system during the takeoff, and may also be explicitly set using MAV_CMD_DO_SET_HOME. | 	The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. | 	Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. | 	The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector. |         Note: this message can be requested by sending the MAV_CMD_REQUEST_MESSAGE with param1=242 (or the deprecated MAV_CMD_GET_HOME_POSITION command). |       
-        SetHomePosition                            = 243   , // |         Sets the home position. | 	The home position is the default position that the system will return to and land on. |         The position is set automatically by the system during the takeoff (and may also be set using this message). |         The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. |         Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. |         The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector. |         Note: the current home position may be emitted in a HOME_POSITION message on request (using MAV_CMD_REQUEST_MESSAGE with param1=242). |       
+        SetHomePosition                            = 243   , // |         Sets the home position. |         The home position is the default position that the system will return to and land on. |         The position is set automatically by the system during the takeoff (and may also be set using this message). |         The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. |         Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. |         The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector. |         Note: the current home position may be emitted in a HOME_POSITION message on request (using MAV_CMD_REQUEST_MESSAGE with param1=242). |       
         MessageInterval                            = 244   , // |         The interval between messages for a particular MAVLink message ID. |         This message is sent in response to the MAV_CMD_REQUEST_MESSAGE command with param1=244 (this message) and param2=message_id (the id of the message for which the interval is required). | 	It may also be sent in response to MAV_CMD_GET_MESSAGE_INTERVAL. | 	This interface replaces DATA_STREAM.
         ExtendedSysState                           = 245   , //Provides state for additional features
         AdsbVehicle                                = 246   , //The location and information of an ADSB vehicle
@@ -162,8 +162,8 @@ namespace MAVLinkSharp.Runtime {
         CameraSettings                             = 260   , //Settings of a camera. Can be requested with a MAV_CMD_REQUEST_MESSAGE command.
         StorageInformation                         = 261   , //Information about a storage medium. This message is sent in response to a request with MAV_CMD_REQUEST_MESSAGE and whenever the status of the storage changes (STORAGE_STATUS). Use MAV_CMD_REQUEST_MESSAGE.param2 to indicate the index/id of requested storage: 0 for all, 1 for first, 2 for second, etc.
         CameraCaptureStatus                        = 262   , //Information about the status of a capture. Can be requested with a MAV_CMD_REQUEST_MESSAGE command.
-        CameraImageCaptured                        = 263   , //Information about a captured image. This is emitted every time a message is captured. |         MAV_CMD_REQUEST_MESSAGE can be used to (re)request this message for a specific sequence number or range of sequence numbers: |         MAV_CMD_REQUEST_MESSAGE.param2 indicates the sequence number the first image to send, or set to -1 to send the message for all sequence numbers. |         MAV_CMD_REQUEST_MESSAGE.param3 is used to specify a range of messages to send: |         set to 0 (default) to send just the the message for the sequence number in param 2, |         set to -1 to send the message for the sequence number in param 2 and all the following sequence numbers,  |         set to the sequence number of the final message in the range.
-        FlightInformation                          = 264   , //Information about flight since last arming. |         This can be requested using MAV_CMD_REQUEST_MESSAGE. |       
+        CameraImageCaptured                        = 263   , //Information about a captured image. This is emitted every time a message is captured. |         MAV_CMD_REQUEST_MESSAGE can be used to (re)request this message for a specific sequence number or range of sequence numbers: |         MAV_CMD_REQUEST_MESSAGE.param2 indicates the sequence number the first image to send, or set to -1 to send the message for all sequence numbers. |         MAV_CMD_REQUEST_MESSAGE.param3 is used to specify a range of messages to send: |         set to 0 (default) to send just the the message for the sequence number in param 2, |         set to -1 to send the message for the sequence number in param 2 and all the following sequence numbers, |         set to the sequence number of the final message in the range.
+        FlightInformation                          = 264   , //Flight information. |         This includes time since boot for arm, takeoff, and land, and a flight number. |         Takeoff and landing values reset to zero on arm. |         This can be requested using MAV_CMD_REQUEST_MESSAGE. |         Note, some fields are misnamed - timestamps are from boot (not UTC) and the flight_uuid is a sequence number. |       
         MountOrientation                           = 265   , //Orientation of a mount
         LoggingData                                = 266   , //A message containing logged data (see also MAV_CMD_LOGGING_START)
         LoggingDataAcked                           = 267   , //A message containing logged data which requires a LOGGING_ACK to be sent back
@@ -173,17 +173,19 @@ namespace MAVLinkSharp.Runtime {
         CameraFovStatus                            = 271   , //Information about the field of view of a camera. Can be requested with a MAV_CMD_REQUEST_MESSAGE command.
         CameraTrackingImageStatus                  = 275   , //Camera tracking status, sent while in active tracking. Use MAV_CMD_SET_MESSAGE_INTERVAL to define message interval.
         CameraTrackingGeoStatus                    = 276   , //Camera tracking status, sent while in active tracking. Use MAV_CMD_SET_MESSAGE_INTERVAL to define message interval.
+        CameraThermalRange                         = 277   , //Camera absolute thermal range. This can be streamed when the associated VIDEO_STREAM_STATUS `flag` field bit VIDEO_STREAM_STATUS_FLAGS_THERMAL_RANGE_ENABLED is set, but a GCS may choose to only request it for the current active stream. Use MAV_CMD_SET_MESSAGE_INTERVAL to define message interval (param3 indicates the stream id of the current camera, or 0 for all streams, param4 indicates the target camera_device_id for autopilot-attached cameras or 0 for MAVLink cameras).
         GimbalManagerInformation                   = 280   , //Information about a high level gimbal manager. This message should be requested by a ground station using MAV_CMD_REQUEST_MESSAGE.
         GimbalManagerStatus                        = 281   , //Current status about a high level gimbal manager. This message should be broadcast at a low regular rate (e.g. 5Hz).
         GimbalManagerSetAttitude                   = 282   , //High level message to control a gimbal's attitude. This message is to be sent to the gimbal manager (e.g. from a ground station). Angles and rates can be set to NaN according to use case.
         GimbalDeviceInformation                    = 283   , //Information about a low level gimbal. This message should be requested by the gimbal manager or a ground station using MAV_CMD_REQUEST_MESSAGE. The maximum angles and rates are the limits by hardware. However, the limits by software used are likely different/smaller and dependent on mode/settings/etc..
-        GimbalDeviceSetAttitude                    = 284   , //Low level message to control a gimbal device's attitude. This message is to be sent from the gimbal manager to the gimbal device component. Angles and rates can be set to NaN according to use case.
-        GimbalDeviceAttitudeStatus                 = 285   , //Message reporting the status of a gimbal device. This message should be broadcasted by a gimbal device component. The angles encoded in the quaternion are relative to absolute North if the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set (roll: positive is rolling to the right, pitch: positive is pitching up, yaw is turn to the right) or relative to the vehicle heading if the flag is not set. This message should be broadcast at a low regular rate (e.g. 10Hz).
-        AutopilotStateForGimbalDevice              = 286   , //Low level message containing autopilot state relevant for a gimbal device. This message is to be sent from the gimbal manager to the gimbal device component. The data of this message server for the gimbal's estimator corrections in particular horizon compensation, as well as the autopilot's control intention e.g. feed forward angular control in z-axis.
-        GimbalManagerSetPitchyaw                   = 287   , //High level message to control a gimbal's pitch and yaw angles. This message is to be sent to the gimbal manager (e.g. from a ground station). Angles and rates can be set to NaN according to use case.
+        GimbalDeviceSetAttitude                    = 284   , //Low level message to control a gimbal device's attitude. | 	  This message is to be sent from the gimbal manager to the gimbal device component. | 	  The quaternion and angular velocities can be set to NaN according to use case. | 	  For the angles encoded in the quaternion and the angular velocities holds: | 	  If the flag GIMBAL_DEVICE_FLAGS_YAW_IN_VEHICLE_FRAME is set, then they are relative to the vehicle heading (vehicle frame). | 	  If the flag GIMBAL_DEVICE_FLAGS_YAW_IN_EARTH_FRAME is set, then they are relative to absolute North (earth frame). | 	  If neither of these flags are set, then (for backwards compatibility) it holds: | 	  If the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set, then they are relative to absolute North (earth frame), | 	  else they are relative to the vehicle heading (vehicle frame). | 	  Setting both GIMBAL_DEVICE_FLAGS_YAW_IN_VEHICLE_FRAME and GIMBAL_DEVICE_FLAGS_YAW_IN_EARTH_FRAME is not allowed. | 	  These rules are to ensure backwards compatibility. | 	  New implementations should always set either GIMBAL_DEVICE_FLAGS_YAW_IN_VEHICLE_FRAME or GIMBAL_DEVICE_FLAGS_YAW_IN_EARTH_FRAME.
+        GimbalDeviceAttitudeStatus                 = 285   , //Message reporting the status of a gimbal device. | 	  This message should be broadcast by a gimbal device component at a low regular rate (e.g. 5 Hz). | 	  For the angles encoded in the quaternion and the angular velocities holds: | 	  If the flag GIMBAL_DEVICE_FLAGS_YAW_IN_VEHICLE_FRAME is set, then they are relative to the vehicle heading (vehicle frame). | 	  If the flag GIMBAL_DEVICE_FLAGS_YAW_IN_EARTH_FRAME is set, then they are relative to absolute North (earth frame). | 	  If neither of these flags are set, then (for backwards compatibility) it holds: | 	  If the flag GIMBAL_DEVICE_FLAGS_YAW_LOCK is set, then they are relative to absolute North (earth frame), | 	  else they are relative to the vehicle heading (vehicle frame). | 	  Other conditions of the flags are not allowed. | 	  The quaternion and angular velocities in the other frame can be calculated from delta_yaw and delta_yaw_velocity as | 	  q_earth = q_delta_yaw * q_vehicle and w_earth = w_delta_yaw_velocity + w_vehicle (if not NaN). | 	  If neither the GIMBAL_DEVICE_FLAGS_YAW_IN_VEHICLE_FRAME nor the GIMBAL_DEVICE_FLAGS_YAW_IN_EARTH_FRAME flag is set, | 	  then (for backwards compatibility) the data in the delta_yaw and delta_yaw_velocity fields are to be ignored. | 	  New implementations should always set either GIMBAL_DEVICE_FLAGS_YAW_IN_VEHICLE_FRAME or GIMBAL_DEVICE_FLAGS_YAW_IN_EARTH_FRAME, | 	  and always should set delta_yaw and delta_yaw_velocity either to the proper value or NaN.
+        AutopilotStateForGimbalDevice              = 286   , //Low level message containing autopilot state relevant for a gimbal device. This message is to be sent from the autopilot to the gimbal device component. The data of this message are for the gimbal device's estimator corrections, in particular horizon compensation, as well as indicates autopilot control intentions, e.g. feed forward angular control in the z-axis.
+        GimbalManagerSetPitchyaw                   = 287   , //Set gimbal manager pitch and yaw angles (high rate message). This message is to be sent to the gimbal manager (e.g. from a ground station) and will be ignored by gimbal devices. Angles and rates can be set to NaN according to use case. Use MAV_CMD_DO_GIMBAL_MANAGER_PITCHYAW for low-rate adjustments that require confirmation.
         GimbalManagerSetManualControl              = 288   , //High level message to control a gimbal manually. The angles or angular rates are unitless; the actual rates will depend on internal gimbal manager settings/configuration (e.g. set by parameters). This message is to be sent to the gimbal manager (e.g. from a ground station). Angles and rates can be set to NaN according to use case.
         EscInfo                                    = 290   , //ESC information for lower rate streaming. Recommended streaming rate 1Hz. See ESC_STATUS for higher-rate ESC data.
         EscStatus                                  = 291   , //ESC information for higher rate streaming. Recommended streaming rate is ~10 Hz. Information that changes more slowly is sent in ESC_INFO. It should typically only be streamed on high-bandwidth links (i.e. to a companion computer).
+        Airspeed                                   = 295   , //Airspeed information from a sensor.
         WifiConfigAp                               = 299   , //Configure WiFi AP SSID, password, and mode. This message is re-emitted as an acknowledgement by the AP. The message may also be explicitly requested using MAV_CMD_REQUEST_MESSAGE
         ProtocolVersion                            = 300   , //Version and capability of protocol version. This message can be requested with MAV_CMD_REQUEST_MESSAGE and is used as part of the handshaking to establish which MAVLink version should be used on the network. Every node should respond to a request for PROTOCOL_VERSION to enable the handshaking. Library implementers should consider adding this into the default decoding state machine to allow the protocol core to respond directly.
         AisVessel                                  = 301   , //The location and information of an AIS vessel
@@ -203,9 +205,13 @@ namespace MAVLinkSharp.Runtime {
         CellularConfig                             = 336   , //Configure cellular modems. |         This message is re-emitted as an acknowledgement by the modem. |         The message may also be explicitly requested using MAV_CMD_REQUEST_MESSAGE.
         RawRpm                                     = 339   , //RPM sensor data message.
         UtmGlobalPosition                          = 340   , //The global position resulting from GPS and sensor fusion.
+        ParamError                                 = 345   , //Parameter set/get error. Returned from a MAVLink node in response to an error in the parameter protocol, for example failing to set a parameter because it does not exist. |       
         DebugFloatArray                            = 350   , //Large debug/prototyping array. The message uses the maximum available payload for data. The array_id and name fields are used to discriminate between messages in code and in user interfaces (respectively). Do not use in production code.
         OrbitExecutionStatus                       = 360   , //Vehicle status report that is sent out while orbit execution is in progress (see MAV_CMD_DO_ORBIT).
-        SmartBatteryInfo                           = 370   , //Smart Battery information (static/infrequent update). Use for updates from: smart battery to flight stack, flight stack to GCS. Use BATTERY_STATUS for smart battery frequent updates.
+        FigureEightExecutionStatus                 = 361   , // |         Vehicle status report that is sent out while figure eight execution is in progress (see MAV_CMD_DO_FIGURE_EIGHT). |         This may typically send at low rates: of the order of 2Hz. |       
+        SmartBatteryInfo                           = 370   , //Smart Battery information (static/infrequent update). Use for updates from: smart battery to flight stack, flight stack to GCS. Use BATTERY_STATUS for the frequent battery updates.
+        FuelStatus                                 = 371   , //Fuel status. |         This message provides "generic" fuel level information for  in a GCS and for triggering failsafes in an autopilot. |         The fuel type and associated units for fields in this message are defined in the enum MAV_FUEL_TYPE. |  |         The reported `consumed_fuel` and `remaining_fuel` must only be supplied if measured: they must not be inferred from the `maximum_fuel` and the other value. |         A recipient can assume that if these fields are supplied they are accurate. |         If not provided, the recipient can infer `remaining_fuel` from `maximum_fuel` and `consumed_fuel` on the assumption that the fuel was initially at its maximum (this is what battery monitors assume). |         Note however that this is an assumption, and the UI should prompt the user appropriately (i.e. notify user that they should fill the tank before boot). |  |         This kind of information may also be sent in fuel-specific messages such as BATTERY_STATUS_V2. |         If both messages are sent for the same fuel system, the ids and corresponding information must match. |  |         This should be streamed (nominally at 0.1 Hz). |       
+        BatteryInfo                                = 372   , // |         Battery information that is static, or requires infrequent update. |         This message should requested using MAV_CMD_REQUEST_MESSAGE and/or streamed at very low rate. |         BATTERY_STATUS_V2 is used for higher-rate battery status information. |       
         GeneratorStatus                            = 373   , //Telemetry of power generation system. Alternator or mechanical generator.
         ActuatorOutputStatus                       = 375   , //The raw values of the actuator outputs (e.g. on Pixhawk, from MAIN, AUX ports). This message supersedes SERVO_OUTPUT_RAW.
         TimeEstimateToTarget                       = 380   , //Time/duration estimates for various events and actions given the current vehicle state and position.
@@ -215,13 +221,18 @@ namespace MAVLinkSharp.Runtime {
         CanFilterModify                            = 388   , //Modify the filter of what CAN messages to forward over the mavlink. This can be used to make CAN forwarding work well on low bandwidth links. The filtering is applied on bits 8 to 24 of the CAN id (2nd and 3rd bytes) which corresponds to the DroneCAN message ID for DroneCAN. Filters with more than 16 IDs can be constructed by sending multiple CAN_FILTER_MODIFY messages.
         OnboardComputerStatus                      = 390   , //Hardware status sent by an onboard computer.
         ComponentInformation                       = 395   , // |         Component information message, which may be requested using MAV_CMD_REQUEST_MESSAGE. |       
-        ComponentMetadata                          = 397   , // |         Component metadata message, which may be requested using MAV_CMD_REQUEST_MESSAGE. |          |         This contains the MAVLink FTP URI and CRC for the component's general metadata file. |         The file must be hosted on the component, and may be xz compressed. |         The file CRC can be used for file caching. |          |         The general metadata file can be read to get the locations of other metadata files (COMP_METADATA_TYPE) and translations, which may be hosted either on the vehicle or the internet. |         For more information see: https://mavlink.io/en/services/component_information.html. |          |         Note: Camera components should use CAMERA_INFORMATION instead, and autopilots may use both this message and AUTOPILOT_VERSION. |       
+        ComponentInformationBasic                  = 396   , //Basic component information data. Should be requested using MAV_CMD_REQUEST_MESSAGE on startup, or when required.
+        ComponentMetadata                          = 397   , // |         Component metadata message, which may be requested using MAV_CMD_REQUEST_MESSAGE. |  |         This contains the MAVLink FTP URI and CRC for the component's general metadata file. |         The file must be hosted on the component, and may be xz compressed. |         The file CRC can be used for file caching. |  |         The general metadata file can be read to get the locations of other metadata files (COMP_METADATA_TYPE) and translations, which may be hosted either on the vehicle or the internet. |         For more information see: https://mavlink.io/en/services/component_information.html. |  |         Note: Camera components should use CAMERA_INFORMATION instead, and autopilots may use both this message and AUTOPILOT_VERSION. |       
         PlayTuneV2                                 = 400   , //Play vehicle tone/tune (buzzer). Supersedes message PLAY_TUNE.
         SupportedTunes                             = 401   , //Tune formats supported by vehicle. This should be emitted as response to MAV_CMD_REQUEST_MESSAGE.
         Event                                      = 410   , //Event message. Each new event from a particular component gets a new sequence number. The same message might be sent multiple times if (re-)requested. Most events are broadcast, some can be specific to a target component (as receivers keep track of the sequence for missed events, all events need to be broadcast. Thus we use destination_component instead of target_component).
         CurrentEventSequence                       = 411   , //Regular broadcast for the current latest event sequence number for a component. This is used to check for dropped events.
         RequestEvent                               = 412   , //Request one or more events to be (re-)sent. If first_sequence==last_sequence, only a single event is requested. Note that first_sequence can be larger than last_sequence (because the sequence number can wrap). Each sequence will trigger an EVENT or EVENT_ERROR response.
         ResponseEventError                         = 413   , //Response to a REQUEST_EVENT in case of an error (e.g. the event is not available anymore).
+        AvailableModes                             = 435   , //Information about a flight mode. |  |         The message can be enumerated to get information for all modes, or requested for a particular mode, using MAV_CMD_REQUEST_MESSAGE. |         Specify 0 in param2 to request that the message is emitted for all available modes or the specific index for just one mode. |         The modes must be available/settable for the current vehicle/frame type. |         Each mode should only be emitted once (even if it is both standard and custom). |         Note that the current mode should be emitted in CURRENT_MODE, and that if the mode list can change then AVAILABLE_MODES_MONITOR must be emitted on first change and subsequently streamed. |         See https://mavlink.io/en/services/standard_modes.html |       
+        CurrentMode                                = 436   , //Get the current mode. |         This should be emitted on any mode change, and broadcast at low rate (nominally 0.5 Hz). |         It may be requested using MAV_CMD_REQUEST_MESSAGE. |         See https://mavlink.io/en/services/standard_modes.html |       
+        AvailableModesMonitor                      = 437   , //A change to the sequence number indicates that the set of AVAILABLE_MODES has changed. |         A receiver must re-request all available modes whenever the sequence number changes. |         This is only emitted after the first change and should then be broadcast at low rate (nominally 0.3 Hz) and on change. |         See https://mavlink.io/en/services/standard_modes.html |       
+        IlluminatorStatus                          = 440   , //Illuminator status
         WheelDistance                              = 9000  , //Cumulative distance traveled for each reported wheel.
         WinchStatus                                = 9005  , //Winch status.
         OpenDroneIdBasicId                         = 12900 , //Data for filling the OpenDroneID Basic ID message. This and the below messages are primarily meant for feeding data to/from an OpenDroneID implementation. E.g. https://github.com/opendroneid/opendroneid-core-c. These messages are compatible with the ASTM F3411 Remote ID standard and the ASD-STAN prEN 4709-002 Direct Remote ID standard. Additional information and usage of these messages is documented at https://mavlink.io/en/services/opendroneid.html.
@@ -313,12 +324,12 @@ namespace MAVLinkSharp.Runtime {
                 case 39    : return 38;     //MISSION_ITEM
                 case 40    : return 5;      //MISSION_REQUEST
                 case 41    : return 4;      //MISSION_SET_CURRENT
-                case 42    : return 2;      //MISSION_CURRENT
+                case 42    : return 18;     //MISSION_CURRENT
                 case 43    : return 3;      //MISSION_REQUEST_LIST
-                case 44    : return 5;      //MISSION_COUNT
+                case 44    : return 9;      //MISSION_COUNT
                 case 45    : return 3;      //MISSION_CLEAR_ALL
                 case 46    : return 2;      //MISSION_ITEM_REACHED
-                case 47    : return 4;      //MISSION_ACK
+                case 47    : return 8;      //MISSION_ACK
                 case 48    : return 21;     //SET_GPS_GLOBAL_ORIGIN
                 case 49    : return 20;     //GPS_GLOBAL_ORIGIN
                 case 50    : return 37;     //PARAM_MAP_RC
@@ -332,7 +343,7 @@ namespace MAVLinkSharp.Runtime {
                 case 65    : return 42;     //RC_CHANNELS
                 case 66    : return 6;      //REQUEST_DATA_STREAM
                 case 67    : return 4;      //DATA_STREAM
-                case 69    : return 18;     //MANUAL_CONTROL
+                case 69    : return 30;     //MANUAL_CONTROL
                 case 70    : return 38;     //RC_CHANNELS_OVERRIDE
                 case 73    : return 38;     //MISSION_ITEM_INT
                 case 74    : return 20;     //VFR_HUD
@@ -360,10 +371,10 @@ namespace MAVLinkSharp.Runtime {
                 case 105   : return 63;     //HIGHRES_IMU
                 case 106   : return 44;     //OPTICAL_FLOW_RAD
                 case 107   : return 65;     //HIL_SENSOR
-                case 108   : return 84;     //SIM_STATE
+                case 108   : return 92;     //SIM_STATE
                 case 109   : return 9;      //RADIO_STATUS
                 case 110   : return 254;    //FILE_TRANSFER_PROTOCOL
-                case 111   : return 16;     //TIMESYNC
+                case 111   : return 18;     //TIMESYNC
                 case 112   : return 12;     //CAMERA_TRIGGER
                 case 113   : return 39;     //HIL_GPS
                 case 114   : return 44;     //HIL_OPTICAL_FLOW
@@ -403,7 +414,7 @@ namespace MAVLinkSharp.Runtime {
                 case 149   : return 60;     //LANDING_TARGET
                 case 162   : return 9;      //FENCE_STATUS
                 case 192   : return 54;     //MAG_CAL_REPORT
-                case 225   : return 69;     //EFI_STATUS
+                case 225   : return 73;     //EFI_STATUS
                 case 230   : return 42;     //ESTIMATOR_STATUS
                 case 231   : return 40;     //WIND_COV
                 case 232   : return 65;     //GPS_INPUT
@@ -427,32 +438,34 @@ namespace MAVLinkSharp.Runtime {
                 case 256   : return 42;     //SETUP_SIGNING
                 case 257   : return 9;      //BUTTON_CHANGE
                 case 258   : return 232;    //PLAY_TUNE
-                case 259   : return 235;    //CAMERA_INFORMATION
-                case 260   : return 13;     //CAMERA_SETTINGS
+                case 259   : return 237;    //CAMERA_INFORMATION
+                case 260   : return 14;     //CAMERA_SETTINGS
                 case 261   : return 61;     //STORAGE_INFORMATION
-                case 262   : return 22;     //CAMERA_CAPTURE_STATUS
+                case 262   : return 23;     //CAMERA_CAPTURE_STATUS
                 case 263   : return 255;    //CAMERA_IMAGE_CAPTURED
-                case 264   : return 28;     //FLIGHT_INFORMATION
+                case 264   : return 32;     //FLIGHT_INFORMATION
                 case 265   : return 20;     //MOUNT_ORIENTATION
                 case 266   : return 255;    //LOGGING_DATA
                 case 267   : return 255;    //LOGGING_DATA_ACKED
                 case 268   : return 4;      //LOGGING_ACK
-                case 269   : return 213;    //VIDEO_STREAM_INFORMATION
-                case 270   : return 19;     //VIDEO_STREAM_STATUS
-                case 271   : return 52;     //CAMERA_FOV_STATUS
-                case 275   : return 31;     //CAMERA_TRACKING_IMAGE_STATUS
-                case 276   : return 49;     //CAMERA_TRACKING_GEO_STATUS
+                case 269   : return 215;    //VIDEO_STREAM_INFORMATION
+                case 270   : return 20;     //VIDEO_STREAM_STATUS
+                case 271   : return 53;     //CAMERA_FOV_STATUS
+                case 275   : return 32;     //CAMERA_TRACKING_IMAGE_STATUS
+                case 276   : return 50;     //CAMERA_TRACKING_GEO_STATUS
+                case 277   : return 30;     //CAMERA_THERMAL_RANGE
                 case 280   : return 33;     //GIMBAL_MANAGER_INFORMATION
                 case 281   : return 13;     //GIMBAL_MANAGER_STATUS
                 case 282   : return 35;     //GIMBAL_MANAGER_SET_ATTITUDE
-                case 283   : return 144;    //GIMBAL_DEVICE_INFORMATION
+                case 283   : return 145;    //GIMBAL_DEVICE_INFORMATION
                 case 284   : return 32;     //GIMBAL_DEVICE_SET_ATTITUDE
-                case 285   : return 40;     //GIMBAL_DEVICE_ATTITUDE_STATUS
-                case 286   : return 53;     //AUTOPILOT_STATE_FOR_GIMBAL_DEVICE
+                case 285   : return 49;     //GIMBAL_DEVICE_ATTITUDE_STATUS
+                case 286   : return 57;     //AUTOPILOT_STATE_FOR_GIMBAL_DEVICE
                 case 287   : return 23;     //GIMBAL_MANAGER_SET_PITCHYAW
                 case 288   : return 23;     //GIMBAL_MANAGER_SET_MANUAL_CONTROL
                 case 290   : return 46;     //ESC_INFO
                 case 291   : return 57;     //ESC_STATUS
+                case 295   : return 12;     //AIRSPEED
                 case 299   : return 98;     //WIFI_CONFIG_AP
                 case 300   : return 22;     //PROTOCOL_VERSION
                 case 301   : return 58;     //AIS_VESSEL
@@ -472,9 +485,13 @@ namespace MAVLinkSharp.Runtime {
                 case 336   : return 84;     //CELLULAR_CONFIG
                 case 339   : return 5;      //RAW_RPM
                 case 340   : return 70;     //UTM_GLOBAL_POSITION
+                case 345   : return 21;     //PARAM_ERROR
                 case 350   : return 252;    //DEBUG_FLOAT_ARRAY
                 case 360   : return 25;     //ORBIT_EXECUTION_STATUS
+                case 361   : return 33;     //FIGURE_EIGHT_EXECUTION_STATUS
                 case 370   : return 109;    //SMART_BATTERY_INFO
+                case 371   : return 26;     //FUEL_STATUS
+                case 372   : return 140;    //BATTERY_INFO
                 case 373   : return 42;     //GENERATOR_STATUS
                 case 375   : return 140;    //ACTUATOR_OUTPUT_STATUS
                 case 380   : return 20;     //TIME_ESTIMATE_TO_TARGET
@@ -482,8 +499,9 @@ namespace MAVLinkSharp.Runtime {
                 case 386   : return 16;     //CAN_FRAME
                 case 387   : return 72;     //CANFD_FRAME
                 case 388   : return 37;     //CAN_FILTER_MODIFY
-                case 390   : return 238;    //ONBOARD_COMPUTER_STATUS
+                case 390   : return 240;    //ONBOARD_COMPUTER_STATUS
                 case 395   : return 212;    //COMPONENT_INFORMATION
+                case 396   : return 160;    //COMPONENT_INFORMATION_BASIC
                 case 397   : return 108;    //COMPONENT_METADATA
                 case 400   : return 254;    //PLAY_TUNE_V2
                 case 401   : return 6;      //SUPPORTED_TUNES
@@ -491,6 +509,10 @@ namespace MAVLinkSharp.Runtime {
                 case 411   : return 3;      //CURRENT_EVENT_SEQUENCE
                 case 412   : return 6;      //REQUEST_EVENT
                 case 413   : return 7;      //RESPONSE_EVENT_ERROR
+                case 435   : return 46;     //AVAILABLE_MODES
+                case 436   : return 9;      //CURRENT_MODE
+                case 437   : return 1;      //AVAILABLE_MODES_MONITOR
+                case 440   : return 35;     //ILLUMINATOR_STATUS
                 case 9000  : return 137;    //WHEEL_DISTANCE
                 case 9005  : return 34;     //WINCH_STATUS
                 case 12900 : return 44;     //OPEN_DRONE_ID_BASIC_ID
@@ -674,6 +696,7 @@ namespace MAVLinkSharp.Runtime {
                 case 271   : return new CameraFovStatusData();
                 case 275   : return new CameraTrackingImageStatusData();
                 case 276   : return new CameraTrackingGeoStatusData();
+                case 277   : return new CameraThermalRangeData();
                 case 280   : return new GimbalManagerInformationData();
                 case 281   : return new GimbalManagerStatusData();
                 case 282   : return new GimbalManagerSetAttitudeData();
@@ -685,6 +708,7 @@ namespace MAVLinkSharp.Runtime {
                 case 288   : return new GimbalManagerSetManualControlData();
                 case 290   : return new EscInfoData();
                 case 291   : return new EscStatusData();
+                case 295   : return new AirspeedData();
                 case 299   : return new WifiConfigApData();
                 case 300   : return new ProtocolVersionData();
                 case 301   : return new AisVesselData();
@@ -704,9 +728,13 @@ namespace MAVLinkSharp.Runtime {
                 case 336   : return new CellularConfigData();
                 case 339   : return new RawRpmData();
                 case 340   : return new UtmGlobalPositionData();
+                case 345   : return new ParamErrorData();
                 case 350   : return new DebugFloatArrayData();
                 case 360   : return new OrbitExecutionStatusData();
+                case 361   : return new FigureEightExecutionStatusData();
                 case 370   : return new SmartBatteryInfoData();
+                case 371   : return new FuelStatusData();
+                case 372   : return new BatteryInfoData();
                 case 373   : return new GeneratorStatusData();
                 case 375   : return new ActuatorOutputStatusData();
                 case 380   : return new TimeEstimateToTargetData();
@@ -716,6 +744,7 @@ namespace MAVLinkSharp.Runtime {
                 case 388   : return new CanFilterModifyData();
                 case 390   : return new OnboardComputerStatusData();
                 case 395   : return new ComponentInformationData();
+                case 396   : return new ComponentInformationBasicData();
                 case 397   : return new ComponentMetadataData();
                 case 400   : return new PlayTuneV2Data();
                 case 401   : return new SupportedTunesData();
@@ -723,6 +752,10 @@ namespace MAVLinkSharp.Runtime {
                 case 411   : return new CurrentEventSequenceData();
                 case 412   : return new RequestEventData();
                 case 413   : return new ResponseEventErrorData();
+                case 435   : return new AvailableModesData();
+                case 436   : return new CurrentModeData();
+                case 437   : return new AvailableModesMonitorData();
+                case 440   : return new IlluminatorStatusData();
                 case 9000  : return new WheelDistanceData();
                 case 9005  : return new WinchStatusData();
                 case 12900 : return new OpenDroneIdBasicIdData();

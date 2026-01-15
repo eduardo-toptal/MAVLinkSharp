@@ -23,7 +23,7 @@ namespace MAVLinkSharp.Bindings {
         public ushort                  Counter;            //Counter of data packets received.
         public EscFailureFlags[]       FailureFlags;       //Bitmap of ESC failure flags.
         public short[]                 Temperature;        //Temperature of each ESC. INT16_MAX: if data not supplied by ESC.
-        public byte                    Index;              //Index of the first ESC in this message. minValue = 0, maxValue = 60, increment = 4.
+        public byte                    Index;              //Index of the first ESC in this message (ESC are indexed in motor order). minValue = 0, maxValue = 60, increment = 4.
         public byte                    Count;              //Total number of ESCs in all messages of this type. Message fields with an index higher than this should be ignored because they contain invalid data.
         public EscConnectionTypeFlags  ConnectionType;     //Connection type protocol for all ESC.
         public byte                    Info;               //Information regarding online/offline status of each ESC.    

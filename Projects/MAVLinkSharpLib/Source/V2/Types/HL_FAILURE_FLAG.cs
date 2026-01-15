@@ -2,7 +2,7 @@
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Flags to report failure cases over the high latency telemtry.
+    /// Flags to report failure cases over the high latency telemetry.
     /// </summary>    
     public enum HlFailureFlag {
         Gps                                   = 1,           //GPS failure.
@@ -13,7 +13,7 @@ namespace MAVLinkSharp.Bindings {
         _3dMag                                = 32,          //Magnetometer sensor failure.
         Terrain                               = 64,          //Terrain subsystem failure.
         Battery                               = 128,         //Battery failure/critical low battery.
-        RcReceiver                            = 256,         //RC receiver failure/no rc connection.
+        RcReceiver                            = 256,         //RC receiver failure/no RC connection.
         OffboardLink                          = 512,         //Offboard link failure.
         Engine                                = 1024,        //Engine failure.
         Geofence                              = 2048,        //Geofence violation.

@@ -9,8 +9,11 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Information about flight since last arming.
+    /// Flight information.
+    /// This includes time since boot for arm, takeoff, and land, and a flight number.
+    /// Takeoff and landing values reset to zero on arm.
     /// This can be requested using MAV_CMD_REQUEST_MESSAGE.
+    /// Note, some fields are misnamed - timestamps are from boot (not UTC) and the flight_uuid is a sequence number.
     /// 
     /// </summary>    
     public struct FlightInformationData : IMAVLinkMessageData {
@@ -20,10 +23,11 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 264; }
 
-        public ulong  ArmingTimeUtc;       //Timestamp at arming (time since UNIX epoch) in UTC, 0 for unknown
-        public ulong  TakeoffTimeUtc;      //Timestamp at takeoff (time since UNIX epoch) in UTC, 0 for unknown
-        public ulong  FlightUuid;          //Universally unique identifier (UUID) of flight, should correspond to name of log files
-        public uint   TimeBootMs;          //Timestamp (time since system boot).    
+        public ulong  ArmingTimeUtc;       //Timestamp at arming (since system boot). Set to 0 on boot. Set value on arming. Note, field is misnamed UTC.
+        public ulong  TakeoffTimeUtc;      //Timestamp at takeoff (since system boot). Set to 0 at boot and on arming. Note, field is misnamed UTC.
+        public ulong  FlightUuid;          //Flight number. Note, field is misnamed UUID.
+        public uint   TimeBootMs;          //Timestamp (time since system boot).
+        public uint   LandingTime;         //Timestamp at landing (in ms since system boot). Set to 0 at boot and on arming.    
 
         #region CTOR
         /// <summary>
@@ -39,6 +43,7 @@ namespace MAVLinkSharp.Bindings {
             TakeoffTimeUtc        = default(ulong);
             FlightUuid            = default(ulong);
             TimeBootMs            = default(uint );
+            LandingTime           = default(uint );
         }
         #endregion
 
@@ -47,7 +52,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 28;
+            int    l = 32;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -59,7 +64,8 @@ namespace MAVLinkSharp.Bindings {
             ArmingTimeUtc         = (ulong) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
             TakeoffTimeUtc        = (ulong) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
             FlightUuid            = (ulong) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
-            TimeBootMs            = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);            
+            TimeBootMs            = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            LandingTime           = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);            
             return p;
         }
         #endregion
@@ -69,7 +75,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 28;
+            int    l = 32;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -105,6 +111,10 @@ namespace MAVLinkSharp.Bindings {
             b[p++] = (byte)((int)TimeBootMs>>8 );
             b[p++] = (byte)((int)TimeBootMs>>16);
             b[p++] = (byte)((int)TimeBootMs>>24);
+            b[p++] = (byte)(      LandingTime);
+            b[p++] = (byte)((int)LandingTime>>8 );
+            b[p++] = (byte)((int)LandingTime>>16);
+            b[p++] = (byte)((int)LandingTime>>24);
             return p;
         }
         #endregion
@@ -118,7 +128,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 28;
+            int l = 32;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

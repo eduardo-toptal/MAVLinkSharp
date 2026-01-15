@@ -9,8 +9,7 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// The filtered global position (e.g. fused GPS and accelerometers). The position is in GPS-frame (right-handed, Z-up). It
-    /// is designed as scaled integer message since the resolution of float is not sufficient.
+    /// The filtered global position (e.g. fused GPS and accelerometers). The position is in GPS-frame (right-handed, Z-up). It is designed as scaled integer message since the resolution of float is not sufficient.
     /// </summary>    
     public struct GlobalPositionIntData : IMAVLinkMessageData {
 
@@ -23,7 +22,7 @@ namespace MAVLinkSharp.Bindings {
         public int     Lat;             //Latitude, expressed
         public int     Lon;             //Longitude, expressed
         public int     Alt;             //Altitude (MSL). Note that virtually all GPS modules provide both WGS84 and MSL.
-        public int     RelativeAlt;     //Altitude above ground
+        public int     RelativeAlt;     //Altitude above home
         public short   Vx;              //Ground X Speed (Latitude, positive north)
         public short   Vy;              //Ground Y Speed (Longitude, positive east)
         public short   Vz;              //Ground Z Speed (Altitude, positive down)

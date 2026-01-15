@@ -18,19 +18,20 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 276; }
 
-        public int                        Lat;                //Latitude of tracked object
-        public int                        Lon;                //Longitude of tracked object
-        public float                      Alt;                //Altitude of tracked object(AMSL, WGS84)
-        public float                      HAcc;               //Horizontal accuracy. NAN if unknown
-        public float                      VAcc;               //Vertical accuracy. NAN if unknown
-        public float                      VelN;               //North velocity of tracked object. NAN if unknown
-        public float                      VelE;               //East velocity of tracked object. NAN if unknown
-        public float                      VelD;               //Down velocity of tracked object. NAN if unknown
-        public float                      VelAcc;             //Velocity accuracy. NAN if unknown
-        public float                      Dist;               //Distance between camera and tracked object. NAN if unknown
-        public float                      Hdg;                //Heading in radians, in NED. NAN if unknown
-        public float                      HdgAcc;             //Accuracy of heading, in NED. NAN if unknown
-        public CameraTrackingStatusFlags  TrackingStatus;     //Current tracking status    
+        public int                        Lat;                 //Latitude of tracked object
+        public int                        Lon;                 //Longitude of tracked object
+        public float                      Alt;                 //Altitude of tracked object(AMSL, WGS84)
+        public float                      HAcc;                //Horizontal accuracy. NAN if unknown
+        public float                      VAcc;                //Vertical accuracy. NAN if unknown
+        public float                      VelN;                //North velocity of tracked object. NAN if unknown
+        public float                      VelE;                //East velocity of tracked object. NAN if unknown
+        public float                      VelD;                //Down velocity of tracked object. NAN if unknown
+        public float                      VelAcc;              //Velocity accuracy. NAN if unknown
+        public float                      Dist;                //Distance between camera and tracked object. NAN if unknown
+        public float                      Hdg;                 //Heading in radians, in NED. NAN if unknown
+        public float                      HdgAcc;              //Accuracy of heading, in NED. NAN if unknown
+        public CameraTrackingStatusFlags  TrackingStatus;      //Current tracking status
+        public byte                       CameraDeviceId;      //Camera id of a non-MAVLink camera attached to an autopilot (1-6).  0 if the component is a MAVLink camera (with its own component id).    
 
         #region CTOR
         /// <summary>
@@ -42,19 +43,20 @@ namespace MAVLinkSharp.Bindings {
         }
         */
         public void Init() {
-            Lat                  = default(int                      );
-            Lon                  = default(int                      );
-            Alt                  = default(float                    );
-            HAcc                 = default(float                    );
-            VAcc                 = default(float                    );
-            VelN                 = default(float                    );
-            VelE                 = default(float                    );
-            VelD                 = default(float                    );
-            VelAcc               = default(float                    );
-            Dist                 = default(float                    );
-            Hdg                  = default(float                    );
-            HdgAcc               = default(float                    );
-            TrackingStatus       = default(CameraTrackingStatusFlags);
+            Lat                   = default(int                      );
+            Lon                   = default(int                      );
+            Alt                   = default(float                    );
+            HAcc                  = default(float                    );
+            VAcc                  = default(float                    );
+            VelN                  = default(float                    );
+            VelE                  = default(float                    );
+            VelD                  = default(float                    );
+            VelAcc                = default(float                    );
+            Dist                  = default(float                    );
+            Hdg                   = default(float                    );
+            HdgAcc                = default(float                    );
+            TrackingStatus        = default(CameraTrackingStatusFlags);
+            CameraDeviceId        = default(byte                     );
         }
         #endregion
 
@@ -63,7 +65,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 49;
+            int    l = 50;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -72,19 +74,20 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            Lat                  = (int                      ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            Lon                  = (int                      ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            Alt                  = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            HAcc                 = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            VAcc                 = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            VelN                 = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            VelE                 = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            VelD                 = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            VelAcc               = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            Dist                 = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            Hdg                  = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            HdgAcc               = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            TrackingStatus       = (CameraTrackingStatusFlags) (b[p++]);            
+            Lat                   = (int                      ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            Lon                   = (int                      ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            Alt                   = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            HAcc                  = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            VAcc                  = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            VelN                  = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            VelE                  = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            VelD                  = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            VelAcc                = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Dist                  = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Hdg                   = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            HdgAcc                = (float                    ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            TrackingStatus        = (CameraTrackingStatusFlags) (b[p++]);
+            CameraDeviceId        = (byte                     ) (b[p++]);            
             return p;
         }
         #endregion
@@ -94,7 +97,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 49;
+            int    l = 50;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -110,17 +113,18 @@ namespace MAVLinkSharp.Bindings {
             b[p++] = (byte)((int)Lon>>8 );
             b[p++] = (byte)((int)Lon>>16);
             b[p++] = (byte)((int)Lon>>24);
-            MemoryMarshal.Write(b.Slice(p, 4), ref Alt                 ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref HAcc                ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref VAcc                ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref VelN                ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref VelE                ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref VelD                ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref VelAcc              ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref Dist                ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref Hdg                 ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref HdgAcc              ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref Alt                  ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref HAcc                 ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref VAcc                 ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref VelN                 ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref VelE                 ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref VelD                 ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref VelAcc               ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref Dist                 ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref Hdg                  ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref HdgAcc               ); p+=4;
             b[p++] = (byte)(TrackingStatus);
+            b[p++] = (byte)(CameraDeviceId);
             return p;
         }
         #endregion
@@ -134,7 +138,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 49;
+            int l = 50;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

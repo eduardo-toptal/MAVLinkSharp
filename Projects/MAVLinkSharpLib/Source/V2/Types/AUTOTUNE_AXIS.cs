@@ -2,13 +2,13 @@
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Enable axes that will be tuned via autotuning. Used in MAV_CMD_DO_AUTOTUNE_ENABLE.
+    /// Axes that will be autotuned by MAV_CMD_DO_AUTOTUNE_ENABLE.
+    ///         Note that at least one flag must be set in MAV_CMD_DO_AUTOTUNE_ENABLE.param2: if none are set, the flight stack will tune its default set of axes.
     /// </summary>    
     public enum AutotuneAxisFlags {
-        Default               = 0,           //Flight stack tunes axis according to its default settings.
-        Roll                  = 1,           //Autotune roll axis.
-        Pitch                 = 2,           //Autotune pitch axis.
-        Yaw                   = 4            //Autotune yaw axis.
+        Roll                = 1,           //Autotune roll axis.
+        Pitch               = 2,           //Autotune pitch axis.
+        Yaw                 = 4            //Autotune yaw axis.
     }
 
 }

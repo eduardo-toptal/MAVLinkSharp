@@ -39,7 +39,7 @@ namespace MAVLinkSharp.Bindings {
         public byte               WindHeading;        //Wind heading
         public byte               Eph;                //Maximum error horizontal position since last message
         public byte               Epv;                //Maximum error vertical position since last message
-        public sbyte              TemperatureAir;     //Air temperature from airspeed sensor
+        public sbyte              TemperatureAir;     //Air temperature
         public sbyte              ClimbRate;          //Maximum climb rate magnitude since last message
         public sbyte              Battery;            //Battery level (-1 if field not provided).
         public sbyte              Custom0;            //Field for custom payload.

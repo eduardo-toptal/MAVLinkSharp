@@ -168,14 +168,8 @@ namespace MAVLinkSharp.Runtime {
         /// Updates this network clocking
         /// </summary>
         internal void InternalLoop() {
-
-            //Stopwatch clk = Stopwatch.StartNew();
-
             while(m_running) {
-                //if(clk.Elapsed.TotalMilliseconds < 0.5) { Thread.SpinWait(5); continue; }
-                //clk.Restart();
                 if(!enabled) { Thread.Sleep(100); continue; }
-                Thread.Sleep(1);
                 double dt   = m_clk_delta.Elapsed.TotalSeconds;
                 ulong  t_ms = (ulong)m_clk_elapsed.Elapsed.TotalMilliseconds;
                 ulong  t_us = (ulong)m_clk_elapsed.Elapsed.Ticks/10;
@@ -224,8 +218,7 @@ namespace MAVLinkSharp.Runtime {
                     };
                     lock(nl) for(int i=0;i<nl.Count;i++) if((nl[i].rate & f)!=0) if(nl[i].enabled) nl[i].InternalUpdate();
                 }
-                
-                //Thread.Yield();
+                Thread.Yield();
             }
         }
 

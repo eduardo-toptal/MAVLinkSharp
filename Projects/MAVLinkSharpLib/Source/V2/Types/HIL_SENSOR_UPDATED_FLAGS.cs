@@ -5,7 +5,6 @@ namespace MAVLinkSharp.Bindings {
     /// Flags in the HIL_SENSOR message indicate which fields have updated since the last message
     /// </summary>    
     public enum HilSensorUpdatedFlags {
-        HilSensorUpdatedNone             = 0,           //None of the fields in HIL_SENSOR have been updated
         HilSensorUpdatedReset            = 0,           //Full reset of attitude/position/velocities/etc was performed in sim (Bit 31).
         HilSensorUpdatedXacc             = 1,           //The value in the xacc field has been updated
         HilSensorUpdatedYacc             = 2,           //The value in the yacc field has been updated

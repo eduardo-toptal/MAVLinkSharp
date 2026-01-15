@@ -35,7 +35,8 @@ namespace MAVLinkSharp.Bindings {
         public float  ThrottleOut;                    //Output throttle
         public float  PtCompensation;                 //Pressure/temperature compensation
         public byte   Health;                         //EFI health status
-        public float  IgnitionVoltage;                //Supply voltage to EFI sparking system.  Zero in this value means "unknown", so if the supply voltage really is zero volts use 0.0001 instead.    
+        public float  IgnitionVoltage;                //Supply voltage to EFI sparking system.  Zero in this value means "unknown", so if the supply voltage really is zero volts use 0.0001 instead.
+        public float  FuelPressure;                   //Fuel pressure. Zero in this value means "unknown", so if the fuel pressure really is zero kPa use 0.0001 instead.    
 
         #region CTOR
         /// <summary>
@@ -65,6 +66,7 @@ namespace MAVLinkSharp.Bindings {
             PtCompensation                   = default(float);
             Health                           = default(byte );
             IgnitionVoltage                  = default(float);
+            FuelPressure                     = default(float);
         }
         #endregion
 
@@ -73,7 +75,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 69;
+            int    l = 73;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -99,7 +101,8 @@ namespace MAVLinkSharp.Bindings {
             ThrottleOut                      = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
             PtCompensation                   = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
             Health                           = (byte ) (b[p++]);
-            IgnitionVoltage                  = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;            
+            IgnitionVoltage                  = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            FuelPressure                     = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;            
             return p;
         }
         #endregion
@@ -109,7 +112,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 69;
+            int    l = 73;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -135,6 +138,7 @@ namespace MAVLinkSharp.Bindings {
             MemoryMarshal.Write(b.Slice(p, 4), ref PtCompensation                  ); p+=4;
             b[p++] = (byte)(Health);
             MemoryMarshal.Write(b.Slice(p, 4), ref IgnitionVoltage                 ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref FuelPressure                    ); p+=4;
             return p;
         }
         #endregion
@@ -148,7 +152,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 69;
+            int l = 73;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

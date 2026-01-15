@@ -26,7 +26,7 @@ namespace MAVLinkSharp.Bindings {
         public float                  PitchMax;            //Maximum pitch angle (positive: up, negative: down)
         public float                  YawMin;              //Minimum yaw angle (positive: to the right, negative: to the left)
         public float                  YawMax;              //Maximum yaw angle (positive: to the right, negative: to the left)
-        public byte                   GimbalDeviceId;      //Gimbal device ID that this gimbal manager is responsible for.    
+        public byte                   GimbalDeviceId;      //Gimbal device ID that this gimbal manager is responsible for. Component ID of gimbal device (or 1-6 for non-MAVLink gimbal).    
 
         #region CTOR
         /// <summary>

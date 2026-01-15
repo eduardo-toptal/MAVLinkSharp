@@ -5,7 +5,6 @@ namespace MAVLinkSharp.Bindings {
     /// Flags in the HIGHRES_IMU message indicate which fields have updated since the last message
     /// </summary>    
     public enum HighresImuUpdatedFlags {
-        HighresImuUpdatedNone             = 0,           //None of the fields in HIGHRES_IMU have been updated
         HighresImuUpdatedXacc             = 1,           //The value in the xacc field has been updated
         HighresImuUpdatedYacc             = 2,           //The value in the yacc field has been updated
         HighresImuUpdatedZacc             = 4,           //The value in the zacc field has been updated since
@@ -18,8 +17,7 @@ namespace MAVLinkSharp.Bindings {
         HighresImuUpdatedAbsPressure      = 512,         //The value in the abs_pressure field has been updated
         HighresImuUpdatedDiffPressure     = 1024,        //The value in the diff_pressure field has been updated
         HighresImuUpdatedPressureAlt      = 2048,        //The value in the pressure_alt field has been updated
-        HighresImuUpdatedTemperature      = 4096,        //The value in the temperature field has been updated
-        HighresImuUpdatedAll              = 65535        //All fields in HIGHRES_IMU have been updated.
+        HighresImuUpdatedTemperature      = 4096         //The value in the temperature field has been updated
     }
 
 }

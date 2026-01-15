@@ -18,7 +18,7 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 142; }
 
-        public byte    RequestId;        //Request ID. This ID should be re-used when sending back URI contents
+        public byte    RequestId;        //Request ID. This ID should be reused when sending back URI contents
         public byte    UriType;          //The type of requested URI. 0 = a file via URL. 1 = a UAVCAN binary
         public byte[]  Uri;              //The requested unique resource identifier (URI). It is not necessarily a straight domain name (depends on the URI type enum)
         public byte    TransferType;     //The way the autopilot wants to receive the URI. 0 = MAVLink FTP. 1 = binary stream.

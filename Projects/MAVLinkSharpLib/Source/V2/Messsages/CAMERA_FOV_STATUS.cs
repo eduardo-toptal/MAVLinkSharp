@@ -18,16 +18,17 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 271; }
 
-        public uint     TimeBootMs;      //Timestamp (time since system boot).
-        public int      LatCamera;       //Latitude of camera (INT32_MAX if unknown).
-        public int      LonCamera;       //Longitude of camera (INT32_MAX if unknown).
-        public int      AltCamera;       //Altitude (MSL) of camera (INT32_MAX if unknown).
-        public int      LatImage;        //Latitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).
-        public int      LonImage;        //Longitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).
-        public int      AltImage;        //Altitude (MSL) of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).
-        public float[]  Q;               //Quaternion of camera orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
-        public float    Hfov;            //Horizontal field of view (NaN if unknown).
-        public float    Vfov;            //Vertical field of view (NaN if unknown).    
+        public uint     TimeBootMs;          //Timestamp (time since system boot).
+        public int      LatCamera;           //Latitude of camera (INT32_MAX if unknown).
+        public int      LonCamera;           //Longitude of camera (INT32_MAX if unknown).
+        public int      AltCamera;           //Altitude (MSL) of camera (INT32_MAX if unknown).
+        public int      LatImage;            //Latitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).
+        public int      LonImage;            //Longitude of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).
+        public int      AltImage;            //Altitude (MSL) of center of image (INT32_MAX if unknown, INT32_MIN if at infinity, not intersecting with horizon).
+        public float[]  Q;                   //Quaternion of camera orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
+        public float    Hfov;                //Horizontal field of view (NaN if unknown).
+        public float    Vfov;                //Vertical field of view (NaN if unknown).
+        public byte     CameraDeviceId;      //Camera id of a non-MAVLink camera attached to an autopilot (1-6).  0 if the component is a MAVLink camera (with its own component id).    
 
         #region CTOR
         /// <summary>
@@ -39,16 +40,17 @@ namespace MAVLinkSharp.Bindings {
         }
         */
         public void Init() {
-            TimeBootMs        = default(uint );
-            LatCamera         = default(int  );
-            LonCamera         = default(int  );
-            AltCamera         = default(int  );
-            LatImage          = default(int  );
-            LonImage          = default(int  );
-            AltImage          = default(int  );
-            Q                 = new float[  4];
-            Hfov              = default(float);
-            Vfov              = default(float);
+            TimeBootMs            = default(uint );
+            LatCamera             = default(int  );
+            LonCamera             = default(int  );
+            AltCamera             = default(int  );
+            LatImage              = default(int  );
+            LonImage              = default(int  );
+            AltImage              = default(int  );
+            Q                     = new float[  4];
+            Hfov                  = default(float);
+            Vfov                  = default(float);
+            CameraDeviceId        = default(byte );
         }
         #endregion
 
@@ -57,7 +59,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 52;
+            int    l = 53;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -66,16 +68,17 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            TimeBootMs        = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            LatCamera         = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            LonCamera         = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            AltCamera         = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            LatImage          = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            LonImage          = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            AltImage          = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            for(int i=0;i<4  ;i++) { Q[i]              = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4; }
-            Hfov              = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            Vfov              = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;            
+            TimeBootMs            = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            LatCamera             = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            LonCamera             = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            AltCamera             = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            LatImage              = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            LonImage              = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            AltImage              = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            for(int i=0;i<4  ;i++) { Q[i]                  = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4; }
+            Hfov                  = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Vfov                  = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            CameraDeviceId        = (byte ) (b[p++]);            
             return p;
         }
         #endregion
@@ -85,7 +88,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 52;
+            int    l = 53;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -122,10 +125,11 @@ namespace MAVLinkSharp.Bindings {
             b[p++] = (byte)((int)AltImage>>16);
             b[p++] = (byte)((int)AltImage>>24);
             for(int i=0;i<  4;i++) {
-                MemoryMarshal.Write(b.Slice(p, 4), ref Q[i]             ); p+=4;
+                MemoryMarshal.Write(b.Slice(p, 4), ref Q[i]                 ); p+=4;
             }
-            MemoryMarshal.Write(b.Slice(p, 4), ref Hfov             ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref Vfov             ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref Hfov                 ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref Vfov                 ); p+=4;
+            b[p++] = (byte)(CameraDeviceId);
             return p;
         }
         #endregion
@@ -139,7 +143,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 52;
+            int l = 53;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

@@ -22,7 +22,7 @@ namespace MAVLinkSharp.Bindings {
         ZAltitudeControl                             = 8192,        //0x2000 z/altitude control
         XyPositionControl                            = 16384,       //0x4000 x/y position control
         MotorOutputs                                 = 32768,       //0x8000 motor outputs / control
-        RcReceiver                                   = 65536,       //0x10000 rc receiver
+        RcReceiver                                   = 65536,       //0x10000 RC receiver
         _3dGyro2                                     = 131072,      //0x20000 2nd 3D gyro
         _3dAccel2                                    = 262144,      //0x40000 2nd 3D accelerometer
         _3dMag2                                      = 524288,      //0x80000 2nd 3D magnetometer

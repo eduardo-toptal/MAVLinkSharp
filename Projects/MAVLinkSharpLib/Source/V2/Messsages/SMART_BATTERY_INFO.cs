@@ -9,7 +9,7 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Smart Battery information (static/infrequent update). Use for updates from: smart battery to flight stack, flight stack to GCS. Use BATTERY_STATUS for smart battery frequent updates.
+    /// Smart Battery information (static/infrequent update). Use for updates from: smart battery to flight stack, flight stack to GCS. Use BATTERY_STATUS for the frequent battery updates.
     /// </summary>    
     public struct SmartBatteryInfoData : IMAVLinkMessageData {
 

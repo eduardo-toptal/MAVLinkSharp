@@ -9,7 +9,7 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Battery information. Updates GCS with flight controller battery status. Smart batteries also use this message, but may additionally send SMART_BATTERY_INFO.
+    /// Battery information. Updates GCS with flight controller battery status. Smart batteries also use this message, but may additionally send BATTERY_INFO.
     /// </summary>    
     public struct BatteryStatusData : IMAVLinkMessageData {
 

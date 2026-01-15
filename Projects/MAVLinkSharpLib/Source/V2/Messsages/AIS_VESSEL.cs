@@ -28,7 +28,7 @@ namespace MAVLinkSharp.Bindings {
         public ushort             DimensionStern;         //Distance from lat/lon location to stern
         public ushort             Tslc;                   //Time since last communication in seconds
         public AisFlags           Flags;                  //Bitmask to indicate various statuses including valid data fields
-        public sbyte              TurnRate;               //Turn rate
+        public sbyte              TurnRate;               //Turn rate, 0.1 degrees per second
         public AisNavStatusFlags  NavigationalStatus;     //Navigational status
         public AisTypeFlags       Type;                   //Type of vessels
         public byte               DimensionPort;          //Distance from lat/lon location to port side

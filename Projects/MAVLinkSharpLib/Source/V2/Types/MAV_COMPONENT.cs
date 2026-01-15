@@ -2,9 +2,18 @@
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Component ids (values) for the different types and instances of onboard hardware/software that might make up a MAVLink system (autopilot, cameras, servos, GPS systems, avoidance systems etc.).
-    ///       Components must use the appropriate ID in their source address when sending messages. Components can also use IDs to determine if they are the intended recipient of an incoming message. The MAV_COMP_ID_ALL value is used to indicate messages that must be processed by all components.
-    ///       When creating new entries, components that can have multiple instances (e.g. cameras, servos etc.) should be allocated sequential values. An appropriate number of values should be left free after these components to allow the number of instances to be expanded.
+    /// Legacy component ID values for particular types of hardware/software that might make up a MAVLink system (autopilot, cameras, servos, avoidance systems etc.).
+    ///       
+    ///         Components are not required or expected to use IDs with names that correspond to their type or function, but may choose to do so.
+    ///         Using an ID that matches the type may slightly reduce the chances of component id clashes, as, for historical reasons, it is less likely to be used by some other type of component.
+    ///         System integration will still need to ensure that all components have unique IDs.
+    /// 
+    ///         Component IDs are used for addressing messages to a particular component within a system.
+    ///         A component can use any unique ID between 1 and 255 (MAV_COMP_ID_ALL value is the broadcast address, used to send to all components).
+    ///         
+    ///         Historically component ID were also used for identifying the type of component.
+    ///         New code must not use component IDs to infer the component type, but instead check the MAV_TYPE in the HEARTBEAT message!
+    ///       
     /// </summary>    
     public enum MAVComponentFlags {
         MavCompIdAll                         = 0,           //Target id (target_component) used to broadcast messages to all components of the receiving system. Components should attempt to process messages with this component ID and forward to components on any other interfaces. Note: This is not a valid *source* component id for a message.
@@ -90,6 +99,9 @@ namespace MAVLinkSharp.Bindings {
         MavCompIdCamera4                     = 103,         //Camera #4.
         MavCompIdCamera5                     = 104,         //Camera #5.
         MavCompIdCamera6                     = 105,         //Camera #6.
+        MavCompIdRadio                       = 110,         //Radio #1.
+        MavCompIdRadio2                      = 111,         //Radio #2.
+        MavCompIdRadio3                      = 112,         //Radio #3.
         MavCompIdServo1                      = 140,         //Servo #1.
         MavCompIdServo2                      = 141,         //Servo #2.
         MavCompIdServo3                      = 142,         //Servo #3.
@@ -112,6 +124,7 @@ namespace MAVLinkSharp.Bindings {
         MavCompIdQx1Gimbal                   = 159,         //Gimbal ID for QX1.
         MavCompIdFlarm                       = 160,         //FLARM collision alert component.
         MavCompIdParachute                   = 161,         //Parachute component.
+        MavCompIdWinch                       = 169,         //Winch component.
         MavCompIdGimbal2                     = 171,         //Gimbal #2.
         MavCompIdGimbal3                     = 172,         //Gimbal #3.
         MavCompIdGimbal4                     = 173,         //Gimbal #4
@@ -140,7 +153,8 @@ namespace MAVLinkSharp.Bindings {
         MavCompIdUdpBridge                   = 240,         //Component to bridge MAVLink to UDP (i.e. from a UART).
         MavCompIdUartBridge                  = 241,         //Component to bridge to UART (i.e. from UDP).
         MavCompIdTunnelNode                  = 242,         //Component handling TUNNEL messages (e.g. vendor specific GUI of a component).
-        MavCompIdSystemControl               = 250          //Component for handling system messages (e.g. to ARM, takeoff, etc.).
+        MavCompIdIlluminator                 = 243,         //Illuminator
+        MavCompIdSystemControl               = 250          //Deprecated, don't use. Component for handling system messages (e.g. to ARM, takeoff, etc.).
     }
 
 }

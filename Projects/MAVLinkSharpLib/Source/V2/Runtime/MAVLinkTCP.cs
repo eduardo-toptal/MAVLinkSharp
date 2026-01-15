@@ -87,8 +87,7 @@ namespace MAVLinkSharp.Runtime {
             if(m_client == null) return;            
             int c = 0;
             try { 
-                NetworkStream ns = m_client.GetStream();
-                if(!ns.DataAvailable) return;
+                NetworkStream ns = m_client.GetStream();                
                 c = ns.Read(m_buffer);                 
             } catch(System.Exception){ }
             if(c<=0) return;

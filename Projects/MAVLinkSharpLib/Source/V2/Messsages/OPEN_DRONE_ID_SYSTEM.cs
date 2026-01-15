@@ -20,12 +20,12 @@ namespace MAVLinkSharp.Bindings {
 
         public int                               OperatorLatitude;          //Latitude of the operator. If unknown: 0 (both Lat/Lon).
         public int                               OperatorLongitude;         //Longitude of the operator. If unknown: 0 (both Lat/Lon).
-        public float                             AreaCeiling;               //Area Operations Ceiling relative to WGS84. If unknown: -1000 m.
-        public float                             AreaFloor;                 //Area Operations Floor relative to WGS84. If unknown: -1000 m.
+        public float                             AreaCeiling;               //Area Operations Ceiling relative to WGS84. If unknown: -1000 m. Used only for swarms/multiple UA.
+        public float                             AreaFloor;                 //Area Operations Floor relative to WGS84. If unknown: -1000 m. Used only for swarms/multiple UA.
         public float                             OperatorAltitudeGeo;       //Geodetic altitude of the operator relative to WGS84. If unknown: -1000 m.
         public uint                              Timestamp;                 //32 bit Unix Timestamp in seconds since 00:00:00 01/01/2019.
-        public ushort                            AreaCount;                 //Number of aircraft in the area, group or formation (default 1).
-        public ushort                            AreaRadius;                //Radius of the cylindrical area of the group or formation (default 0).
+        public ushort                            AreaCount;                 //Number of aircraft in the area, group or formation (default 1). Used only for swarms/multiple UA.
+        public ushort                            AreaRadius;                //Radius of the cylindrical area of the group or formation (default 0). Used only for swarms/multiple UA.
         public byte                              TargetSystem;              //System ID (0 for broadcast).
         public byte                              TargetComponent;           //Component ID (0 for broadcast).
         public byte[]                            IdOrMac;                   //Only used for drone ID data received from other UAs. See detailed description at https://mavlink.io/en/services/opendroneid.html.

@@ -26,7 +26,7 @@ namespace MAVLinkSharp.Bindings {
         public ushort                 HorVelocity;      //The horizontal velocity
         public short                  VerVelocity;      //The vertical velocity. Positive is up
         public AdsbFlags              Flags;            //Bitmap to indicate various statuses including valid data fields
-        public ushort                 Squawk;           //Squawk code
+        public ushort                 Squawk;           //Squawk code. Note that the code is in decimal: e.g. 7700 (general emergency) is encoded as binary 0b0001_1110_0001_0100, not(!) as 0b0000_111_111_000_000
         public AdsbAltitudeTypeFlags  AltitudeType;     //ADSB altitude type.
         public char[]                 Callsign;         //The callsign, 8+null
         public AdsbEmitterTypeFlags   EmitterType;      //ADSB emitter type.

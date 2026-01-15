@@ -29,9 +29,9 @@ namespace MAVLinkSharp.Bindings {
         public int      Latitude;         //Latitude (WGS84)
         public int      Longitude;        //Longitude (WGS84)
         public int      Altitude;         //Altitude (MSL). Positive for up.
-        public float    X;                //Local X position of this position in the local coordinate frame
-        public float    Y;                //Local Y position of this position in the local coordinate frame
-        public float    Z;                //Local Z position of this position in the local coordinate frame
+        public float    X;                //Local X position of this position in the local coordinate frame (NED)
+        public float    Y;                //Local Y position of this position in the local coordinate frame (NED)
+        public float    Z;                //Local Z position of this position in the local coordinate frame (NED: positive "down")
         public float[]  Q;                //World to surface normal and heading transformation of the takeoff position. Used to indicate the heading and slope of the ground
         public float    ApproachX;        //Local X position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.
         public float    ApproachY;        //Local Y position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.

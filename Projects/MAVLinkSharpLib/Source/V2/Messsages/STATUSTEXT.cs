@@ -19,7 +19,7 @@ namespace MAVLinkSharp.Bindings {
         public int GetId() { return 253; }
 
         public MAVSeverityFlags  Severity;     //Severity of status. Relies on the definitions within RFC-5424.
-        public char[]            Text;         //Status text message, without null termination character
+        public char[]            Text;         //Status text message, without null termination character. UTF-8 encoded.
         public ushort            Id;           //Unique (opaque) identifier for this statustext message.  May be used to reassemble a logical long-statustext message from a sequence of chunks.  A value of zero indicates this is the only chunk in the sequence and the message can be emitted immediately.
         public byte              ChunkSeq;     //This chunk's sequence number; indexing is from zero.  Any null character in the text field is taken to mean this was the last chunk.    
 

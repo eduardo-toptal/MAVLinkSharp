@@ -31,14 +31,16 @@ namespace MAVLinkSharp.Bindings {
         public float  Xgyro;           //Angular speed around X axis
         public float  Ygyro;           //Angular speed around Y axis
         public float  Zgyro;           //Angular speed around Z axis
-        public float  Lat;             //Latitude
-        public float  Lon;             //Longitude
+        public float  Lat;             //Latitude (lower precision). Both this and the lat_int field should be set.
+        public float  Lon;             //Longitude (lower precision). Both this and the lon_int field should be set.
         public float  Alt;             //Altitude
         public float  StdDevHorz;      //Horizontal position standard deviation
         public float  StdDevVert;      //Vertical position standard deviation
         public float  Vn;              //True velocity in north direction in earth-fixed NED frame
         public float  Ve;              //True velocity in east direction in earth-fixed NED frame
-        public float  Vd;              //True velocity in down direction in earth-fixed NED frame    
+        public float  Vd;              //True velocity in down direction in earth-fixed NED frame
+        public int    LatInt;          //Latitude (higher precision). If 0, recipients should use the lat field value (otherwise this field is preferred).
+        public int    LonInt;          //Longitude (higher precision). If 0, recipients should use the lon field value (otherwise this field is preferred).    
 
         #region CTOR
         /// <summary>
@@ -71,6 +73,8 @@ namespace MAVLinkSharp.Bindings {
             Vn                = default(float);
             Ve                = default(float);
             Vd                = default(float);
+            LatInt            = default(int  );
+            LonInt            = default(int  );
         }
         #endregion
 
@@ -79,7 +83,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 84;
+            int    l = 92;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -108,7 +112,9 @@ namespace MAVLinkSharp.Bindings {
             StdDevVert        = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
             Vn                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
             Ve                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            Vd                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;            
+            Vd                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            LatInt            = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            LonInt            = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);            
             return p;
         }
         #endregion
@@ -118,7 +124,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 84;
+            int    l = 92;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -147,6 +153,14 @@ namespace MAVLinkSharp.Bindings {
             MemoryMarshal.Write(b.Slice(p, 4), ref Vn               ); p+=4;
             MemoryMarshal.Write(b.Slice(p, 4), ref Ve               ); p+=4;
             MemoryMarshal.Write(b.Slice(p, 4), ref Vd               ); p+=4;
+            b[p++] = (byte)(      LatInt);
+            b[p++] = (byte)((int)LatInt>>8 );
+            b[p++] = (byte)((int)LatInt>>16);
+            b[p++] = (byte)((int)LatInt>>24);
+            b[p++] = (byte)(      LonInt);
+            b[p++] = (byte)((int)LonInt>>8 );
+            b[p++] = (byte)((int)LonInt>>16);
+            b[p++] = (byte)((int)LonInt>>24);
             return p;
         }
         #endregion
@@ -160,7 +174,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 84;
+            int l = 92;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

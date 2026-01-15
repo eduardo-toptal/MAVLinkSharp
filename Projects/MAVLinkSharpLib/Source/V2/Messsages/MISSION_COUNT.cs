@@ -21,7 +21,8 @@ namespace MAVLinkSharp.Bindings {
         public ushort               Count;               //Number of mission items in the sequence
         public byte                 TargetSystem;        //System ID
         public byte                 TargetComponent;     //Component ID
-        public MAVMissionTypeFlags  MissionType;         //Mission type.    
+        public MAVMissionTypeFlags  MissionType;         //Mission type.
+        public uint                 OpaqueId;            //Id of current on-vehicle mission, fence, or rally point plan (on download from vehicle). | This field is used when downloading a plan from a vehicle to a GCS. | 0 on upload to the vehicle from GCS. | 0 if plan ids are not supported. | The current on-vehicle plan ids are streamed in `MISSION_CURRENT`, allowing a GCS to determine if any part of the plan has changed and needs to be re-uploaded. | The ids are recalculated by the vehicle when any part of the on-vehicle plan changes (when a new plan is uploaded, the vehicle returns the new id to the GCS in MISSION_ACK).    
 
         #region CTOR
         /// <summary>
@@ -37,6 +38,7 @@ namespace MAVLinkSharp.Bindings {
             TargetSystem          = default(byte               );
             TargetComponent       = default(byte               );
             MissionType           = default(MAVMissionTypeFlags);
+            OpaqueId              = default(uint               );
         }
         #endregion
 
@@ -45,7 +47,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 5;
+            int    l = 9;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -57,7 +59,8 @@ namespace MAVLinkSharp.Bindings {
             Count                 = (ushort             ) (b[p++] | LS8[b[p++]]);
             TargetSystem          = (byte               ) (b[p++]);
             TargetComponent       = (byte               ) (b[p++]);
-            MissionType           = (MAVMissionTypeFlags) (b[p++]);            
+            MissionType           = (MAVMissionTypeFlags) (b[p++]);
+            OpaqueId              = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);            
             return p;
         }
         #endregion
@@ -67,7 +70,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 5;
+            int    l = 9;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -80,6 +83,10 @@ namespace MAVLinkSharp.Bindings {
             b[p++] = (byte)(TargetSystem);
             b[p++] = (byte)(TargetComponent);
             b[p++] = (byte)(MissionType);
+            b[p++] = (byte)(      OpaqueId);
+            b[p++] = (byte)((int)OpaqueId>>8 );
+            b[p++] = (byte)((int)OpaqueId>>16);
+            b[p++] = (byte)((int)OpaqueId>>24);
             return p;
         }
         #endregion
@@ -93,7 +100,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 5;
+            int l = 9;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

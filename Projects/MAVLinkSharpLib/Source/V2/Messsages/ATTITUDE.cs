@@ -9,7 +9,7 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// The attitude in the aeronautical frame (right-handed, Z-down, X-front, Y-right).
+    /// The attitude in the aeronautical frame (right-handed, Z-down, Y-right, X-front, ZYX, intrinsic).
     /// </summary>    
     public struct AttitudeData : IMAVLinkMessageData {
 

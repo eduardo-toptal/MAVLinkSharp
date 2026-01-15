@@ -6,7 +6,7 @@ namespace MAVLinkSharp.Bindings {
     /// </summary>    
     public enum SetFocusTypeFlags {
         FocusTypeStep              = 0,           //Focus one step increment (-1 for focusing in, 1 for focusing out towards infinity).
-        FocusTypeContinuous        = 1,           //Continuous focus up/down until stopped (-1 for focusing in, 1 for focusing out towards infinity, 0 to stop focusing)
+        FocusTypeContinuous        = 1,           //Continuous normalized focus in/out rate until stopped. Range -1..1, negative: in, positive: out towards infinity, 0 to stop focusing. Other values should be clipped to the range.
         FocusTypeRange             = 2,           //Focus value as proportion of full camera focus range (a value between 0.0 and 100.0)
         FocusTypeMeters            = 3,           //Focus value in metres. Note that there is no message to get the valid focus range of the camera, so this can type can only be used for cameras where the range is known (implying that this cannot reliably be used in a GCS for an arbitrary camera).
         FocusTypeAuto              = 4,           //Focus automatically.

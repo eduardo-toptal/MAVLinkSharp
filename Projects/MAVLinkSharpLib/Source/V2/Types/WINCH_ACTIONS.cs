@@ -13,7 +13,8 @@ namespace MAVLinkSharp.Bindings {
         WinchHold                     = 5,           //Engage motor and hold current position. Only action and instance command parameters are used, others are ignored.
         WinchRetract                  = 6,           //Return the reel to the fully retracted position. Only action and instance command parameters are used, others are ignored.
         WinchLoadLine                 = 7,           //Load the reel with line. The winch will calculate the total loaded length and stop when the tension exceeds a threshold. Only action and instance command parameters are used, others are ignored.
-        WinchAbandonLine              = 8            //Spool out the entire length of the line. Only action and instance command parameters are used, others are ignored.
+        WinchAbandonLine              = 8,           //Spool out the entire length of the line. Only action and instance command parameters are used, others are ignored.
+        WinchLoadPayload              = 9            //Spools out just enough to present the hook to the user to load the payload. Only action and instance command parameters are used, others are ignored
     }
 
 }

@@ -76,7 +76,6 @@ namespace MAVLinkSharp.Runtime {
             p_buffer = d;
             p_length = 0;
             if(m_client==null) return;
-            if(m_client.Available<=0) return;
             try { d = m_client.Receive(ref m_rcv_ep); } catch(System.Exception p_err) { }   
             p_buffer = d;
             p_length = d==null ? 0 : d.Length;

@@ -24,7 +24,8 @@ namespace MAVLinkSharp.Bindings {
         public float  AvailableCapacity;     //Available storage capacity.
         public byte   ImageStatus;           //Current status of image capturing (0: idle, 1: capture in progress, 2: interval set but idle, 3: interval set and capture in progress)
         public byte   VideoStatus;           //Current status of video capturing (0: idle, 1: capture in progress)
-        public int    ImageCount;            //Total number of images captured ('forever', or until reset using MAV_CMD_STORAGE_FORMAT).    
+        public int    ImageCount;            //Total number of images captured ('forever', or until reset using MAV_CMD_STORAGE_FORMAT).
+        public byte   CameraDeviceId;        //Camera id of a non-MAVLink camera attached to an autopilot (1-6).  0 if the component is a MAVLink camera (with its own component id).    
 
         #region CTOR
         /// <summary>
@@ -43,6 +44,7 @@ namespace MAVLinkSharp.Bindings {
             ImageStatus             = default(byte );
             VideoStatus             = default(byte );
             ImageCount              = default(int  );
+            CameraDeviceId          = default(byte );
         }
         #endregion
 
@@ -51,7 +53,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 22;
+            int    l = 23;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -66,7 +68,8 @@ namespace MAVLinkSharp.Bindings {
             AvailableCapacity       = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
             ImageStatus             = (byte ) (b[p++]);
             VideoStatus             = (byte ) (b[p++]);
-            ImageCount              = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);            
+            ImageCount              = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            CameraDeviceId          = (byte ) (b[p++]);            
             return p;
         }
         #endregion
@@ -76,7 +79,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 22;
+            int    l = 23;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -100,6 +103,7 @@ namespace MAVLinkSharp.Bindings {
             b[p++] = (byte)((int)ImageCount>>8 );
             b[p++] = (byte)((int)ImageCount>>16);
             b[p++] = (byte)((int)ImageCount>>24);
+            b[p++] = (byte)(CameraDeviceId);
             return p;
         }
         #endregion
@@ -113,7 +117,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 22;
+            int l = 23;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

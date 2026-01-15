@@ -18,10 +18,11 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 260; }
 
-        public uint             TimeBootMs;      //Timestamp (time since system boot).
-        public CameraModeFlags  ModeId;          //Camera mode
-        public float            Zoomlevel;       //Current zoom level (0.0 to 100.0, NaN if not known)
-        public float            Focuslevel;      //Current focus level (0.0 to 100.0, NaN if not known)    
+        public uint             TimeBootMs;          //Timestamp (time since system boot).
+        public CameraModeFlags  ModeId;              //Camera mode
+        public float            Zoomlevel;           //Current zoom level as a percentage of the full range (0.0 to 100.0, NaN if not known)
+        public float            Focuslevel;          //Current focus level as a percentage of the full range (0.0 to 100.0, NaN if not known)
+        public byte             CameraDeviceId;      //Camera id of a non-MAVLink camera attached to an autopilot (1-6).  0 if the component is a MAVLink camera (with its own component id).    
 
         #region CTOR
         /// <summary>
@@ -33,10 +34,11 @@ namespace MAVLinkSharp.Bindings {
         }
         */
         public void Init() {
-            TimeBootMs        = default(uint           );
-            ModeId            = default(CameraModeFlags);
-            Zoomlevel         = default(float          );
-            Focuslevel        = default(float          );
+            TimeBootMs            = default(uint           );
+            ModeId                = default(CameraModeFlags);
+            Zoomlevel             = default(float          );
+            Focuslevel            = default(float          );
+            CameraDeviceId        = default(byte           );
         }
         #endregion
 
@@ -45,7 +47,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 13;
+            int    l = 14;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -54,10 +56,11 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            TimeBootMs        = (uint           ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            ModeId            = (CameraModeFlags) (b[p++]);
-            Zoomlevel         = (float          ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            Focuslevel        = (float          ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;            
+            TimeBootMs            = (uint           ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            ModeId                = (CameraModeFlags) (b[p++]);
+            Zoomlevel             = (float          ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Focuslevel            = (float          ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            CameraDeviceId        = (byte           ) (b[p++]);            
             return p;
         }
         #endregion
@@ -67,7 +70,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 13;
+            int    l = 14;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -80,8 +83,9 @@ namespace MAVLinkSharp.Bindings {
             b[p++] = (byte)((int)TimeBootMs>>16);
             b[p++] = (byte)((int)TimeBootMs>>24);
             b[p++] = (byte)(ModeId);
-            MemoryMarshal.Write(b.Slice(p, 4), ref Zoomlevel        ); p+=4;
-            MemoryMarshal.Write(b.Slice(p, 4), ref Focuslevel       ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref Zoomlevel            ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref Focuslevel           ); p+=4;
+            b[p++] = (byte)(CameraDeviceId);
             return p;
         }
         #endregion
@@ -95,7 +99,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 13;
+            int l = 14;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

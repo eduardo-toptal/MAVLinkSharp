@@ -9,7 +9,7 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Sent from autopilot to simulation. Hardware in the loop control outputs
+    /// Sent from autopilot to simulation. Hardware in the loop control outputs. Alternative to HIL_ACTUATOR_CONTROLS.
     /// </summary>    
     public struct HilControlsData : IMAVLinkMessageData {
 

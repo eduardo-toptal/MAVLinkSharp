@@ -31,7 +31,7 @@ namespace MAVLinkSharp.Bindings {
         public float                   Z;                 //Z Position of the landing target in MAV_FRAME
         public float[]                 Q;                 //Quaternion of landing target orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
         public LandingTargetTypeFlags  Type;              //Type of landing target
-        public byte                    PositionValid;     //Boolean indicating whether the position fields (x, y, z, q, type) contain valid target position information (valid: 1, invalid: 0). Default is 0 (invalid).    
+        public MAVBoolFlags            PositionValid;     //Position fields (x, y, z, q, type) contain valid target position information (MAV_BOOL_FALSE: invalid values). Values not equal to 0 or 1 are invalid.    
 
         #region CTOR
         /// <summary>
@@ -56,7 +56,7 @@ namespace MAVLinkSharp.Bindings {
             Z                   = default(float                 );
             Q                   = new float[  4];
             Type                = default(LandingTargetTypeFlags);
-            PositionValid       = default(byte                  );
+            PositionValid       = default(MAVBoolFlags          );
         }
         #endregion
 
@@ -87,7 +87,7 @@ namespace MAVLinkSharp.Bindings {
             Z                   = (float                 ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
             for(int i=0;i<4  ;i++) { Q[i]                = (float                 ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4; }
             Type                = (LandingTargetTypeFlags) (b[p++]);
-            PositionValid       = (byte                  ) (b[p++]);            
+            PositionValid       = (MAVBoolFlags          ) (b[p++]);            
             return p;
         }
         #endregion

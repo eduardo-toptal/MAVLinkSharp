@@ -20,7 +20,7 @@ namespace MAVLinkSharp.Bindings {
 
         public uint                TimeBootMs;                  //Timestamp (time since system boot).
         public GimbalManagerFlags  Flags;                       //High level gimbal manager flags currently applied.
-        public byte                GimbalDeviceId;              //Gimbal device ID that this gimbal manager is responsible for.
+        public byte                GimbalDeviceId;              //Gimbal device ID that this gimbal manager is responsible for. Component ID of gimbal device (or 1-6 for non-MAVLink gimbal).
         public byte                PrimaryControlSysid;         //System ID of MAVLink component with primary control, 0 for none.
         public byte                PrimaryControlCompid;        //Component ID of MAVLink component with primary control, 0 for none.
         public byte                SecondaryControlSysid;       //System ID of MAVLink component with secondary control, 0 for none.

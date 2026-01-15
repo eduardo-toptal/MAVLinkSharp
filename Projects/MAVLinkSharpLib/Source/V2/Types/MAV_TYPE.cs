@@ -28,8 +28,8 @@ namespace MAVLinkSharp.Bindings {
         VtolTailsitterQuadrotor            = 20,          //Quad-rotor Tailsitter VTOL using a V-shaped quad config in vertical operation. Note: value previously named MAV_TYPE_VTOL_QUADROTOR.
         VtolTiltrotor                      = 21,          //Tiltrotor VTOL. Fuselage and wings stay (nominally) horizontal in all flight phases. It able to tilt (some) rotors to provide thrust in cruise flight.
         VtolFixedrotor                     = 22,          //VTOL with separate fixed rotors for hover and cruise flight. Fuselage and wings stay (nominally) horizontal in all flight phases.
-        VtolTailsitter                     = 23,          //Tailsitter VTOL. Fuselage and wings orientation changes depending on flight phase: vertical for hover, horizontal for cruise. Use more specific VTOL MAV_TYPE_VTOL_DUOROTOR or MAV_TYPE_VTOL_QUADROTOR if appropriate.
-        VtolReserved4                      = 24,          //VTOL reserved 4
+        VtolTailsitter                     = 23,          //Tailsitter VTOL. Fuselage and wings orientation changes depending on flight phase: vertical for hover, horizontal for cruise. Use more specific VTOL MAV_TYPE_VTOL_TAILSITTER_DUOROTOR or MAV_TYPE_VTOL_TAILSITTER_QUADROTOR if appropriate.
+        VtolTiltwing                       = 24,          //Tiltwing VTOL. Fuselage stays horizontal in all flight phases. The whole wing, along with any attached engine, can tilt between vertical and horizontal mode.
         VtolReserved5                      = 25,          //VTOL reserved 5
         Gimbal                             = 26,          //Gimbal
         Adsb                               = 27,          //ADSB system
@@ -47,7 +47,14 @@ namespace MAVLinkSharp.Bindings {
         Osd                                = 39,          //OSD
         Imu                                = 40,          //IMU
         Gps                                = 41,          //GPS
-        Winch                              = 42           //Winch
+        Winch                              = 42,          //Winch
+        GenericMultirotor                  = 43,          //Generic multirotor that does not fit into a specific type or whose type is unknown
+        Illuminator                        = 44,          //Illuminator. An illuminator is a light source that is used for lighting up dark areas external to the system: e.g. a torch or searchlight (as opposed to a light source for illuminating the system itself, e.g. an indicator light).
+        SpacecraftOrbiter                  = 45,          //Orbiter spacecraft. Includes satellites orbiting terrestrial and extra-terrestrial bodies. Follows NASA Spacecraft Classification.
+        GroundQuadruped                    = 46,          //A generic four-legged ground vehicle (e.g., a robot dog).
+        VtolGyrodyne                       = 47,          //VTOL hybrid of helicopter and autogyro. It has a main rotor for lift and separate propellers for forward flight. The rotor must be powered for hover but can autorotate in cruise flight. See: https://en.wikipedia.org/wiki/Gyrodyne
+        Gripper                            = 48,          //Gripper
+        Radio                              = 49           //Radio
     }
 
 }

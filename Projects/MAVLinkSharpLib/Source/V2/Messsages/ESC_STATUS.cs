@@ -22,7 +22,7 @@ namespace MAVLinkSharp.Bindings {
         public int[]    Rpm;          //Reported motor RPM from each ESC (negative for reverse rotation).
         public float[]  Voltage;      //Voltage measured from each ESC.
         public float[]  Current;      //Current measured from each ESC.
-        public byte     Index;        //Index of the first ESC in this message. minValue = 0, maxValue = 60, increment = 4.    
+        public byte     Index;        //Index of the first ESC in this message (ESC are indexed in motor order). minValue = 0, maxValue = 60, increment = 4.    
 
         #region CTOR
         /// <summary>

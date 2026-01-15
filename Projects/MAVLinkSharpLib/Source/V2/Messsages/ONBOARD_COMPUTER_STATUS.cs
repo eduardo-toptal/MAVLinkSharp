@@ -18,26 +18,27 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 390; }
 
-        public ulong    TimeUsec;             //Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
-        public uint     Uptime;               //Time since system boot.
-        public uint     RamUsage;             //Amount of used RAM on the component system. A value of UINT32_MAX implies the field is unused.
-        public uint     RamTotal;             //Total amount of RAM on the component system. A value of UINT32_MAX implies the field is unused.
-        public uint[]   StorageType;          //Storage type: 0: HDD, 1: SSD, 2: EMMC, 3: SD card (non-removable), 4: SD card (removable). A value of UINT32_MAX implies the field is unused.
-        public uint[]   StorageUsage;         //Amount of used storage space on the component system. A value of UINT32_MAX implies the field is unused.
-        public uint[]   StorageTotal;         //Total amount of storage space on the component system. A value of UINT32_MAX implies the field is unused.
-        public uint[]   LinkType;             //Link type: 0-9: UART, 10-19: Wired network, 20-29: Wifi, 30-39: Point-to-point proprietary, 40-49: Mesh proprietary
-        public uint[]   LinkTxRate;           //Network traffic from the component system. A value of UINT32_MAX implies the field is unused.
-        public uint[]   LinkRxRate;           //Network traffic to the component system. A value of UINT32_MAX implies the field is unused.
-        public uint[]   LinkTxMax;            //Network capacity from the component system. A value of UINT32_MAX implies the field is unused.
-        public uint[]   LinkRxMax;            //Network capacity to the component system. A value of UINT32_MAX implies the field is unused.
-        public short[]  FanSpeed;             //Fan speeds. A value of INT16_MAX implies the field is unused.
-        public byte     Type;                 //Type of the onboard computer: 0: Mission computer primary, 1: Mission computer backup 1, 2: Mission computer backup 2, 3: Compute node, 4-5: Compute spares, 6-9: Payload computers.
-        public byte[]   CpuCores;             //CPU usage on the component in percent (100 - idle). A value of UINT8_MAX implies the field is unused.
-        public byte[]   CpuCombined;          //Combined CPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the field is unused.
-        public byte[]   GpuCores;             //GPU usage on the component in percent (100 - idle). A value of UINT8_MAX implies the field is unused.
-        public byte[]   GpuCombined;          //Combined GPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the field is unused.
-        public sbyte    TemperatureBoard;     //Temperature of the board. A value of INT8_MAX implies the field is unused.
-        public sbyte[]  TemperatureCore;      //Temperature of the CPU core. A value of INT8_MAX implies the field is unused.    
+        public ulong                TimeUsec;             //Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+        public uint                 Uptime;               //Time since system boot.
+        public uint                 RamUsage;             //Amount of used RAM on the component system. A value of UINT32_MAX implies the field is unused.
+        public uint                 RamTotal;             //Total amount of RAM on the component system. A value of UINT32_MAX implies the field is unused.
+        public uint[]               StorageType;          //Storage type: 0: HDD, 1: SSD, 2: EMMC, 3: SD card (non-removable), 4: SD card (removable). A value of UINT32_MAX implies the field is unused.
+        public uint[]               StorageUsage;         //Amount of used storage space on the component system. A value of UINT32_MAX implies the field is unused.
+        public uint[]               StorageTotal;         //Total amount of storage space on the component system. A value of UINT32_MAX implies the field is unused.
+        public uint[]               LinkType;             //Link type: 0-9: UART, 10-19: Wired network, 20-29: Wifi, 30-39: Point-to-point proprietary, 40-49: Mesh proprietary
+        public uint[]               LinkTxRate;           //Network traffic from the component system. A value of UINT32_MAX implies the field is unused.
+        public uint[]               LinkRxRate;           //Network traffic to the component system. A value of UINT32_MAX implies the field is unused.
+        public uint[]               LinkTxMax;            //Network capacity from the component system. A value of UINT32_MAX implies the field is unused.
+        public uint[]               LinkRxMax;            //Network capacity to the component system. A value of UINT32_MAX implies the field is unused.
+        public short[]              FanSpeed;             //Fan speeds. A value of INT16_MAX implies the field is unused.
+        public byte                 Type;                 //Type of the onboard computer: 0: Mission computer primary, 1: Mission computer backup 1, 2: Mission computer backup 2, 3: Compute node, 4-5: Compute spares, 6-9: Payload computers.
+        public byte[]               CpuCores;             //CPU usage on the component in percent (100 - idle). A value of UINT8_MAX implies the field is unused.
+        public byte[]               CpuCombined;          //Combined CPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the field is unused.
+        public byte[]               GpuCores;             //GPU usage on the component in percent (100 - idle). A value of UINT8_MAX implies the field is unused.
+        public byte[]               GpuCombined;          //Combined GPU usage as the last 10 slices of 100 MS (a histogram). This allows to identify spikes in load that max out the system, but only for a short amount of time. A value of UINT8_MAX implies the field is unused.
+        public sbyte                TemperatureBoard;     //Temperature of the board. A value of INT8_MAX implies the field is unused.
+        public sbyte[]              TemperatureCore;      //Temperature of the CPU core. A value of INT8_MAX implies the field is unused.
+        public ComputerStatusFlags  StatusFlags;          //Bitmap of status flags.    
 
         #region CTOR
         /// <summary>
@@ -49,10 +50,10 @@ namespace MAVLinkSharp.Bindings {
         }
         */
         public void Init() {
-            TimeUsec               = default(ulong);
-            Uptime                 = default(uint );
-            RamUsage               = default(uint );
-            RamTotal               = default(uint );
+            TimeUsec               = default(ulong              );
+            Uptime                 = default(uint               );
+            RamUsage               = default(uint               );
+            RamTotal               = default(uint               );
             StorageType            = new uint[  4];
             StorageUsage           = new uint[  4];
             StorageTotal           = new uint[  4];
@@ -62,13 +63,14 @@ namespace MAVLinkSharp.Bindings {
             LinkTxMax              = new uint[  6];
             LinkRxMax              = new uint[  6];
             FanSpeed               = new short[  4];
-            Type                   = default(byte );
+            Type                   = default(byte               );
             CpuCores               = new byte[  8];
             CpuCombined            = new byte[ 10];
             GpuCores               = new byte[  4];
             GpuCombined            = new byte[ 10];
-            TemperatureBoard       = default(sbyte);
+            TemperatureBoard       = default(sbyte              );
             TemperatureCore        = new sbyte[  8];
+            StatusFlags            = default(ComputerStatusFlags);
         }
         #endregion
 
@@ -77,7 +79,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 238;
+            int    l = 240;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -86,26 +88,27 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            TimeUsec               = (ulong) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
-            Uptime                 = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            RamUsage               = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            RamTotal               = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            for(int i=0;i<4  ;i++) { StorageType[i]         = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
-            for(int i=0;i<4  ;i++) { StorageUsage[i]        = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
-            for(int i=0;i<4  ;i++) { StorageTotal[i]        = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
-            for(int i=0;i<6  ;i++) { LinkType[i]            = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
-            for(int i=0;i<6  ;i++) { LinkTxRate[i]          = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
-            for(int i=0;i<6  ;i++) { LinkRxRate[i]          = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
-            for(int i=0;i<6  ;i++) { LinkTxMax[i]           = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
-            for(int i=0;i<6  ;i++) { LinkRxMax[i]           = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
-            for(int i=0;i<4  ;i++) { FanSpeed[i]            = (short) (b[p++] | LS8[b[p++]]); }
-            Type                   = (byte ) (b[p++]);
-            for(int i=0;i<8  ;i++) { CpuCores[i]            = (byte ) (b[p++]); }
-            for(int i=0;i<10 ;i++) { CpuCombined[i]         = (byte ) (b[p++]); }
-            for(int i=0;i<4  ;i++) { GpuCores[i]            = (byte ) (b[p++]); }
-            for(int i=0;i<10 ;i++) { GpuCombined[i]         = (byte ) (b[p++]); }
-            TemperatureBoard       = (sbyte) (b[p++]);
-            for(int i=0;i<8  ;i++) { TemperatureCore[i]     = (sbyte) (b[p++]); }            
+            TimeUsec               = (ulong              ) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
+            Uptime                 = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            RamUsage               = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            RamTotal               = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            for(int i=0;i<4  ;i++) { StorageType[i]         = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
+            for(int i=0;i<4  ;i++) { StorageUsage[i]        = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
+            for(int i=0;i<4  ;i++) { StorageTotal[i]        = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
+            for(int i=0;i<6  ;i++) { LinkType[i]            = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
+            for(int i=0;i<6  ;i++) { LinkTxRate[i]          = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
+            for(int i=0;i<6  ;i++) { LinkRxRate[i]          = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
+            for(int i=0;i<6  ;i++) { LinkTxMax[i]           = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
+            for(int i=0;i<6  ;i++) { LinkRxMax[i]           = (uint               ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]); }
+            for(int i=0;i<4  ;i++) { FanSpeed[i]            = (short              ) (b[p++] | LS8[b[p++]]); }
+            Type                   = (byte               ) (b[p++]);
+            for(int i=0;i<8  ;i++) { CpuCores[i]            = (byte               ) (b[p++]); }
+            for(int i=0;i<10 ;i++) { CpuCombined[i]         = (byte               ) (b[p++]); }
+            for(int i=0;i<4  ;i++) { GpuCores[i]            = (byte               ) (b[p++]); }
+            for(int i=0;i<10 ;i++) { GpuCombined[i]         = (byte               ) (b[p++]); }
+            TemperatureBoard       = (sbyte              ) (b[p++]);
+            for(int i=0;i<8  ;i++) { TemperatureCore[i]     = (sbyte              ) (b[p++]); }
+            StatusFlags            = (ComputerStatusFlags) (b[p++] | LS8[b[p++]]);            
             return p;
         }
         #endregion
@@ -115,7 +118,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 238;
+            int    l = 240;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -212,6 +215,8 @@ namespace MAVLinkSharp.Bindings {
             for(int i=0;i<  8;i++) {
                 b[p++] = (byte)(TemperatureCore[i]);
             }
+            b[p++] = (byte)(      StatusFlags);
+            b[p++] = (byte)((int)StatusFlags>>8 );
             return p;
         }
         #endregion
@@ -225,7 +230,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 238;
+            int l = 240;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

@@ -5,8 +5,8 @@ namespace MAVLinkSharp.Bindings {
     /// 
     /// </summary>    
     public enum MAVOdidArmStatusFlags {
-        MavOdidGoodToArm              = 0,           //Passing arming checks.
-        MavOdidPreArmFailGeneric      = 1            //Generic arming failure, see error string for details.
+        GoodToArm                                = 0,           //Passing arming checks.
+        PreArmFailGeneric                        = 1            //Generic arming failure, see error string for details.
     }
 
 }

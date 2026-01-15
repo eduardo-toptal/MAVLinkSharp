@@ -2,10 +2,10 @@
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// These flags encode the MAV mode.
+    /// These flags encode the MAV mode, see MAV_MODE enum for useful combinations.
     /// </summary>    
     public enum MAVModeFlag {
-        CustomModeEnabled                  = 1,           //0b00000001 Reserved for future use.
+        CustomModeEnabled                  = 1,           //0b00000001 system-specific custom mode is enabled. When using this flag to enable a custom mode all other flags should be ignored.
         TestEnabled                        = 2,           //0b00000010 system has a test mode enabled. This flag is intended for temporary system tests and should not be used for stable implementations.
         AutoEnabled                        = 4,           //0b00000100 autonomous mode enabled, system finds its own goal positions. Guided flag can be set or not, depends on the actual implementation.
         GuidedEnabled                      = 8,           //0b00001000 guided mode enabled, system flies waypoints / mission items.

@@ -15,7 +15,10 @@ namespace MAVLinkSharp.Bindings {
         MavWinchStatusGroundSense        = 128,         //Winch is using torque measurements to sense the ground.
         MavWinchStatusRetracting         = 256,         //Winch is returning to the fully retracted position.
         MavWinchStatusRedeliver          = 512,         //Winch is redelivering the payload. This is a failover state if the line tension goes above a threshold during RETRACTING.
-        MavWinchStatusAbandonLine        = 1024         //Winch is abandoning the line and possibly payload. Winch unspools the entire calculated line length. This is a failover state from REDELIVER if the number of attempts exceeds a threshold.
+        MavWinchStatusAbandonLine        = 1024,        //Winch is abandoning the line and possibly payload. Winch unspools the entire calculated line length. This is a failover state from REDELIVER if the number of attempts exceeds a threshold.
+        MavWinchStatusLocking            = 2048,        //Winch is engaging the locking mechanism.
+        MavWinchStatusLoadLine           = 4096,        //Winch is spooling on line.
+        MavWinchStatusLoadPayload        = 8192         //Winch is loading a payload.
     }
 
 }

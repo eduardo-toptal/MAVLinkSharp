@@ -16,7 +16,9 @@ namespace MAVLinkSharp.Bindings {
         HasVideoStream                                   = 256,         //Camera has video streaming capabilities (request VIDEO_STREAM_INFORMATION with MAV_CMD_REQUEST_MESSAGE for video streaming info)
         HasTrackingPoint                                 = 512,         //Camera supports tracking of a point on the camera view.
         HasTrackingRectangle                             = 1024,        //Camera supports tracking of a selection rectangle on the camera view.
-        HasTrackingGeoStatus                             = 2048         //Camera supports tracking geo status (CAMERA_TRACKING_GEO_STATUS).
+        HasTrackingGeoStatus                             = 2048,        //Camera supports tracking geo status (CAMERA_TRACKING_GEO_STATUS).
+        HasThermalRange                                  = 4096,        //Camera supports absolute thermal range (request CAMERA_THERMAL_RANGE with MAV_CMD_REQUEST_MESSAGE).
+        HasMti                                           = 8192         //Camera supports Moving Target Indicators (MTI) on the camera view (using MAV_CMD_CAMERA_START_MTI).
     }
 
 }

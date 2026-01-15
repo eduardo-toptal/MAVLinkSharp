@@ -22,7 +22,7 @@ namespace MAVLinkSharp.Bindings {
         public ushort                            Mnc;               //Mobile network code. If unknown, set to UINT16_MAX
         public ushort                            Lac;               //Location area code. If unknown, set to 0
         public CellularStatusFlag                Status;            //Cellular modem status
-        public CellularNetworkFailedReasonFlags  FailureReason;     //Failure reason when status in in CELLUAR_STATUS_FAILED
+        public CellularNetworkFailedReasonFlags  FailureReason;     //Failure reason when status in in CELLULAR_STATUS_FLAG_FAILED
         public CellularNetworkRadioTypeFlags     Type;              //Cellular network radio type: gsm, cdma, lte...
         public byte                              Quality;           //Signal quality in percent. If unknown, set to UINT8_MAX    
 

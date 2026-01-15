@@ -20,7 +20,7 @@ namespace MAVLinkSharp.Bindings {
 
         public int                    Latitude;               //Current latitude of the unmanned aircraft. If unknown: 0 (both Lat/Lon).
         public int                    Longitude;              //Current longitude of the unmanned aircraft. If unknown: 0 (both Lat/Lon).
-        public float                  AltitudeBarometric;     //The altitude calculated from the barometric pressue. Reference is against 29.92inHg or 1013.2mb. If unknown: -1000 m.
+        public float                  AltitudeBarometric;     //The altitude calculated from the barometric pressure. Reference is against 29.92inHg or 1013.2mb. If unknown: -1000 m.
         public float                  AltitudeGeodetic;       //The geodetic altitude as defined by WGS84. If unknown: -1000 m.
         public float                  Height;                 //The current height of the unmanned aircraft above the take-off location or the ground as indicated by height_reference. If unknown: -1000 m.
         public float                  Timestamp;              //Seconds after the full hour with reference to UTC time. Typically the GPS outputs a time-of-week value in milliseconds. First convert that to UTC and then convert for this field using ((float) (time_week_ms % (60*60*1000))) / 1000. If unknown: 0xFFFF.

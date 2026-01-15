@@ -19,7 +19,7 @@ namespace MAVLinkSharp.Bindings {
         public int GetId() { return 82; }
 
         public uint                         TimeBootMs;          //Timestamp (time since system boot).
-        public float[]                      Q;                   //Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
+        public float[]                      Q;                   //Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0) from MAV_FRAME_LOCAL_NED to MAV_FRAME_BODY_FRD
         public float                        BodyRollRate;        //Body roll rate
         public float                        BodyPitchRate;       //Body pitch rate
         public float                        BodyYawRate;         //Body yaw rate

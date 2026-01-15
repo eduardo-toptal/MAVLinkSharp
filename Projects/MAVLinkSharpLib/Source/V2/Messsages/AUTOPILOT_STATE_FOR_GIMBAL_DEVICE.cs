@@ -9,7 +9,7 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Low level message containing autopilot state relevant for a gimbal device. This message is to be sent from the gimbal manager to the gimbal device component. The data of this message server for the gimbal's estimator corrections in particular horizon compensation, as well as the autopilot's control intention e.g. feed forward angular control in z-axis.
+    /// Low level message containing autopilot state relevant for a gimbal device. This message is to be sent from the autopilot to the gimbal device component. The data of this message are for the gimbal device's estimator corrections, in particular horizon compensation, as well as indicates autopilot control intentions, e.g. feed forward angular control in the z-axis.
     /// </summary>    
     public struct AutopilotStateForGimbalDeviceData : IMAVLinkMessageData {
 
@@ -20,16 +20,17 @@ namespace MAVLinkSharp.Bindings {
 
         public ulong                 TimeBootUs;                         //Timestamp (time since system boot).
         public float[]               Q;                                  //Quaternion components of autopilot attitude: w, x, y, z (1 0 0 0 is the null-rotation, Hamilton convention).
-        public uint                  QEstimatedDelayUs;                  //Estimated delay of the attitude data.
-        public float                 Vx;                                 //X Speed in NED (North, East, Down).
-        public float                 Vy;                                 //Y Speed in NED (North, East, Down).
-        public float                 Vz;                                 //Z Speed in NED (North, East, Down).
-        public uint                  VEstimatedDelayUs;                  //Estimated delay of the speed data.
-        public float                 FeedForwardAngularVelocityZ;        //Feed forward Z component of angular velocity, positive is yawing to the right, NaN to be ignored. This is to indicate if the autopilot is actively yawing.
+        public uint                  QEstimatedDelayUs;                  //Estimated delay of the attitude data. 0 if unknown.
+        public float                 Vx;                                 //X Speed in NED (North, East, Down). NAN if unknown.
+        public float                 Vy;                                 //Y Speed in NED (North, East, Down). NAN if unknown.
+        public float                 Vz;                                 //Z Speed in NED (North, East, Down). NAN if unknown.
+        public uint                  VEstimatedDelayUs;                  //Estimated delay of the speed data. 0 if unknown.
+        public float                 FeedForwardAngularVelocityZ;        //Feed forward Z component of angular velocity (positive: yawing to the right). NaN to be ignored. This is to indicate if the autopilot is actively yawing.
         public EstimatorStatusFlags  EstimatorStatus;                    //Bitmap indicating which estimator outputs are valid.
         public byte                  TargetSystem;                       //System ID
         public byte                  TargetComponent;                    //Component ID
-        public MAVLandedStateFlags   LandedState;                        //The landed state. Is set to MAV_LANDED_STATE_UNDEFINED if landed state is unknown.    
+        public MAVLandedStateFlags   LandedState;                        //The landed state. Is set to MAV_LANDED_STATE_UNDEFINED if landed state is unknown.
+        public float                 AngularVelocityZ;                   //Z component of angular velocity in NED (North, East, Down). NaN if unknown.    
 
         #region CTOR
         /// <summary>
@@ -53,6 +54,7 @@ namespace MAVLinkSharp.Bindings {
             TargetSystem                         = default(byte                );
             TargetComponent                      = default(byte                );
             LandedState                          = default(MAVLandedStateFlags );
+            AngularVelocityZ                     = default(float               );
         }
         #endregion
 
@@ -61,7 +63,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 53;
+            int    l = 57;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -81,7 +83,8 @@ namespace MAVLinkSharp.Bindings {
             EstimatorStatus                      = (EstimatorStatusFlags) (b[p++] | LS8[b[p++]]);
             TargetSystem                         = (byte                ) (b[p++]);
             TargetComponent                      = (byte                ) (b[p++]);
-            LandedState                          = (MAVLandedStateFlags ) (b[p++]);            
+            LandedState                          = (MAVLandedStateFlags ) (b[p++]);
+            AngularVelocityZ                     = (float               ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;            
             return p;
         }
         #endregion
@@ -91,7 +94,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 53;
+            int    l = 57;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -127,6 +130,7 @@ namespace MAVLinkSharp.Bindings {
             b[p++] = (byte)(TargetSystem);
             b[p++] = (byte)(TargetComponent);
             b[p++] = (byte)(LandedState);
+            MemoryMarshal.Write(b.Slice(p, 4), ref AngularVelocityZ                    ); p+=4;
             return p;
         }
         #endregion
@@ -140,7 +144,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 53;
+            int l = 57;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

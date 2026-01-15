@@ -20,10 +20,10 @@ namespace MAVLinkSharp.Bindings {
 
         public MAVProtocolCapabilityFlags  Capabilities;                 //Bitmap of capabilities
         public ulong                       Uid;                          //UID if provided by hardware (see uid2)
-        public uint                        FlightSwVersion;              //Firmware version number
+        public uint                        FlightSwVersion;              //Firmware version number. | The field must be encoded as 4 bytes, where each byte (shown from MSB to LSB) is part of a semantic version: (major) (minor) (patch) (FIRMWARE_VERSION_TYPE).
         public uint                        MiddlewareSwVersion;          //Middleware version number
         public uint                        OsSwVersion;                  //Operating system version number
-        public uint                        BoardVersion;                 //HW / board version (last 8 bits should be silicon ID, if any). The first 16 bits of this field specify https://github.com/PX4/PX4-Bootloader/blob/master/board_types.txt
+        public uint                        BoardVersion;                 //HW / board version (last 8 bits should be silicon ID, if any). The first 16 bits of this field specify a board type from an enumeration stored at https://github.com/PX4/PX4-Bootloader/blob/master/board_types.txt and with extensive additions at https://github.com/ArduPilot/ardupilot/blob/master/Tools/AP_Bootloader/board_types.txt
         public ushort                      VendorId;                     //ID of the board vendor
         public ushort                      ProductId;                    //ID of the product
         public byte[]                      FlightCustomVersion;          //Custom version field, commonly the first 8 bytes of the git hash. This is not an unique identifier, but should allow to identify the commit using the main version number even for very large code bases.

@@ -18,18 +18,20 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 269; }
 
-        public float                   Framerate;       //Frame rate.
-        public uint                    Bitrate;         //Bit rate.
-        public VideoStreamStatusFlags  Flags;           //Bitmap of stream status flags.
-        public ushort                  ResolutionH;     //Horizontal resolution.
-        public ushort                  ResolutionV;     //Vertical resolution.
-        public ushort                  Rotation;        //Video image rotation clockwise.
-        public ushort                  Hfov;            //Horizontal Field of view.
-        public byte                    StreamId;        //Video Stream ID (1 for first, 2 for second, etc.)
-        public byte                    Count;           //Number of streams available.
-        public VideoStreamTypeFlags    Type;            //Type of stream.
-        public char[]                  Name;            //Stream name.
-        public char[]                  Uri;             //Video stream URI (TCP or RTSP URI ground station should connect to) or port number (UDP port ground station should listen to).    
+        public float                     Framerate;           //Frame rate.
+        public uint                      Bitrate;             //Bit rate.
+        public VideoStreamStatusFlags    Flags;               //Bitmap of stream status flags.
+        public ushort                    ResolutionH;         //Horizontal resolution.
+        public ushort                    ResolutionV;         //Vertical resolution.
+        public ushort                    Rotation;            //Video image rotation clockwise.
+        public ushort                    Hfov;                //Horizontal Field of view.
+        public byte                      StreamId;            //Video Stream ID (1 for first, 2 for second, etc.)
+        public byte                      Count;               //Number of streams available.
+        public VideoStreamTypeFlags      Type;                //Type of stream.
+        public char[]                    Name;                //Stream name.
+        public char[]                    Uri;                 //Video stream URI (TCP or RTSP URI ground station should connect to) or port number (UDP port ground station should listen to).
+        public VideoStreamEncodingFlags  Encoding;            //Encoding of stream.
+        public byte                      CameraDeviceId;      //Camera id of a non-MAVLink camera attached to an autopilot (1-6).  0 if the component is a MAVLink camera (with its own component id).    
 
         #region CTOR
         /// <summary>
@@ -41,18 +43,20 @@ namespace MAVLinkSharp.Bindings {
         }
         */
         public void Init() {
-            Framerate         = default(float                 );
-            Bitrate           = default(uint                  );
-            Flags             = default(VideoStreamStatusFlags);
-            ResolutionH       = default(ushort                );
-            ResolutionV       = default(ushort                );
-            Rotation          = default(ushort                );
-            Hfov              = default(ushort                );
-            StreamId          = default(byte                  );
-            Count             = default(byte                  );
-            Type              = default(VideoStreamTypeFlags  );
-            Name              = new char[ 32];
-            Uri               = new char[160];
+            Framerate             = default(float                   );
+            Bitrate               = default(uint                    );
+            Flags                 = default(VideoStreamStatusFlags  );
+            ResolutionH           = default(ushort                  );
+            ResolutionV           = default(ushort                  );
+            Rotation              = default(ushort                  );
+            Hfov                  = default(ushort                  );
+            StreamId              = default(byte                    );
+            Count                 = default(byte                    );
+            Type                  = default(VideoStreamTypeFlags    );
+            Name                  = new char[ 32];
+            Uri                   = new char[160];
+            Encoding              = default(VideoStreamEncodingFlags);
+            CameraDeviceId        = default(byte                    );
         }
         #endregion
 
@@ -61,7 +65,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 213;
+            int    l = 215;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -70,18 +74,20 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            Framerate         = (float                 ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
-            Bitrate           = (uint                  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            Flags             = (VideoStreamStatusFlags) (b[p++] | LS8[b[p++]]);
-            ResolutionH       = (ushort                ) (b[p++] | LS8[b[p++]]);
-            ResolutionV       = (ushort                ) (b[p++] | LS8[b[p++]]);
-            Rotation          = (ushort                ) (b[p++] | LS8[b[p++]]);
-            Hfov              = (ushort                ) (b[p++] | LS8[b[p++]]);
-            StreamId          = (byte                  ) (b[p++]);
-            Count             = (byte                  ) (b[p++]);
-            Type              = (VideoStreamTypeFlags  ) (b[p++]);
-            for(int i=0;i<32 ;i++) { Name[i]           = (char                  ) (b[p++]); }
-            for(int i=0;i<160;i++) { Uri[i]            = (char                  ) (b[p++]); }            
+            Framerate             = (float                   ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4;
+            Bitrate               = (uint                    ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            Flags                 = (VideoStreamStatusFlags  ) (b[p++] | LS8[b[p++]]);
+            ResolutionH           = (ushort                  ) (b[p++] | LS8[b[p++]]);
+            ResolutionV           = (ushort                  ) (b[p++] | LS8[b[p++]]);
+            Rotation              = (ushort                  ) (b[p++] | LS8[b[p++]]);
+            Hfov                  = (ushort                  ) (b[p++] | LS8[b[p++]]);
+            StreamId              = (byte                    ) (b[p++]);
+            Count                 = (byte                    ) (b[p++]);
+            Type                  = (VideoStreamTypeFlags    ) (b[p++]);
+            for(int i=0;i<32 ;i++) { Name[i]               = (char                    ) (b[p++]); }
+            for(int i=0;i<160;i++) { Uri[i]                = (char                    ) (b[p++]); }
+            Encoding              = (VideoStreamEncodingFlags) (b[p++]);
+            CameraDeviceId        = (byte                    ) (b[p++]);            
             return p;
         }
         #endregion
@@ -91,7 +97,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 213;
+            int    l = 215;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -99,7 +105,7 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            MemoryMarshal.Write(b.Slice(p, 4), ref Framerate        ); p+=4;
+            MemoryMarshal.Write(b.Slice(p, 4), ref Framerate            ); p+=4;
             b[p++] = (byte)(      Bitrate);
             b[p++] = (byte)((int)Bitrate>>8 );
             b[p++] = (byte)((int)Bitrate>>16);
@@ -123,6 +129,8 @@ namespace MAVLinkSharp.Bindings {
             for(int i=0;i<160;i++) {
                 b[p++] = (byte)(Uri[i]);
             }
+            b[p++] = (byte)(Encoding);
+            b[p++] = (byte)(CameraDeviceId);
             return p;
         }
         #endregion
@@ -136,7 +144,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 213;
+            int l = 215;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

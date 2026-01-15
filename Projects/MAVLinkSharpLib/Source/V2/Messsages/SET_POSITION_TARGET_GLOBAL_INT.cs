@@ -19,8 +19,8 @@ namespace MAVLinkSharp.Bindings {
         public int GetId() { return 86; }
 
         public uint                         TimeBootMs;          //Timestamp (time since system boot). The rationale for the timestamp in the setpoint is to allow the system to compensate for the transport delay of the setpoint. This allows the system to compensate processing latency.
-        public int                          LatInt;              //X Position in WGS84 frame
-        public int                          LonInt;              //Y Position in WGS84 frame
+        public int                          LatInt;              //Latitude in WGS84 frame
+        public int                          LonInt;              //Longitude in WGS84 frame
         public float                        Alt;                 //Altitude (MSL, Relative to home, or AGL - depending on frame)
         public float                        Vx;                  //X velocity in NED frame
         public float                        Vy;                  //Y velocity in NED frame
@@ -33,7 +33,7 @@ namespace MAVLinkSharp.Bindings {
         public PositionTargetTypemaskFlags  TypeMask;            //Bitmap to indicate which dimensions should be ignored by the vehicle.
         public byte                         TargetSystem;        //System ID
         public byte                         TargetComponent;     //Component ID
-        public MAVFrameFlags                CoordinateFrame;     //Valid options are: MAV_FRAME_GLOBAL_INT = 5, MAV_FRAME_GLOBAL_RELATIVE_ALT_INT = 6, MAV_FRAME_GLOBAL_TERRAIN_ALT_INT = 11    
+        public MAVFrameFlags                CoordinateFrame;     //Valid options are: MAV_FRAME_GLOBAL = 0, MAV_FRAME_GLOBAL_RELATIVE_ALT = 3, MAV_FRAME_GLOBAL_TERRAIN_ALT = 10 (MAV_FRAME_GLOBAL_INT, MAV_FRAME_GLOBAL_RELATIVE_ALT_INT, MAV_FRAME_GLOBAL_TERRAIN_ALT_INT are allowed synonyms, but have been deprecated)    
 
         #region CTOR
         /// <summary>

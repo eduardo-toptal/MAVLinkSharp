@@ -9,7 +9,17 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
+    /// 
     /// Time synchronization message.
+    /// The message is used for both timesync requests and responses.
+    /// The request is sent with `ts1=syncing component timestamp` and `tc1=0`, and may be broadcast or targeted to a specific system/component.
+    /// The response is sent with `ts1=syncing component timestamp` (mirror back unchanged), and `tc1=responding component timestamp`, with the `target_system` and `target_component` set to ids of the original request.
+    /// Systems can determine if they are receiving a request or response based on the value of `tc`.
+    /// If the response has `target_system==target_component==0` the remote system has not been updated to use the component IDs and cannot reliably timesync; the requester may report an error.
+    /// Timestamps are UNIX Epoch time or time since system boot in nanoseconds (the timestamp format can be inferred by checking for the magnitude of the number; generally it doesn't matter as only the offset is used).
+    /// The message sequence is repeated numerous times with results being filtered/averaged to estimate the offset.
+    /// See also: https://mavlink.io/en/services/timesync.html.
+    /// 
     /// </summary>    
     public struct TimesyncData : IMAVLinkMessageData {
 
@@ -18,8 +28,10 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 111; }
 
-        public long  Tc1;    //Time sync timestamp 1
-        public long  Ts1;    //Time sync timestamp 2    
+        public long  Tc1;                 //Time sync timestamp 1. Syncing: 0. Responding: Timestamp of responding component.
+        public long  Ts1;                 //Time sync timestamp 2. Timestamp of syncing component (mirrored in response).
+        public byte  TargetSystem;        //Target system id. Request: 0 (broadcast) or id of specific system. Response must contain system id of the requesting component.
+        public byte  TargetComponent;     //Target component id. Request: 0 (broadcast) or id of specific component. Response must contain component id of the requesting component.    
 
         #region CTOR
         /// <summary>
@@ -31,8 +43,10 @@ namespace MAVLinkSharp.Bindings {
         }
         */
         public void Init() {
-            Tc1      = default(long);
-            Ts1      = default(long);
+            Tc1                   = default(long);
+            Ts1                   = default(long);
+            TargetSystem          = default(byte);
+            TargetComponent       = default(byte);
         }
         #endregion
 
@@ -41,7 +55,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 16;
+            int    l = 18;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -50,8 +64,10 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            Tc1      = (long) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
-            Ts1      = (long) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);            
+            Tc1                   = (long) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
+            Ts1                   = (long) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
+            TargetSystem          = (byte) (b[p++]);
+            TargetComponent       = (byte) (b[p++]);            
             return p;
         }
         #endregion
@@ -61,7 +77,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 16;
+            int    l = 18;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -85,6 +101,8 @@ namespace MAVLinkSharp.Bindings {
             b[p++] = (byte)((long)Ts1>>40);
             b[p++] = (byte)((long)Ts1>>48);
             b[p++] = (byte)((long)Ts1>>56);
+            b[p++] = (byte)(TargetSystem);
+            b[p++] = (byte)(TargetComponent);
             return p;
         }
         #endregion
@@ -98,7 +116,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 16;
+            int l = 18;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

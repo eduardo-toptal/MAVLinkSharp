@@ -2,11 +2,11 @@
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// RC type
+    /// RC type. Used in MAV_CMD_START_RX_PAIR.
     /// </summary>    
     public enum RcTypeFlags {
-        SpektrumDsm2          = 0,           //Spektrum DSM2
-        SpektrumDsmx          = 1            //Spektrum DSMX
+        Spektrum         = 0,           //Spektrum
+        Crsf             = 1            //CRSF
     }
 
 }

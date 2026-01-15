@@ -32,7 +32,7 @@ namespace MAVLinkSharp.Bindings {
         public byte                 TargetComponent;     //Component ID
         public MAVFrameFlags        Frame;               //The coordinate system of the waypoint.
         public byte                 Current;             //false:0, true:1
-        public byte                 Autocontinue;        //Autocontinue to next waypoint
+        public byte                 Autocontinue;        //Autocontinue to next waypoint. 0: false, 1: true. Set false to pause mission after the item completes.
         public MAVMissionTypeFlags  MissionType;         //Mission type.    
 
         #region CTOR

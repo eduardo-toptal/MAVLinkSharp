@@ -9,7 +9,7 @@ using MAVLinkSharp.Runtime;
 namespace MAVLinkSharp.Bindings {
 
     /// <summary>
-    /// Sent from autopilot to simulation. Hardware in the loop control outputs (replacement for HIL_CONTROLS)
+    /// Sent from autopilot to simulation. Hardware in the loop control outputs. Alternative to HIL_CONTROLS.
     /// </summary>    
     public struct HilActuatorControlsData : IMAVLinkMessageData {
 
@@ -18,10 +18,10 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 93; }
 
-        public ulong        TimeUsec;     //Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
-        public ulong        Flags;        //Flags as bitfield, 1: indicate simulation using lockstep.
-        public float[]      Controls;     //Control outputs -1 .. 1. Channel assignment depends on the simulated hardware.
-        public MAVModeFlag  Mode;         //System mode. Includes arming state.    
+        public ulong                     TimeUsec;     //Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.
+        public HilActuatorControlsFlags  Flags;        //Flags bitmask.
+        public float[]                   Controls;     //Control outputs -1 .. 1. Channel assignment depends on the simulated hardware.
+        public MAVModeFlag               Mode;         //System mode. Includes arming state.    
 
         #region CTOR
         /// <summary>
@@ -33,10 +33,10 @@ namespace MAVLinkSharp.Bindings {
         }
         */
         public void Init() {
-            TimeUsec       = default(ulong      );
-            Flags          = default(ulong      );
+            TimeUsec       = default(ulong                   );
+            Flags          = default(HilActuatorControlsFlags);
             Controls       = new float[ 16];
-            Mode           = default(MAVModeFlag);
+            Mode           = default(MAVModeFlag             );
         }
         #endregion
 
@@ -54,10 +54,10 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            TimeUsec       = (ulong      ) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
-            Flags          = (ulong      ) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
-            for(int i=0;i<16 ;i++) { Controls[i]    = (float      ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4; }
-            Mode           = (MAVModeFlag) (b[p++]);            
+            TimeUsec       = (ulong                   ) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
+            Flags          = (HilActuatorControlsFlags) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
+            for(int i=0;i<16 ;i++) { Controls[i]    = (float                   ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4; }
+            Mode           = (MAVModeFlag             ) (b[p++]);            
             return p;
         }
         #endregion

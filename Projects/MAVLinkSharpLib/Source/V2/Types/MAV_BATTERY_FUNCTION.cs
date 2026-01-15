@@ -9,7 +9,7 @@ namespace MAVLinkSharp.Bindings {
         All                             = 1,           //Battery supports all flight systems
         Propulsion                      = 2,           //Battery for the propulsion system
         Avionics                        = 3,           //Avionics battery
-        MavBatteryTypePayload           = 4            //Payload battery
+        Payload                         = 4            //Payload battery
     }
 
 }

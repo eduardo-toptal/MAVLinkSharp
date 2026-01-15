@@ -5,7 +5,6 @@ namespace MAVLinkSharp.Bindings {
     /// Flags to report ESC failures.
     /// </summary>    
     public enum EscFailureFlags {
-        EscFailureNone               = 0,           //No ESC failure.
         EscFailureOverCurrent        = 1,           //Over current failure.
         EscFailureOverVoltage        = 2,           //Over voltage failure.
         EscFailureOverTemperature    = 4,           //Over temperature failure.

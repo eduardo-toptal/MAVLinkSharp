@@ -20,19 +20,20 @@ namespace MAVLinkSharp.Bindings {
 
         public ulong                 Uid;                 //UID of gimbal hardware (0 if unknown).
         public uint                  TimeBootMs;          //Timestamp (time since system boot).
-        public uint                  FirmwareVersion;     //Version of the gimbal firmware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor & 0xff) << 8 | (Major & 0xff).
-        public uint                  HardwareVersion;     //Version of the gimbal hardware, encoded as: (Dev & 0xff) << 24 | (Patch & 0xff) << 16 | (Minor & 0xff) << 8 | (Major & 0xff).
-        public float                 RollMin;             //Minimum hardware roll angle (positive: rolling to the right, negative: rolling to the left)
-        public float                 RollMax;             //Maximum hardware roll angle (positive: rolling to the right, negative: rolling to the left)
-        public float                 PitchMin;            //Minimum hardware pitch angle (positive: up, negative: down)
-        public float                 PitchMax;            //Maximum hardware pitch angle (positive: up, negative: down)
-        public float                 YawMin;              //Minimum hardware yaw angle (positive: to the right, negative: to the left)
-        public float                 YawMax;              //Maximum hardware yaw angle (positive: to the right, negative: to the left)
+        public uint                  FirmwareVersion;     //Version of the gimbal firmware, encoded as: `(Dev & 0xff) << 24 + (Patch & 0xff) << 16 + (Minor & 0xff) << 8 + (Major & 0xff)`.
+        public uint                  HardwareVersion;     //Version of the gimbal hardware, encoded as: `(Dev & 0xff) << 24 + (Patch & 0xff) << 16 + (Minor & 0xff) << 8 + (Major & 0xff)`.
+        public float                 RollMin;             //Minimum hardware roll angle (positive: rolling to the right, negative: rolling to the left). NAN if unknown.
+        public float                 RollMax;             //Maximum hardware roll angle (positive: rolling to the right, negative: rolling to the left). NAN if unknown.
+        public float                 PitchMin;            //Minimum hardware pitch angle (positive: up, negative: down). NAN if unknown.
+        public float                 PitchMax;            //Maximum hardware pitch angle (positive: up, negative: down). NAN if unknown.
+        public float                 YawMin;              //Minimum hardware yaw angle (positive: to the right, negative: to the left). NAN if unknown.
+        public float                 YawMax;              //Maximum hardware yaw angle (positive: to the right, negative: to the left). NAN if unknown.
         public GimbalDeviceCapFlags  CapFlags;            //Bitmap of gimbal capability flags.
         public ushort                CustomCapFlags;      //Bitmap for use for gimbal-specific capability flags.
         public char[]                VendorName;          //Name of the gimbal vendor.
         public char[]                ModelName;           //Name of the gimbal model.
-        public char[]                CustomName;          //Custom name of the gimbal given to it by the user.    
+        public char[]                CustomName;          //Custom name of the gimbal given to it by the user.
+        public byte                  GimbalDeviceId;      //This field is to be used if the gimbal manager and the gimbal device are the same component and hence have the same component ID. This field is then set to a number between 1-6. If the component ID is separate, this field is not required and must be set to 0.    
 
         #region CTOR
         /// <summary>
@@ -59,6 +60,7 @@ namespace MAVLinkSharp.Bindings {
             VendorName            = new char[ 32];
             ModelName             = new char[ 32];
             CustomName            = new char[ 32];
+            GimbalDeviceId        = default(byte                );
         }
         #endregion
 
@@ -67,7 +69,7 @@ namespace MAVLinkSharp.Bindings {
         /// Reads the data from Buffer into this struct
         /// </summary>    
         public int Read(byte[] p_buffer,int p_offset=0) {
-            int    l = 144;
+            int    l = 145;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals
@@ -90,7 +92,8 @@ namespace MAVLinkSharp.Bindings {
             CustomCapFlags        = (ushort              ) (b[p++] | LS8[b[p++]]);
             for(int i=0;i<32 ;i++) { VendorName[i]         = (char                ) (b[p++]); }
             for(int i=0;i<32 ;i++) { ModelName[i]          = (char                ) (b[p++]); }
-            for(int i=0;i<32 ;i++) { CustomName[i]         = (char                ) (b[p++]); }            
+            for(int i=0;i<32 ;i++) { CustomName[i]         = (char                ) (b[p++]); }
+            GimbalDeviceId        = (byte                ) (b[p++]);            
             return p;
         }
         #endregion
@@ -100,7 +103,7 @@ namespace MAVLinkSharp.Bindings {
         /// Writes the message data into a Buffer
         /// </summary>    
         public int Write(byte[] p_buffer,int p_offset=0) {
-            int    l = 144;
+            int    l = 145;
             //Assert Range
             if((p_buffer.Length - p_offset) < l) return 0; 
             //Locals            
@@ -147,6 +150,7 @@ namespace MAVLinkSharp.Bindings {
             for(int i=0;i< 32;i++) {
                 b[p++] = (byte)(CustomName[i]);
             }
+            b[p++] = (byte)(GimbalDeviceId);
             return p;
         }
         #endregion
@@ -160,7 +164,7 @@ namespace MAVLinkSharp.Bindings {
         public int Read(Stream p_stream) {
             Stream ss = p_stream;
             if(ss==null) return 0;
-            int l = 144;
+            int l = 145;
             if(ss.Length - ss.Position < l) return 0;
             byte[] b;            
             long p = ss.Position;

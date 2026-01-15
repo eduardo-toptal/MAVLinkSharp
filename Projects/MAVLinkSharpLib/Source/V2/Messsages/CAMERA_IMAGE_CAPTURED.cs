@@ -24,17 +24,17 @@ namespace MAVLinkSharp.Bindings {
         /// </summary>    
         public int GetId() { return 263; }
 
-        public ulong    TimeUtc;           //Timestamp (time since UNIX epoch) in UTC. 0 for unknown.
-        public uint     TimeBootMs;        //Timestamp (time since system boot).
-        public int      Lat;               //Latitude where image was taken
-        public int      Lon;               //Longitude where capture was taken
-        public int      Alt;               //Altitude (MSL) where image was taken
-        public int      RelativeAlt;       //Altitude above ground
-        public float[]  Q;                 //Quaternion of camera orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
-        public int      ImageIndex;        //Zero based index of this image (i.e. a new image will have index CAMERA_CAPTURE_STATUS.image count -1)
-        public byte     CameraId;          //Deprecated/unused. Component IDs are used to differentiate multiple cameras.
-        public sbyte    CaptureResult;     //Boolean indicating success (1) or failure (0) while capturing this image.
-        public char[]   FileUrl;           //URL of image taken. Either local storage or http://foo.jpg if camera provides an HTTP interface.    
+        public ulong         TimeUtc;           //Timestamp (time since UNIX epoch) in UTC. 0 for unknown.
+        public uint          TimeBootMs;        //Timestamp (time since system boot).
+        public int           Lat;               //Latitude where image was taken
+        public int           Lon;               //Longitude where capture was taken
+        public int           Alt;               //Altitude (MSL) where image was taken
+        public int           RelativeAlt;       //Altitude above ground
+        public float[]       Q;                 //Quaternion of camera orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
+        public int           ImageIndex;        //Zero based index of this image (i.e. a new image will have index CAMERA_CAPTURE_STATUS.image count -1)
+        public byte          CameraId;          //Camera id of a non-MAVLink camera attached to an autopilot (1-6).  0 if the component is a MAVLink camera (with its own component id). Field name is usually camera_device_id.
+        public MAVBoolFlags  CaptureResult;     //Image was captured successfully (MAV_BOOL_TRUE). Values not equal to 0 or 1 are invalid.
+        public char[]        FileUrl;           //URL of image taken. Either local storage or http://foo.jpg if camera provides an HTTP interface.    
 
         #region CTOR
         /// <summary>
@@ -46,16 +46,16 @@ namespace MAVLinkSharp.Bindings {
         }
         */
         public void Init() {
-            TimeUtc             = default(ulong);
-            TimeBootMs          = default(uint );
-            Lat                 = default(int  );
-            Lon                 = default(int  );
-            Alt                 = default(int  );
-            RelativeAlt         = default(int  );
+            TimeUtc             = default(ulong       );
+            TimeBootMs          = default(uint        );
+            Lat                 = default(int         );
+            Lon                 = default(int         );
+            Alt                 = default(int         );
+            RelativeAlt         = default(int         );
             Q                   = new float[  4];
-            ImageIndex          = default(int  );
-            CameraId            = default(byte );
-            CaptureResult       = default(sbyte);
+            ImageIndex          = default(int         );
+            CameraId            = default(byte        );
+            CaptureResult       = default(MAVBoolFlags);
             FileUrl             = new char[205];
         }
         #endregion
@@ -74,17 +74,17 @@ namespace MAVLinkSharp.Bindings {
             int        p = 0;            
             //byte[] b = p_buffer;
             //int    p = p_offset;
-            TimeUtc             = (ulong) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
-            TimeBootMs          = (uint ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            Lat                 = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            Lon                 = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            Alt                 = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            RelativeAlt         = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            for(int i=0;i<4  ;i++) { Q[i]                = (float) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4; }
-            ImageIndex          = (int  ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
-            CameraId            = (byte ) (b[p++]);
-            CaptureResult       = (sbyte) (b[p++]);
-            for(int i=0;i<205;i++) { FileUrl[i]          = (char ) (b[p++]); }            
+            TimeUtc             = (ulong       ) ((ulong)b[p++] | (ulong)LS8[b[p++]] | (ulong)LS16[b[p++]] | (ulong)LS24[b[p++]] | (ulong)LS32[b[p++]] | (ulong)LS40[b[p++]] | (ulong)LS48[b[p++]] | (ulong)LS56[b[p++]]);
+            TimeBootMs          = (uint        ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            Lat                 = (int         ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            Lon                 = (int         ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            Alt                 = (int         ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            RelativeAlt         = (int         ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            for(int i=0;i<4  ;i++) { Q[i]                = (float       ) MemoryMarshal.Read<float >(b.Slice(p,4)); p+=4; }
+            ImageIndex          = (int         ) (b[p++] | LS8[b[p++]] | LS16[b[p++]] | LS24[b[p++]]);
+            CameraId            = (byte        ) (b[p++]);
+            CaptureResult       = (MAVBoolFlags) (b[p++]);
+            for(int i=0;i<205;i++) { FileUrl[i]          = (char        ) (b[p++]); }            
             return p;
         }
         #endregion
