@@ -6,5 +6,6 @@
   <PropertyGroup>
     <ActiveDebugProfile>MAVLinkGenProj</ActiveDebugProfile>
     <ActiveDebugFramework>net461</ActiveDebugFramework>
+    <_LastSelectedProfileId>D:\Work\Misc\MAVLinkSharp\Projects\MAVLinkGen\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
 </Project>
