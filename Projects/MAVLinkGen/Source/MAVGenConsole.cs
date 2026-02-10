@@ -503,6 +503,11 @@ namespace MAVLinkSharp.Bindings {
                     return $"Enum {name}";
                 }
 
+                public void Merge(Enumeration p_src) {
+                    description += $"\n----\n{p_src.description}";
+                    entries.AddRange(p_src.entries);
+                }
+
 
             }
             #endregion
@@ -884,8 +889,13 @@ namespace MAVLinkSharp.Bindings {
             public void ParseXML() {
                 Console.WriteLine($"MAVGen> Parsing {file.FullName}");
                 XmlDocument def_doc = new XmlDocument();
-                def_doc.Load(file.FullName);                
-                ParseNode(def_doc.DocumentElement);
+                try {
+                    def_doc.Load(file.FullName);
+                    ParseNode(def_doc.DocumentElement);
+                }
+                catch(System.Exception p_err) {
+                    Console.WriteLine($"MAVGen> Parse XML Failed - {p_err.Message}");
+                }
             }
 
             /// <summary>
@@ -995,7 +1005,10 @@ namespace MAVLinkSharp.Bindings {
             args.pathDir = new DirectoryInfo(args.path);
             if(!args.pathDir.Exists) { throw new DirectoryNotFoundException($"MAVLink Definitions Path [{args.pathDir.FullName}] Not Found!"); }
             FileInfo target_file = new FileInfo(args.pathDir.FullName+"/"+args.file);
-            if(!target_file.Exists) { throw new FileNotFoundException($"MAVLink Message File [{target_file.FullName}] Not Found!"); }
+            if(!target_file.Exists) {
+                Console.WriteLine($"MAVGen> File [{target_file.FullName}] Not Found!");
+                //throw new FileNotFoundException($"MAVLink Message File [{target_file.FullName}] Not Found!"); 
+            }
             //File Parsing Stack
             List<FileInfo> file_stack = new List<FileInfo>();
             //Add root file
@@ -1015,10 +1028,27 @@ namespace MAVLinkSharp.Bindings {
             //Join all messages and enums
             List<Definition.Enumeration> list_enums    = new List<Definition.Enumeration>();
             List<Definition.Message>     list_messages = new List<Definition.Message>();
+            //Collect all enums and messages
             foreach(Definition it in definitions) {
                 list_enums.AddRange(it.enums);
                 list_messages.AddRange(it.messages);
-            }            
+            }
+            //Merge enum types
+            //Sort by name so first occurrence will be "main" and following ones will be merged
+            Console.WriteLine($"MAVGen> Checking for Enum Merges");
+            list_enums.Sort(delegate (Definition.Enumeration a, Definition.Enumeration b) { return string.Compare(a.name, b.name); });
+            for(int m=0;m<list_enums.Count;m++) {
+                Definition.Enumeration dst = list_enums[m];
+                for (int n = m+1; n < list_enums.Count; n++) {
+                    Definition.Enumeration src = list_enums[n];
+                    if (dst.name != src.name) continue;
+                    Console.WriteLine($"MAVGen>    Found at {dst.name} - [{m}] <- [{n}]");
+                    dst.Merge(src);
+                    list_enums.RemoveAt(n--);
+                }
+                dst.SortEntries();
+            }
+               
             //Runtime Files
             DirectoryInfo runtime_dir = new DirectoryInfo(args.outputPath+"/Runtime/");
             if(runtime_dir.Exists) runtime_dir.Delete(true);

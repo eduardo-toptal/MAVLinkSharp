@@ -7,7 +7,7 @@
     },
     "MAVLinkGenProj": {
       "commandName": "Project",
-      "commandLineArgs": "-p MAVLinkGen/Definitions/v1.0 -f common.xml -o MAVLinkSharpLib/Source/V2 -t MAVLinkGen/Runtime/",
+      "commandLineArgs": "-p MAVLinkGen/Definitions/v1.0 -f development.xml -o MAVLinkSharpLib/Source/V2 -t MAVLinkGen/Runtime/",
       "workingDirectory": "$(SolutionDir)"
     }
   }
