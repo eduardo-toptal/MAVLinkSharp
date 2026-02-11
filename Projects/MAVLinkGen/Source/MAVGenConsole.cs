@@ -1039,12 +1039,14 @@ namespace MAVLinkSharp.Bindings {
             list_enums.Sort(delegate (Definition.Enumeration a, Definition.Enumeration b) { return string.Compare(a.name, b.name); });
             for(int m=0;m<list_enums.Count;m++) {
                 Definition.Enumeration dst = list_enums[m];
+                int off = 0;
                 for (int n = m+1; n < list_enums.Count; n++) {
                     Definition.Enumeration src = list_enums[n];
                     if (dst.name != src.name) continue;
-                    Console.WriteLine($"MAVGen>    Found at {dst.name} - [{m}] <- [{n}]");
+                    Console.WriteLine($"MAVGen>    Found at {dst.name} - [{m}] <- [{n+off}]");
                     dst.Merge(src);
                     list_enums.RemoveAt(n--);
+                    off++;
                 }
                 dst.SortEntries();
             }
@@ -1193,7 +1195,7 @@ namespace MAVLinkSharp.Bindings {
             DirectoryInfo types_dir = new DirectoryInfo(args.outputPath+"/Types/");
             if(types_dir.Exists) types_dir.Delete(true);
             types_dir.Create();
-            DirectoryInfo messages_dir = new DirectoryInfo(args.outputPath+"/Messsages/");
+            DirectoryInfo messages_dir = new DirectoryInfo(args.outputPath+"/Messages/");
             if(messages_dir.Exists) messages_dir.Delete(true);
             messages_dir.Create();
 
@@ -1266,7 +1268,8 @@ namespace MAVLinkSharp.Bindings {
 
                     }
                 }                
-                string file_path = $"{types_dir.FullName}/{it.name}.cs";
+                string file_path = $"{types_dir.FullName}{it.name}.cs";
+                Console.WriteLine($"   Enumeration [{it.name.PadRight(48)}] -> {file_path}");
                 File.WriteAllText(file_path,tpl);
             }
 
@@ -1600,7 +1603,8 @@ namespace MAVLinkSharp.Bindings {
                     }
                 }                
                 
-                string file_path = $"{messages_dir.FullName}/{it.name}.cs";
+                string file_path = $"{messages_dir.FullName}{it.name}.cs";
+                Console.WriteLine($"   Message [{it.name.PadRight(48)}:{it.id.ToString().PadRight(7)}] -> {file_path}");
                 File.WriteAllText(file_path,tpl);
             }
 
