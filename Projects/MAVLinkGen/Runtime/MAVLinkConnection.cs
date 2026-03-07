@@ -18,6 +18,16 @@ namespace MAVLinkSharp.Runtime {
         public Action<MAVLinkMsg>? OnMessageReceived;
 
         /// <summary>
+        /// Handler for when a raw packet arrives
+        /// </summary>
+        public Action<byte[],int> OnPacketReceiveEvent;
+
+        /// <summary>
+        /// Handler for when a raw packet arrives
+        /// </summary>
+        public Action<MemoryStream> OnPacketSendEvent;
+
+        /// <summary>
         /// Internals
         /// </summary>
         protected MemoryStream m_snd_ms;
@@ -88,8 +98,8 @@ namespace MAVLinkSharp.Runtime {
         /// Sends a MAVLink Message
         /// </summary>
         /// <param name="p_msg"></param>
-        public void Send(MAVLinkMsg p_msg) {            
-            lock(m_send_seq_lock) p_msg.sequence = m_snd_seq++;
+        public void Send(MAVLinkMsg p_msg, bool p_sequence = true) {            
+            if(p_sequence) lock(m_send_seq_lock) p_msg.sequence = m_snd_seq++;
             InternalSend(p_msg);
         }
 
@@ -142,6 +152,7 @@ namespace MAVLinkSharp.Runtime {
                     ms.SetLength(0);
                     if(len>0) if(d!=null) ms.Write(d,0,len);                
                     ms.Position = 0;
+                    if(len>0) if (OnPacketReceiveEvent != null) OnPacketReceiveEvent(d, len);
                 }                
                 bool will_read  = len>0;
                 //bool is_success = false;
@@ -172,7 +183,8 @@ namespace MAVLinkSharp.Runtime {
             MemoryStream ms = m_snd_ms;
             while(m_snd_active) {                   
                 m_snd_signal.WaitOne(10);
-                lock(ms) {                 
+                lock(ms) {
+                    if(OnPacketSendEvent!=null) OnPacketSendEvent(ms);
                     b = ms.GetBuffer();
                     b_len = (int)ms.Position;
                     if(b_len>0) { 

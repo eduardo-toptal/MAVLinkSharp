@@ -52,8 +52,17 @@ namespace MAVLinkSharp.Runtime {
                 m_client = null;
             }
             //Console.WriteLine($"[{name}] Waiting Client...");
-            m_conn = new TcpListener(IPAddress.Parse("0.0.0.0"),p_port);            
-            m_conn.Start();                        
+            try {
+                m_conn = new TcpListener(IPAddress.Parse("0.0.0.0"), p_port);
+                m_conn.Server.ExclusiveAddressUse = false;
+                m_conn.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                m_conn.Start();
+            }
+            catch(System.Exception p_err) {
+                #if UNITY_2017_1_OR_NEWER
+                UnityEngine.Debug.LogWarning($"MAVLinkTCP> Start / Error\n{p_err.Message}");
+                #endif
+            }
             m_listen_tsk =
             Task.Run(async delegate() { 
                 m_client = await m_conn.AcceptTcpClientAsync();
@@ -71,6 +80,17 @@ namespace MAVLinkSharp.Runtime {
         /// <param name="p_packet"></param>
         /// <param name="p_length"></param>
         override protected void OnPacketSend(byte[] p_packet,int p_length) {
+            if(m_conn  ==null) return;
+            if(m_client==null) return;            
+            try { 
+                NetworkStream ns = m_client.GetStream();                
+                ns.Write(p_packet,0,p_length);                        
+            } catch(System.Exception) { }
+        }
+
+        public void SendPacket(byte[] p_packet,int p_length=-1) {
+            int len = p_length < 0 ? (p_packet == null ? -1 : p_packet.Length) : p_length;
+            if (len < 0) return;
             if(m_conn  ==null) return;
             if(m_client==null) return;            
             try { 

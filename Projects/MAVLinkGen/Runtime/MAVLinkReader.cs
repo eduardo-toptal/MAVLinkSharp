@@ -165,7 +165,29 @@ namespace MAVLinkSharp.Runtime {
             //Read Payload that might be zero truncated
             int max_payload_size = MAVLinkMsg.GetMessagePayloadLength(id);
             for(int i=0;i<max_payload_size;i++) bpl[i] = i<payload_len ? b[b_pos++] : (byte)0;
-            //b_pos += payload_len;            
+            //b_pos += payload_len;
+            
+            //Store known fields
+            msg.version              = msg_version;
+            msg.payloadLength        = (byte)payload_len;
+            msg.incompatibilityFlags = inc_flags;
+            msg.compatibilityFlags   = cmp_flags;
+            msg.sequence             = seq;
+            msg.systemId             = sys_id;
+            msg.componentId          = comp_id;
+            msg.messageId            = (MAVLinkMsgId)id;
+
+            //Parse payload data into desired structure
+            IMAVLinkMessageData d = MAVLinkMsg.GetMessageInstance(id);
+            if (d == null) throw new InvalidDataException($"Message Id {(MAVLinkMsgId)id} does not have a valid data structure!");
+            //C#6 struct init
+            d.Init();
+            //d.Read(b,(int)payload_pos);
+            d.Read(bpl, 0);
+            msg.data = d;
+            //Increment Stream position
+            ss.Position += msg_total_len;
+
             //Read CRC           
             crc8_low  = (b[b_pos++]);
             crc8_high = (b[b_pos++]);
@@ -178,16 +200,7 @@ namespace MAVLinkSharp.Runtime {
                 //In case of BadCRC increment 1 byte read and keep parsing
                 ss.Position += 1;
                 return MAVLinkParseResult.BadCRC;
-            }            
-            //Store known fields
-            msg.version              = msg_version;
-            msg.payloadLength        = (byte)payload_len;
-            msg.incompatibilityFlags =       inc_flags;
-            msg.compatibilityFlags   =       cmp_flags;
-            msg.sequence             =       seq;
-            msg.systemId             =       sys_id;
-            msg.componentId          =       comp_id;
-            msg.messageId            =       (MAVLinkMsgId)id;
+            }                        
             //Fetch Signature if any                        
             if(is_signed) {
                 byte  sign_link_id   = 0;
@@ -209,17 +222,7 @@ namespace MAVLinkSharp.Runtime {
                 msg.signature.linkId           = sign_link_id;
                 msg.signature.timestamp        = sign_timestamp;
                 msg.signature.hash             = sign_hash;
-            } 
-            //Parse payload data into desired structure
-            IMAVLinkMessageData d = MAVLinkMsg.GetMessageInstance(id);
-            if(d==null) throw new InvalidDataException($"Message Id {(MAVLinkMsgId)id} does not have a valid data structure!");
-            //C#6 struct init
-            d.Init();
-            //d.Read(b,(int)payload_pos);
-            d.Read(bpl,0);
-            msg.data = d;
-            //Increment Stream position
-            ss.Position += msg_total_len;            
+            }                       
             //SUCCESS!
             return MAVLinkParseResult.Success;
         }

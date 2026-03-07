@@ -37,12 +37,22 @@ namespace MAVLinkSharp.Runtime {
                 try { m_client.Close(); } catch(System.Exception){ }
                 m_client = null;
             }
-            try { 
-                m_client = p_port<=0 ? new UdpClient() : new UdpClient(p_port); 
+            try {
+                //m_client = p_port<=0 ? new UdpClient() : new UdpClient(p_port);
+                m_client = new UdpClient();                
+                m_client.Client.ExclusiveAddressUse = false;
+                m_client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                if (p_port > 0) {
+                    m_client.Client.Bind(new IPEndPoint(IPAddress.Any, p_port));
+                }
                 m_client.Client.ReceiveBufferSize = 4 * 1024 * 1024;
                 m_client.Client.SendBufferSize    = 1 * 1024 * 1024;
             }
-            catch(System.Exception) { }
+            catch(System.Exception p_err) {
+                #if UNITY_2017_1_OR_NEWER
+                UnityEngine.Debug.LogWarning($"MAVLinkUDP> Start / Error\n{p_err.Message}");
+                #endif
+            }
         }
 
         /// <summary>
@@ -64,6 +74,15 @@ namespace MAVLinkSharp.Runtime {
                 IPEndPoint ep = m_targets[i];
                 try { m_client.Send(p_packet,p_length, ep); } catch(System.Exception) { }
             }            
+        }
+
+        public void SendPacket(byte[] p_packet,int p_length=-1) {
+            int len = p_length < 0 ? (p_packet == null ? -1 : p_packet.Length) : p_length;
+            if (len < 0) return;
+            for (int i = 0; i < m_targets.Count; i++) {
+                IPEndPoint ep = m_targets[i];
+                try { m_client.Send(p_packet, p_length, ep); } catch (System.Exception) { }
+            }
         }
 
         /// <summary>
