@@ -1,7 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
+
 
 #pragma warning disable CS8603
 #pragma warning disable CS8632
@@ -36,7 +39,7 @@ namespace MAVLinkSharp.Runtime {
         /// <summary>
         /// CTOR
         /// </summary>
-        public MAVLinkTCP(string p_name="") : base(p_name) {                        
+        public MAVLinkTCP(string p_name="") : base(null,p_name) {                        
             m_buffer  = new byte[1024 * 80];
             m_lock_ns = new object();
         }
@@ -54,9 +57,7 @@ namespace MAVLinkSharp.Runtime {
             //Console.WriteLine($"[{name}] Waiting Client...");
             try {
                 m_conn = new TcpListener(IPAddress.Parse("0.0.0.0"), p_port);
-                m_conn.Server.ExclusiveAddressUse = false;
-                m_conn.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                m_conn.Start();
+                m_conn.Start();                
             }
             catch(System.Exception p_err) {
                 #if UNITY_2017_1_OR_NEWER
@@ -64,65 +65,52 @@ namespace MAVLinkSharp.Runtime {
                 #endif
             }
             m_listen_tsk =
-            Task.Run(async delegate() { 
-                m_client = await m_conn.AcceptTcpClientAsync();
-                m_client.NoDelay = true;
-                m_client.Client.ReceiveBufferSize = 4 * 1024 * 1024; //   4 MB receive buffer
-                m_client.Client.SendBufferSize    = 1 * 1024 * 1024; // 512 KB send buffer
-                m_listen_tsk = null;
-                //Console.WriteLine($"[{name}] Client Connected!");
+            Task.Run(async delegate() {
+                try {                    
+                    m_client = await m_conn.AcceptTcpClientAsync();
+                    m_client.NoDelay = true;
+                    m_client.Client.ReceiveBufferSize = 4 * 1024 * 1024;
+                    m_client.Client.SendBufferSize    = 4 * 1024 * 1024;
+                    m_listen_tsk = null;
+                    #if UNITY_2017_1_OR_NEWER
+                    UnityEngine.Debug.Log($"MAVLinkTCP> [{name}] Client Connected!");
+                    #endif                    
+                    TCPDataStream dds = new TCPDataStream(m_client,name,320);
+                    SetStream(dds);
+                }
+                catch(System.Exception p_err) {
+                    #if UNITY_2017_1_OR_NEWER
+                    UnityEngine.Debug.LogWarning($"MAVLinkTCP> Start / AcceptTcpClientAsync - Error\n{p_err.Message}");
+                    #endif
+                }
             });
-        }
-
-        /// <summary>
-        /// Handler for sending data packets thru the link.
-        /// </summary>
-        /// <param name="p_packet"></param>
-        /// <param name="p_length"></param>
-        override protected void OnPacketSend(byte[] p_packet,int p_length) {
-            if(m_conn  ==null) return;
-            if(m_client==null) return;            
-            try { 
-                NetworkStream ns = m_client.GetStream();                
-                ns.Write(p_packet,0,p_length);                        
-            } catch(System.Exception) { }
-        }
-
-        public void SendPacket(byte[] p_packet,int p_length=-1) {
-            int len = p_length < 0 ? (p_packet == null ? -1 : p_packet.Length) : p_length;
-            if (len < 0) return;
-            if(m_conn  ==null) return;
-            if(m_client==null) return;            
-            try { 
-                NetworkStream ns = m_client.GetStream();                
-                ns.Write(p_packet,0,p_length);                        
-            } catch(System.Exception) { }
-        }
-
-        protected override void OnPacketReceive(out byte[]? p_buffer,out int p_length) {
-            byte[] d = null;
-            p_buffer = d;
-            p_length = 0;
-            if(m_conn   == null) return;
-            if(m_client == null) return;            
-            int c = 0;
-            try { 
-                NetworkStream ns = m_client.GetStream();                
-                c = ns.Read(m_buffer);                 
-            } catch(System.Exception){ }
-            if(c<=0) return;
-            p_buffer = m_buffer;
-            p_length = c;
         }
 
         /// <summary>
         /// DTOR
         /// </summary>
         protected override void OnDispose() {
+
+            //Finish Accept Task
+            if(m_listen_tsk != null) try { m_listen_tsk.Dispose(); } catch(System.Exception) { }
+            m_listen_tsk = null;
+
+            if(m_conn != null) { 
+                try {                    
+                    m_conn.Stop();
+                    try { m_conn.Server.Close();   } catch { }
+                    try { m_conn.Server.Dispose(); } catch { }                    
+                }
+                catch(System.Exception p_err) { 
+                    #if UNITY_2017_1_OR_NEWER
+                    UnityEngine.Debug.LogWarning($"MAVLinkTCP> Dispose Error \n {p_err.Message}");
+                    #endif
+                }
+            }
+            m_conn = null;
+
             base.OnDispose();
-            if (m_conn != null) try { m_conn.Stop(); } catch (System.Exception) { }
-            if (m_listen_tsk != null) try { m_listen_tsk.Dispose(); } catch (System.Exception) { }
-            m_client = null;
+
         }
 
     }

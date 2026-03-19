@@ -18,6 +18,11 @@ namespace MAVLinkSharp.Runtime {
         public Action<MAVLinkMsg>? OnMessageReceived;
 
         /// <summary>
+        /// Reference to the data stream;
+        /// </summary>
+        public BaseDataStream Stream { get; protected set; }
+
+        /// <summary>
         /// Handler for when a raw packet arrives
         /// </summary>
         public Action<byte[],int> OnPacketReceiveEvent;
@@ -27,42 +32,42 @@ namespace MAVLinkSharp.Runtime {
         /// </summary>
         public Action<MemoryStream> OnPacketSendEvent;
 
-        /// <summary>
-        /// Internals
-        /// </summary>
         protected MemoryStream m_snd_ms;
         protected MemoryStream m_rcv_ms;
         protected MAVLinkReader m_rcv;
         protected MAVLinkWriter m_snd;
-        protected bool m_rcv_active;
-        protected bool m_snd_active;
-        protected byte m_snd_seq;
         protected object m_send_seq_lock;
-        private Thread m_rcv_thd;
-        private Thread m_snd_thd;        
-        private ManualResetEvent m_snd_signal;
+        protected byte m_snd_seq;
 
         /// <summary>
         /// CTOR
         /// </summary>
-        public MAVLinkConnection(string p_name="") : base(p_name) {
+        public MAVLinkConnection(BaseDataStream p_stream,string p_name=null) : base(p_name ?? "") {
+
+            Stream = p_stream;
             m_snd_ms = new MemoryStream();
             m_rcv_ms = new MemoryStream();
-            m_rcv    = new MAVLinkReader(m_rcv_ms);
-            m_snd    = new MAVLinkWriter(m_snd_ms);
-            m_rcv_active = true;
-            m_snd_active = true;
-            m_snd_seq    = 0;
+            m_rcv = new MAVLinkReader(m_rcv_ms);
+            m_snd = new MAVLinkWriter(m_snd_ms);
+            m_snd_seq = 0;
             m_send_seq_lock = new object();
 
-            m_snd_signal = new ManualResetEvent(false);
+            SetStream(p_stream);
 
-            m_rcv_thd = new Thread(InternalReadLoop);
-            m_snd_thd = new Thread(InternalWriteLoop);
-            m_rcv_thd.Name = $"MAVLINK_{name.ToUpper()}.RCV";
-            m_snd_thd.Name = $"MAVLINK_{name.ToUpper()}.SND";
-            m_rcv_thd.Start();
-            m_snd_thd.Start();
+        }
+
+        /// <summary>
+        /// Sets the data stream to be used by this connection
+        /// </summary>
+        /// <param name="p_stream"></param>
+        protected void SetStream(BaseDataStream p_stream) {
+            if(Stream!=null) { Stream.Dispose(); }
+            Stream = null;
+            if(p_stream == null) return;
+            Stream = p_stream;
+            Stream.OnDataReceiveEvent = OnDataReceive;
+            Stream.OnDataSendEvent    = OnDataSend;
+            Stream.Start();
 
         }
 
@@ -107,11 +112,70 @@ namespace MAVLinkSharp.Runtime {
         /// Handles message actual delivery
         /// </summary>
         /// <param name="p_msg"></param>
-        internal void InternalSend(MAVLinkMsg p_msg) {                        
+        internal void InternalSend(MAVLinkMsg p_msg) {
+            if(m_snd_ms == null) return;
             lock(m_snd_ms) {
+                m_snd_ms.SetLength(0);
+                m_snd_ms.Position = 0;
                 m_snd.WriteV2(p_msg);                
-            }
-            try { m_snd_signal.Set(); } catch(System.Exception){ }
+                m_snd_ms.Position = 0;
+                if(Stream != null) Stream.Send(m_snd_ms);
+                m_snd_ms.Position = 0;
+            }            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_packet"></param>
+        /// <param name="p_length"></param>
+        public void SendPacket(byte[] p_packet,int p_length = -1) {
+            if(Stream != null)
+                Stream.Send(p_packet,p_length < 0 ? p_packet.Length : p_length);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_data"></param>
+        /// <param name="p_length"></param>
+        protected void OnDataSend(byte[] p_data, int p_length) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_data"></param>
+        /// <param name="p_length"></param>
+        protected void OnDataReceive(byte[] p_data,int p_length) {
+            if(m_rcv_ms == null) return;
+            MemoryStream ms = m_rcv_ms;
+            byte[] d   = p_data;
+            int    len = p_length;
+            if(ms.CanWrite) {
+                ms.SetLength(0);
+                if(len>0) if(d!=null) ms.Write(d,0,len);                
+                ms.Position = 0;
+                if(len>0) if (OnPacketReceiveEvent != null) OnPacketReceiveEvent(d, len);
+            }                
+            bool will_read  = len>0;
+            //bool is_success = false;
+            while(will_read) {   
+                if(ms.Position>=ms.Length) break;
+                MAVLinkMsg msg = MAVLinkMsg.GetPool();
+                MAVLinkParseResult res = MAVLinkParseResult.Unknown;
+                res = m_rcv.Read(ref msg);                    
+                switch(res) {
+                    case MAVLinkParseResult.Success:    
+                        Dispatch(msg); 
+                        if(OnMessageReceived!=null) OnMessageReceived(msg); 
+                        //is_success=true;
+                    break;
+                    case MAVLinkParseResult.NotFound: 
+                    case MAVLinkParseResult.Incomplete: will_read=false; break;
+                    case MAVLinkParseResult.BadCRC:     break;
+                }                    
+                MAVLinkMsg.SetPool(msg);
+            }                  
         }
 
         /// <summary>
@@ -125,91 +189,15 @@ namespace MAVLinkSharp.Runtime {
         }
 
         /// <summary>
-        /// Handler for when a data packet arrived at the link
-        /// </summary>
-        /// <param name="p_packet"></param>
-        virtual protected void OnPacketReceive(out byte[]? p_buffer,out int p_length) {  p_buffer = null; p_length = 0; }
-
-        /// <summary>
-        /// Handler for sending data packets thru the link.
-        /// </summary>
-        /// <param name="p_packet"></param>
-        /// <param name="p_length"></param>
-        virtual protected void OnPacketSend(byte[] p_packet,int p_length) { }
-
-        /// <summary>
-        /// Waits for packets and process incoming messages
-        /// </summary>
-        /// <param name="so"></param>
-        protected void InternalReadLoop(object? so) {
-            
-            while(m_rcv_active) {
-                byte[]? d = null; 
-                int len = 0;
-                OnPacketReceive(out d,out len);                
-                MemoryStream ms = m_rcv_ms;
-                if(ms.CanWrite) {
-                    ms.SetLength(0);
-                    if(len>0) if(d!=null) ms.Write(d,0,len);                
-                    ms.Position = 0;
-                    if(len>0) if (OnPacketReceiveEvent != null) OnPacketReceiveEvent(d, len);
-                }                
-                bool will_read  = len>0;
-                //bool is_success = false;
-                while(will_read) {   
-                    if(ms.Position>=ms.Length) break;
-                    MAVLinkMsg msg = MAVLinkMsg.GetPool();
-                    MAVLinkParseResult res = MAVLinkParseResult.Unknown;
-                    res = m_rcv.Read(ref msg);                    
-                    switch(res) {
-                        case MAVLinkParseResult.Success:    Dispatch(msg); if(OnMessageReceived!=null) OnMessageReceived(msg); /*is_success=true;*/ break;
-                        case MAVLinkParseResult.NotFound: 
-                        case MAVLinkParseResult.Incomplete: will_read=false; break;
-                        case MAVLinkParseResult.BadCRC:     break;
-                    }                    
-                    MAVLinkMsg.SetPool(msg);
-                }                    
-                Thread.Yield();                
-            }
-        }
-
-        /// <summary>
-        /// Wait for buffered sent messages and process submissions
-        /// </summary>
-        /// <param name="so"></param>
-        protected void InternalWriteLoop(object? so) {  
-            byte[] b;
-            int    b_len;
-            MemoryStream ms = m_snd_ms;
-            while(m_snd_active) {                   
-                m_snd_signal.WaitOne(10);
-                lock(ms) {
-                    if(OnPacketSendEvent!=null) OnPacketSendEvent(ms);
-                    b = ms.GetBuffer();
-                    b_len = (int)ms.Position;
-                    if(b_len>0) { 
-                        OnPacketSend(b,b_len);                        
-                        ms.Position=0;
-                    }
-                }                      
-                m_snd_signal.Reset();                
-            }            
-        }        
-        
-        /// <summary>
         /// DTOR
         /// </summary>
         protected override void OnDispose() {            
-            m_rcv_active = false;
-            m_snd_active = false;
-            if(m_rcv_thd!=null) if(!m_rcv_thd.Join(48)) m_rcv_thd.Abort();
-            if(m_snd_thd!=null) if(!m_snd_thd.Join(48)) m_snd_thd.Abort();
-            m_rcv_thd = null;
-            m_snd_thd = null;
+            if(Stream!=null) Stream.Dispose();
             m_snd_seq = 0;
             m_rcv_ms.Dispose();
             m_snd_ms.Dispose();
-            m_snd_signal.Dispose();
+            m_snd_ms = null;
+            m_rcv_ms = null;
         }
 
     }
