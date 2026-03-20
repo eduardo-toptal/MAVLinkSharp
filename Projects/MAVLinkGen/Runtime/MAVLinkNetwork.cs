@@ -218,7 +218,8 @@ namespace MAVLinkSharp.Runtime {
                     };
                     lock(nl) for(int i=0;i<nl.Count;i++) if((nl[i].rate & f)!=0) if(nl[i].enabled) nl[i].InternalUpdate();
                 }
-                Thread.Yield();
+                //Thread.Yield();
+                Thread.Sleep(2);
             }
         }
 
