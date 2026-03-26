@@ -38,7 +38,8 @@ namespace MAVLinkSharp.Runtime {
                 m_client = null;
             }
             try {                
-                m_client = new UdpClient();                
+                m_client = new UdpClient();
+                m_client.EnableBroadcast = true;
                 //m_client.Client.ExclusiveAddressUse = false;
                 //m_client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
                 if (p_port > 0) {

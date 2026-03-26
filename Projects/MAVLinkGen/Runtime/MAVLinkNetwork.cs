@@ -191,6 +191,8 @@ namespace MAVLinkSharp.Runtime {
 
                 //For all available flags
                 MAVLinkNetworkRate msk_f = MAVLinkNetworkRate.Realtime;
+                //Start by assuming the fastes node wants to run at 1000ms
+                double min_sleep = 100.0;
                 for(int k=0;k<7;k++) {
                     MAVLinkNetworkRate f = msk_exec & msk_f;
                     bool will_run = f != 0;
@@ -198,8 +200,7 @@ namespace MAVLinkSharp.Runtime {
                     if(!will_run) continue;
                     double exec_dt = dt;
                     switch(f) {
-                        case MAVLinkNetworkRate.Disabled: continue;
-                        case MAVLinkNetworkRate.Realtime: break;
+                        case MAVLinkNetworkRate.Disabled: continue;                        
                         case MAVLinkNetworkRate.Rate1000ms:    exec_dt = 1.0000; break;
                         case MAVLinkNetworkRate.Rate800ms:     exec_dt = 0.8000; break;
                         case MAVLinkNetworkRate.Rate500ms:     exec_dt = 0.5000; break;
@@ -209,17 +210,27 @@ namespace MAVLinkSharp.Runtime {
                         case MAVLinkNetworkRate.Rate16ms:      exec_dt = 0.0166; break;
                         case MAVLinkNetworkRate.Rate10ms:      exec_dt = 0.0100; break;
                         case MAVLinkNetworkRate.Rate5ms:       exec_dt = 0.0050; break;
+                        case MAVLinkNetworkRate.Realtime:      exec_dt = 0.0030; break;
                     }
+
                     time = new Clock() {
                         rate      = f,
                         deltaTime = exec_dt,
                         elapsedMS = t_ms,
                         elapsedUS = t_us
                     };
-                    lock(nl) for(int i=0;i<nl.Count;i++) if((nl[i].rate & f)!=0) if(nl[i].enabled) nl[i].InternalUpdate();
-                }
-                //Thread.Yield();
-                Thread.Sleep(2);
+                    lock(nl) {
+                        for(int i=0;i<nl.Count;i++) {
+                            if(!nl[i].enabled)      continue;
+                            if((nl[i].rate & f)==0) continue;
+                            //Tune next sleep to the fastest node minus a bias
+                            min_sleep = Math.Min(min_sleep,exec_dt * 1000.0 * 0.9);
+                            nl[i].InternalUpdate();                            
+                        }
+                    }
+                }        
+                //Sleep proportional to the fastest running node
+                Thread.Sleep((int)min_sleep);
             }
         }
 
